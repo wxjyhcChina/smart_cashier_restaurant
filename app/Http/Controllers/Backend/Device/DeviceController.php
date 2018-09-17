@@ -47,7 +47,6 @@ class DeviceController extends Controller
     public function create(ManageDeviceRequest $request)
     {
         //
-        return view('backend.device.create');
     }
 
     /**
@@ -60,9 +59,6 @@ class DeviceController extends Controller
     public function store(StoreDeviceRequest $request)
     {
         //
-        $this->deviceRepo->create($request->all());
-
-        return redirect()->route('admin.device.index')->withFlashSuccess(trans('alerts.backend.device.created'));
     }
 
     /**
@@ -86,7 +82,6 @@ class DeviceController extends Controller
     public function edit(Device $device, ManageDeviceRequest $request)
     {
         //
-        return view('backend.device.edit')->withDevice($device);
     }
 
     /**
@@ -100,23 +95,6 @@ class DeviceController extends Controller
     public function update(Device $device, ManageDeviceRequest $request)
     {
         //
-        $this->deviceRepo->update($device, $request->all());
-
-        return redirect()->route('admin.device.index')->withFlashSuccess(trans('alerts.backend.device.updated'));
-    }
-
-    /**
-     * @param Device $device
-     * @param $status
-     * @param ManageDeviceRequest $request
-     * @return mixed
-     * @throws GeneralException
-     */
-    public function mark(Device $device, $status, ManageDeviceRequest $request)
-    {
-        $this->deviceRepo->mark($device, $status);
-
-        return redirect()->back()->withFlashSuccess(trans('alerts.backend.device.updated'));
     }
 
     /**

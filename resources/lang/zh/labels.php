@@ -105,10 +105,6 @@ return [
         'device' => [
             'management' => '设备管理',
             'active' => '所有设备',
-            'edit' => '编辑设备',
-            'create' => '创建设备',
-            'import' => '导入设备',
-            'select' => '选择文件',
 
             'table' => [
                 'id' => '编号',
@@ -120,16 +116,26 @@ return [
         'card' => [
             'management' => 'IC卡管理',
             'active' => '所有IC卡',
-            'edit' => '编辑IC卡',
-            'create' => '创建IC卡',
-            'import' => '导入IC卡',
-            'select' => '选择文件',
 
             'table' => [
                 'id' => '编号',
                 'number' => 'IC卡号',
                 'internal_number' => 'IC卡内部编码',
                 'status' => '状态',
+            ]
+        ],
+
+        'department' => [
+            'management' => '部门管理',
+            'active' => '所有部门',
+            'edit' => '编辑部门',
+            'create' => '创建部门',
+
+            'table' => [
+                'id' => '编号',
+                'code' => '部门编号',
+                'name' => '部门名',
+                'created_at' => '创建时间',
             ]
         ],
     ],

@@ -3,7 +3,9 @@
 namespace App\Exceptions;
 
 use App\Exceptions\Api\ApiException;
+use App\Modules\Enums\ErrorCode;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
@@ -68,6 +70,12 @@ class Handler extends ExceptionHandler
             $responseArray = array_merge($exception->getParam(), ["error_code"=>$exception->getCode(), 'error_message'=>$exception->getMessage()]);
 
             return response()->json($responseArray, $exception->getResponseCode());
+        }
+
+        if ($exception instanceof AuthorizationException){
+            $responseArray = ['error_message'=>'unauthorized'];
+
+            return response()->json($responseArray, '403');
         }
 
         return parent::render($request, $exception);

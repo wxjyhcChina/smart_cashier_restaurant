@@ -35,16 +35,10 @@ return [
             'updated_password'    => '用户密码已成功更新。',
         ],
 
-        'card' => [
-            'created' => 'IC卡添加成功.',
-            'updated' => 'IC卡更新成功.',
-            'imported' => 'IC卡导入成功.',
-        ],
-
-        'device' => [
-            'created' => '设备添加成功.',
-            'updated' => '设备更新成功.',
-            'imported' => '设备导入成功.',
+        'department' => [
+            'created' => '部门添加成功.',
+            'updated' => '部门更新成功.',
+            'imported' => '部门导入成功.',
         ],
     ],
 

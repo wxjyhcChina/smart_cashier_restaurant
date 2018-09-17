@@ -47,7 +47,6 @@ class CardController extends Controller
     public function create(ManageCardRequest $request)
     {
         //
-        return view('backend.card.create');
     }
 
     /**
@@ -60,27 +59,6 @@ class CardController extends Controller
     public function store(StoreCardRequest $request)
     {
         //
-        $input = $request->all();
-
-        $this->cardRepo->create($input);
-
-        return redirect()->route('admin.card.index')->withFlashSuccess(trans('alerts.backend.card.created'));
-    }
-
-    /**
-     * @param ManageCardRequest $request
-     * @return mixed
-     */
-    public function import(ManageCardRequest $request)
-    {
-        $file = Input::file('xls');
-        Excel::load($file, function($reader) {
-            $cards = $reader->all();
-
-            $this->cardRepo->createMultipleCards($cards->toArray());
-        });
-
-        return redirect()->route('admin.card.index')->withFlashSuccess(trans('alerts.backend.card.imported'));
     }
 
     /**
@@ -106,7 +84,6 @@ class CardController extends Controller
     public function edit(Card $card, ManageCardRequest $request)
     {
         //
-        return view('backend.card.edit')->withCard($card);
     }
 
     /**
@@ -120,23 +97,6 @@ class CardController extends Controller
     public function update(Card $card, StoreCardRequest $request)
     {
         //
-        $this->cardRepo->update($card, $request->all());
-
-        return redirect()->route('admin.card.index')->withFlashSuccess(trans('alerts.backend.card.created'));
-    }
-
-    /**
-     * @param Card $card
-     * @param $status
-     * @param ManageCardRequest $request
-     * @return mixed
-     * @throws GeneralException
-     */
-    public function mark(Card $card, $status, ManageCardRequest $request)
-    {
-        $this->cardRepo->mark($card, $status);
-
-        return redirect()->back()->withFlashSuccess(trans('alerts.backend.card.updated'));
     }
 
 

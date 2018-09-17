@@ -60,6 +60,15 @@
             </li>
             @endauth
 
+            @permission('manage-department')
+            <li class="{{ active_class(Active::checkUriPattern('admin/department*')) }}">
+                <a href="{{ route('admin.department.index') }}">
+                    <i class="fa fa-users"></i>
+                    <span>{{ trans('menus.backend.department.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
             @permission('manage-card')
             <li class="{{ active_class(Active::checkUriPattern('admin/card*')) }}">
                 <a href="{{ route('admin.card.index') }}">

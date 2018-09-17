@@ -37,24 +37,18 @@ return [
             ],
         ],
 
-        'restaurant' => [
-            'title' => '餐厅管理',
-            'all' => '所有餐厅',
-            'create' => '创建餐厅',
-        ],
-
         'card' => [
             'title' => 'IC卡管理',
-            'all' => '所有IC卡',
-            'create' => '创建IC卡',
-            'import' => '导入IC卡',
         ],
 
         'device' => [
             'title' => '设备管理',
-            'all' => '所有设备',
-            'create' => '创建设备',
-            'import' => '导入设备',
+        ],
+
+        'department' => [
+            'title' => '部门管理',
+            'all' => '所有部门',
+            'create' => '创建部门',
         ],
 
         'log-viewer' => [

@@ -166,6 +166,11 @@ return [
             'device' => [
                 'serial_id' => '设备串号',
             ],
+
+            'department' => [
+                'code' => '部门编码',
+                'name' => '部门名'
+            ]
         ],
 
         'frontend' => [

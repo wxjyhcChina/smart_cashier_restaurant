@@ -54,17 +54,12 @@ return [
             ],
         ],
 
-        'card' => [
-            'mark_error' => '更新IC卡失败，请稍后重试',
-            'update_error' => '更新IC卡失败，请稍后重试',
-            'create_error' => '创建IC卡失败，请稍后重试',
+        'department' => [
+            'mark_error' => '更新部门失败，请稍后重试',
+            'update_error' => '更新部门失败，请稍后重试',
+            'create_error' => '创建部门失败，请稍后重试',
         ],
 
-        'device' => [
-            'mark_error' => '更新设备失败，请稍后重试',
-            'update_error' => '更新设备失败，请稍后重试',
-            'create_error' => '创建设备失败，请稍后重试',
-        ],
     ],
 
     'frontend' => [

@@ -3,15 +3,16 @@
 namespace App\Providers;
 
 use App\Modules\Models\Card\Card;
+use App\Modules\Models\Department\Department;
 use App\Modules\Models\Device\Device;
 use App\Policies\CardPolicy;
+use App\Policies\DepartmentPolicy;
 use App\Policies\DevicePolicy;
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 /**
  * Class RestaurantAuthServiceProvider.
  */
-class RestaurantAuthServiceProvider extends ServiceProvider
+class RestaurantAuthServiceProvider extends AuthServiceProvider
 {
     /**
      * The policy mappings for the application.
@@ -21,6 +22,7 @@ class RestaurantAuthServiceProvider extends ServiceProvider
     protected $policies = [
         //
         Card::class => CardPolicy::class,
-        Device::class => DevicePolicy::class
+        Device::class => DevicePolicy::class,
+        Department::class => DepartmentPolicy::class
     ];
 }
