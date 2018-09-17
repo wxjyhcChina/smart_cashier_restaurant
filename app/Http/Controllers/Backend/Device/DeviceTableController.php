@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Device;
 use App\Repositories\Backend\Device\DeviceRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class DeviceTableController extends Controller
@@ -29,9 +30,11 @@ class DeviceTableController extends Controller
      */
     public function __invoke()
     {
-        return DataTables::of($this->deviceRepo->getForDataTable())
+        $user = Auth::User();
+
+        return DataTables::of($this->deviceRepo->getByRestaurantQuery($user->restaurant_id))
             ->addColumn('actions', function ($device) {
-                return $device->action_buttons;
+                return $device->restaurant_action_buttons;
             })
             ->rawColumns(['actions'])
             ->make(true);

@@ -205,6 +205,7 @@ return [
         App\Access\Provider\AccessServiceProvider::class,
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        App\Providers\RestaurantAuthServiceProvider::class,
         App\Providers\BladeServiceProvider::class,
         //App\Providers\BroadcastServiceProvider::class,
         App\Providers\ComposerServiceProvider::class,

@@ -52,4 +52,12 @@ trait DeviceAttribute
             $this->edit_button.
             $this->status_button;
     }
+
+    /**
+     * @return string
+     */
+    public function getRestaurantActionButtonsAttribute()
+    {
+
+    }
 }

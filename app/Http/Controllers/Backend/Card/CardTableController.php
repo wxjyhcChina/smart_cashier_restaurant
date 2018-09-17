@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Card;
 
 use App\Http\Controllers\Controller;
 use App\Repositories\Backend\Card\CardRepository;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class CardTableController extends Controller
@@ -22,12 +23,17 @@ class CardTableController extends Controller
         $this->cardRepo = $cardRepo;
     }
 
-
+    /**
+     * @return mixed
+     * @throws \Exception
+     */
     public function __invoke()
     {
-        return DataTables::of($this->cardRepo->getForDataTable())
+        $user = Auth::User();
+
+        return DataTables::of($this->cardRepo->getByRestaurantQuery($user->restaurant_id))
             ->addColumn('actions', function ($card) {
-                return $card->action_buttons;
+                return $card->restaurant_action_buttons;
             })
             ->rawColumns(['actions'])
             ->make(true);

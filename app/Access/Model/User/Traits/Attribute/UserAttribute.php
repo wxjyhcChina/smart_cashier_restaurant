@@ -71,7 +71,7 @@ trait UserAttribute
             $size = config('gravatar.default.size');
         }
 
-        return gravatar()->get($this->username.'@boosal.com', ['size' => $size]);
+        return gravatar()->get($this->username.'boosal.com', ['size' => $size]);
     }
 
     /**

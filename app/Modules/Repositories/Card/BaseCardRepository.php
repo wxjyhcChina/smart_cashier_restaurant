@@ -16,4 +16,10 @@ class BaseCardRepository extends BaseRepository
      */
     const MODEL = Card::class;
 
+
+    public function getByRestaurantQuery($restaurant_id)
+    {
+        return $this->query()->where('restaurant_id', $restaurant_id);
+    }
+
 }
