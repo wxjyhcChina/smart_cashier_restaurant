@@ -138,6 +138,19 @@ return [
                 'created_at' => '创建时间',
             ]
         ],
+
+        'shop' => [
+            'management' => '子商户管理',
+            'active' => '所有子商户',
+            'edit' => '编辑子商户',
+            'create' => '创建子商户',
+
+            'table' => [
+                'id' => '编号',
+                'name' => '子商户名',
+                'created_at' => '创建时间',
+            ]
+        ],
     ],
 
     'frontend' => [

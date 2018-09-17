@@ -69,6 +69,15 @@
             </li>
             @endauth
 
+            @permission('manage-shop')
+            <li class="{{ active_class(Active::checkUriPattern('admin/shop*')) }}">
+                <a href="{{ route('admin.shop.index') }}">
+                    <i class="fa fa-map-o"></i>
+                    <span>{{ trans('menus.backend.shop.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
             @permission('manage-card')
             <li class="{{ active_class(Active::checkUriPattern('admin/card*')) }}">
                 <a href="{{ route('admin.card.index') }}">

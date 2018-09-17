@@ -170,6 +170,10 @@ return [
             'department' => [
                 'code' => '部门编码',
                 'name' => '部门名'
+            ],
+
+            'shop' => [
+                'name' => '子商户名'
             ]
         ],
 

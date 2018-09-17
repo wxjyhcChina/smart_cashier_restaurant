@@ -66,7 +66,7 @@ class DepartmentController extends Controller
 
         $this->departmentRepo->create($input);
 
-        return redirect()->route('admin.department.index')->withFlashSuccess(trans('alerts.backend.card.created'));
+        return redirect()->route('admin.department.index')->withFlashSuccess(trans('alerts.backend.department.created'));
     }
 
     /**
@@ -107,7 +107,7 @@ class DepartmentController extends Controller
         //
         $this->departmentRepo->update($department, $request->all());
 
-        return redirect()->route('admin.department.index')->withFlashSuccess(trans('alerts.backend.department.created'));
+        return redirect()->route('admin.department.index')->withFlashSuccess(trans('alerts.backend.department.updated'));
     }
 
     /**
@@ -123,6 +123,7 @@ class DepartmentController extends Controller
 
         return redirect()->back()->withFlashSuccess(trans('alerts.backend.department.updated'));
     }
+
     /**
      * Remove the specified resource from storage.
      *

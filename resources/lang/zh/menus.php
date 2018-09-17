@@ -51,6 +51,13 @@ return [
             'create' => '创建部门',
         ],
 
+        'shop' => [
+            'title' => '子商户管理',
+            'all' => '所有子商户',
+            'create' => '创建子商户',
+        ],
+
+
         'log-viewer' => [
             'main'      => '日志查看器',
             'dashboard' => '指示板',
