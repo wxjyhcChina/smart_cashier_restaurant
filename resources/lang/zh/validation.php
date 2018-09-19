@@ -174,7 +174,14 @@ return [
 
             'shop' => [
                 'name' => '子商户名'
-            ]
+            ],
+
+            'dinningTime' => [
+                'name' => '名称',
+                'time' => '用餐时间',
+                'start_time' => '开始时间',
+                'end_time' => '结束时间',
+            ],
         ],
 
         'frontend' => [

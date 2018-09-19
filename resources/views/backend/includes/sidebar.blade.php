@@ -78,6 +78,15 @@
             </li>
             @endauth
 
+            @permission('manage-dinning-time')
+            <li class="{{ active_class(Active::checkUriPattern('admin/dinningTime*')) }}">
+                <a href="{{ route('admin.dinningTime.index') }}">
+                    <i class="fa fa-map-o"></i>
+                    <span>{{ trans('menus.backend.dinningTime.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
             @permission('manage-card')
             <li class="{{ active_class(Active::checkUriPattern('admin/card*')) }}">
                 <a href="{{ route('admin.card.index') }}">

@@ -151,6 +151,20 @@ return [
                 'created_at' => '创建时间',
             ]
         ],
+
+        'dinningTime' => [
+            'management' => '用餐时间管理',
+            'active' => '所有用餐时间',
+            'edit' => '编辑用餐时间',
+            'create' => '创建用餐时间',
+
+            'table' => [
+                'id' => '编号',
+                'name' => '名称',
+                'start_time' => '开始时间',
+                'end_time' => '结束时间',
+            ]
+        ],
     ],
 
     'frontend' => [

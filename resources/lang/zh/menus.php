@@ -57,6 +57,12 @@ return [
             'create' => '创建子商户',
         ],
 
+        'dinningTime' => [
+            'title' => '用餐时间管理',
+            'all' => '所有用餐时间',
+            'create' => '创建用餐时间',
+        ],
+
 
         'log-viewer' => [
             'main'      => '日志查看器',

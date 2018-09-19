@@ -46,6 +46,12 @@ return [
             'updated' => '子商户更新成功.',
             'imported' => '子商户导入成功.',
         ],
+
+        'dinningTime' => [
+            'created' => '用餐时间添加成功.',
+            'updated' => '用餐时间更新成功.',
+            'imported' => '用餐时间导入成功.',
+        ],
     ],
 
     'frontend' => [
