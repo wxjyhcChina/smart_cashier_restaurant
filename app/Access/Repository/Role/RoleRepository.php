@@ -3,6 +3,7 @@
 namespace App\Access\Repository\Role;
 
 use App\Access\Model\Role\Role;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\GeneralException;
 use App\Repositories\BaseRepository;
@@ -29,8 +30,11 @@ class RoleRepository extends BaseRepository
      */
     public function getAll($order_by = 'sort', $sort = 'asc')
     {
+        $user = Auth::user();
+
         return $this->query()
             ->with('users', 'permissions')
+            ->where('restaurant_id', $user->restaurant_id)
             ->orderBy($order_by, $sort)
             ->get();
     }
@@ -40,8 +44,11 @@ class RoleRepository extends BaseRepository
      */
     public function getForDataTable()
     {
+        $user = Auth::user();
+
         return $this->query()
             ->with('users', 'permissions')
+            ->where('restaurant_id', $user->restaurant_id)
             ->select([
                 config('access.roles_table').'.id',
                 config('access.roles_table').'.name',
@@ -59,7 +66,9 @@ class RoleRepository extends BaseRepository
      */
     public function create(array $input)
     {
-        if ($this->query()->where('name', $input['name'])->first()) {
+        $user = Auth::user();
+
+        if ($this->query()->where('name', $input['name'])->where('restaurant_id', $user->restaurant_id)->first()) {
             throw new GeneralException(trans('exceptions.backend.access.roles.already_exists'));
         }
 

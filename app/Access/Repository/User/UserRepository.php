@@ -3,6 +3,7 @@
 namespace App\Access\Repository\User;
 
 use App\Access\Model\User\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\GeneralException;
 use App\Repositories\BaseRepository;
@@ -86,12 +87,14 @@ class UserRepository extends BaseRepository
      */
     public function getForDataTable($status = 1, $trashed = false)
     {
+        $user = Auth::user();
         /**
          * Note: You must return deleted_at or the User getActionButtonsAttribute won't
          * be able to differentiate what buttons to show for each row.
          */
         $dataTableQuery = $this->query()
             ->with('roles')
+            ->where('restaurant_id', $user->restaurant_id)
             ->select([
                 config('access.users_table').'.id',
                 config('access.users_table').'.username',
