@@ -122,6 +122,7 @@ return [
                 'number' => 'IC卡号',
                 'internal_number' => 'IC卡内部编码',
                 'status' => '状态',
+                'created_at' => '创建时间',
             ]
         ],
 
@@ -163,6 +164,38 @@ return [
                 'name' => '名称',
                 'start_time' => '开始时间',
                 'end_time' => '结束时间',
+            ]
+        ],
+
+        'customer' => [
+            'management' => '卡用户管理',
+            'active' => '所有卡用户',
+            'edit' => '编辑卡用户',
+            'create' => '创建卡用户',
+            'selectCard' => '选择IC卡',
+
+            'table' => [
+                'id' => '编号',
+                'user_name' => '用户名',
+                'id_license' => '身份证号码',
+                'birthday' => '生日',
+                'department' => '部门',
+                'consume_category' => '消费类别',
+                'card' => '绑定卡号',
+                'created_at' => '创建时间',
+            ]
+        ],
+
+        'consumeCategory' => [
+            'management' => '消费类别管理',
+            'active' => '所有消费类别',
+            'edit' => '编辑消费类别',
+            'create' => '创建消费类别',
+
+            'table' => [
+                'id' => '编号',
+                'name' => '类别名',
+                'created_at' => '创建时间',
             ]
         ],
     ],

@@ -63,6 +63,18 @@ return [
             'create' => '创建用餐时间',
         ],
 
+        'consumeCategory' => [
+            'title' => '消费类别管理',
+            'all' => '所有消费类别',
+            'create' => '创建消费类别',
+        ],
+
+        'customer' => [
+            'title' => '卡用户管理',
+            'all' => '所有卡用户',
+            'create' => '创建卡用户',
+        ],
+
 
         'log-viewer' => [
             'main'      => '日志查看器',

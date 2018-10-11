@@ -81,8 +81,26 @@
             @permission('manage-dinning-time')
             <li class="{{ active_class(Active::checkUriPattern('admin/dinningTime*')) }}">
                 <a href="{{ route('admin.dinningTime.index') }}">
-                    <i class="fa fa-map-o"></i>
+                    <i class="fa fa-calendar"></i>
                     <span>{{ trans('menus.backend.dinningTime.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-consume-category')
+            <li class="{{ active_class(Active::checkUriPattern('admin/consumeCategory*')) }}">
+                <a href="{{ route('admin.consumeCategory.index') }}">
+                    <i class="fa fa-bars"></i>
+                    <span>{{ trans('menus.backend.consumeCategory.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-customer')
+            <li class="{{ active_class(Active::checkUriPattern('admin/customer*')) }}">
+                <a href="{{ route('admin.customer.index') }}">
+                    <i class="fa fa-user"></i>
+                    <span>{{ trans('menus.backend.customer.title') }}</span>
                 </a>
             </li>
             @endauth

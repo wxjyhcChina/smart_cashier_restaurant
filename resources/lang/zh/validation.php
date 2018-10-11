@@ -182,6 +182,19 @@ return [
                 'start_time' => '开始时间',
                 'end_time' => '结束时间',
             ],
+
+            'customer' => [
+                'user_name' => '用户名',
+                'id_license' => '身份证号码',
+                'birthday' => '生日',
+                'department' => '部门',
+                'consume_category' => '消费类别',
+                'card' => 'IC卡'
+            ],
+
+            'consumeCategory' => [
+                'name' => '类别名'
+            ],
         ],
 
         'frontend' => [

@@ -20,5 +20,15 @@ use Illuminate\Support\Facades\Log;
  */
 class CardRepository extends BaseCardRepository
 {
-
+    /**
+     * @param $restaurant_id
+     * @return mixed
+     */
+    public function availableCard($restaurant_id)
+    {
+        return $this->query()
+            ->where('restaurant_id', $restaurant_id)
+            ->whereNull('customer_id');
+    }
+    
 }

@@ -67,10 +67,22 @@ return [
         ],
 
         'dinningTime' => [
-            'mark_error' => '更新部用餐时间失败，请稍后重试',
+            'mark_error' => '更新用餐时间失败，请稍后重试',
             'update_error' => '更新用餐时间失败，请稍后重试',
             'create_error' => '创建用餐时间失败，请稍后重试',
             'time_error' => '用餐时间有冲突，请检查后重试',
+        ],
+
+        'customer' => [
+            'mark_error' => '更新卡用户失败，请稍后重试',
+            'update_error' => '更新卡用户失败，请稍后重试',
+            'create_error' => '创建卡用户失败，请稍后重试',
+        ],
+
+        'consumeCategory' => [
+            'mark_error' => '更新消费类别失败，请稍后重试',
+            'update_error' => '更新消费类别失败，请稍后重试',
+            'create_error' => '创建消费类别失败，请稍后重试',
         ],
     ],
 

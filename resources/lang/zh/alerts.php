@@ -52,6 +52,16 @@ return [
             'updated' => '用餐时间更新成功.',
             'imported' => '用餐时间导入成功.',
         ],
+
+        'customer' => [
+            'created' => '卡用户添加成功.',
+            'updated' => '卡用户更新成功.',
+        ],
+
+        'consumeCategory' => [
+            'created' => '消费类别添加成功.',
+            'updated' => '消费类别更新成功.',
+        ],
     ],
 
     'frontend' => [
