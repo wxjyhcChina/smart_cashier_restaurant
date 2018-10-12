@@ -11,10 +11,14 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    public function responseSuccess($params = array())
+    public function responseSuccess($params = null)
     {
-        $responseArray = array_merge($params, ["error_code"=>0]);
-        return response()->json($responseArray);
+        if ($params == null)
+        {
+            $params = new \stdClass();
+        }
+
+        return response()->json($params);
     }
 
     public function responseSuccessWithObject($obj)
@@ -28,10 +32,8 @@ class Controller extends BaseController
         }
         else
         {
-            $obj = array();
+            $obj = new \stdClass();
         }
-
-        $obj['error_code'] = 0;
 
         return response()->json($obj);
     }

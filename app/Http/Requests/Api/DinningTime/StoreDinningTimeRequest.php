@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Backend\DinningTime;
+namespace App\Http\Requests\Api\DinningTime;
 
-use App\Http\Requests\Request;
+use App\Http\Requests\ApiBaseRequest;
 
-class StoreDinningTimeRequest extends Request
+class StoreDinningTimeRequest extends ApiBaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreDinningTimeRequest extends Request
      */
     public function authorize()
     {
-        return access()->allow('manage-dinning-time');
+        return true;
     }
 
     /**
@@ -31,3 +31,4 @@ class StoreDinningTimeRequest extends Request
         ];
     }
 }
+

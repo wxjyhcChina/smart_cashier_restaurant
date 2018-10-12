@@ -3,6 +3,9 @@
 namespace App\Access\Repository\User;
 
 use App\Access\Model\User\User;
+use App\Exceptions\Api\ApiException;
+use App\Http\Middleware\AuthUtil;
+use App\Modules\Enums\ErrorCode;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\GeneralException;
@@ -21,6 +24,8 @@ use App\Notifications\Backend\Access\UserAccountActive;
 use App\Access\Repository\Role\RoleRepository;
 use App\Events\Backend\Access\User\UserPermanentlyDeleted;
 use App\Notifications\Frontend\Auth\UserNeedsConfirmation;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 /**
  * Class UserRepository.
@@ -433,5 +438,115 @@ class UserRepository extends BaseRepository
         $user->status = isset($input['status']) ? 1 : 0;
 
         return $user;
+    }
+
+    /**
+     * @param $credentials
+     * @return array
+     * @throws ApiException
+     */
+    public function login($credentials)
+    {
+        try {
+            // attempt to verify the credentials and create a token for the user
+            if (! $token = Auth('api')->attempt($credentials)) {
+                throw new ApiException(ErrorCode::LOGIN_FAILED, trans('api.error.login_failed'));
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            throw new ApiException(ErrorCode::CREATE_TOKEN_FAILED, trans('api.error.create_token_failed'));
+        }
+
+        $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
+        $token = 'Bearer '.$token;
+
+        $user = Auth('api')->User();
+        $user_id = $user->id;
+
+        // all good so return the token
+        return compact('token', 'expire', 'user_id');
+    }
+
+    /**
+     * @return array
+     * @throws ApiException
+     */
+    public function refreshToken()
+    {
+        try{
+            $old_token = Auth('api')->getToken();
+            $token = Auth('api')->refresh($old_token);
+        }
+        catch (TokenExpiredException $e) {
+            throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), array());
+        } catch (JWTException $e) {
+            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), array());
+        }
+
+        $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
+        $token = 'Bearer '.$token;
+
+        // all good so return the token
+        return compact('token', 'expire');
+    }
+
+    private function guardStr()
+    {
+        return 'api';
+    }
+
+    /**
+     * @return array
+     * @throws ApiException
+     */
+    private function validateTokenInternal()
+    {
+        $valid = true;
+        try{
+            $token = Auth('api')->getToken();
+            AuthUtil::checkOrFail($this->guardStr());
+        }
+        catch (TokenExpiredException $e) {
+            $valid = false;
+            try{
+                $token = Auth('api')->refresh();
+                Auth('api')->setToken($token);
+                AuthUtil::checkOrFail($this->guardStr());
+            }
+            catch (TokenExpiredException $e){
+                throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), array());
+            }
+            catch (JWTException $e){
+                throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), array());
+            }
+        } catch (JWTException $e) {
+            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), array());
+        }
+
+        $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
+        $token = 'Bearer '.$token;
+
+        // all good so return the token
+        return compact('valid', 'token', 'expire');
+    }
+
+    /**
+     * @return array
+     * @throws ApiException
+     */
+    public function validateToken()
+    {
+        $ret = $this->validateTokenInternal();
+
+        return $ret;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function logout()
+    {
+        Auth('api')->invalidate();
+        return true;
     }
 }

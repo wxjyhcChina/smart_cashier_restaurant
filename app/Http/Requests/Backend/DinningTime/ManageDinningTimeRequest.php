@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Backend\Department;
+namespace App\Http\Requests\Backend\DinningTime;
 
 use App\Http\Requests\Request;
 

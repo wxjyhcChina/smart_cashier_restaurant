@@ -10,11 +10,12 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Access\Model\User\Traits\UserSendPasswordReset;
 use App\Access\Model\User\Traits\Attribute\UserAttribute;
 use App\Access\Model\User\Traits\Relationship\UserRelationship;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 /**
  * Class User.
  */
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use UserScope,
         UserAccess,
@@ -63,5 +64,27 @@ class User extends Authenticatable
     {
         parent::__construct($attributes);
         $this->table = config('access.users_table');
+    }
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [
+            'type' => 'restaurant'
+        ];
     }
 }

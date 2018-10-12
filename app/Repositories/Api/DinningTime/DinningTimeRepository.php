@@ -6,7 +6,7 @@
  * Time: 16:33
  */
 
-namespace App\Repositories\Backend\DinningTime;
+namespace App\Repositories\Api\DinningTime;
 
 use App\Modules\Repositories\DinningTime\BaseDinningTimeRepository;
 

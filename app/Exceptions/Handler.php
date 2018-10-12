@@ -67,9 +67,16 @@ class Handler extends ExceptionHandler
          * Api Exceptions
          */
         if ($exception instanceof ApiException){
-            $responseArray = array_merge($exception->getParam(), ["error_code"=>$exception->getCode(), 'error_message'=>$exception->getMessage()]);
+            if ($request->is('api/*'))
+            {
+                $responseArray = array_merge($exception->getParam(), ["error_code"=>$exception->getCode(), 'error_message'=>$exception->getMessage()]);
 
-            return response()->json($responseArray, $exception->getResponseCode());
+                return response()->json($responseArray, $exception->getResponseCode());
+            }
+            else
+            {
+                return redirect()->back()->withInput()->withFlashDanger($exception->getMessage());
+            }
         }
 
         if ($exception instanceof AuthorizationException){

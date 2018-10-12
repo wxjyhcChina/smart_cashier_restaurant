@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Modules\Enums\ErrorCode;
 use App\Exceptions\Api\ApiException;
+use Illuminate\Contracts\Validation\Validator;
 
 /**
  * Class Request
@@ -11,16 +12,14 @@ use App\Exceptions\Api\ApiException;
  */
 class ApiBaseRequest extends Request
 {
-    //
+
     /**
-     * override response method
-     * @param array $errors
+     * @param Validator $validator
      * @throws ApiException
-     * @return null
      */
-    public function response(array $errors)
+    protected function failedValidation(Validator $validator)
     {
-        $error_values = array_values($errors);
-        throw new ApiException(ErrorCode::INPUT_INCOMPLETE, $error_values[0][0]);
+        $errors = $validator->errors();
+        throw new ApiException(ErrorCode::INPUT_INCOMPLETE, $errors->first());
     }
 }

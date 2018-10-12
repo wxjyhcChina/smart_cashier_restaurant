@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Backend\DinningTime;
 
 use App\Exceptions\GeneralException;
-use App\Http\Requests\Backend\Department\ManageDinningTimeRequest;
-use App\Http\Requests\Backend\Department\StoreDinningTimeRequest;
+use App\Http\Requests\Backend\DinningTime\ManageDinningTimeRequest;
+use App\Http\Requests\Backend\DinningTime\StoreDinningTimeRequest;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Repositories\Backend\DinningTime\DinningTimeRepository;
 use Illuminate\Http\Request;

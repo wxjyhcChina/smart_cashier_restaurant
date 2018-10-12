@@ -71,6 +71,9 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 //        'timeout'    => \App\Http\Middleware\SessionTimeout::class,
 
+        'api.auth' => \App\Http\Middleware\ApiAuthenticate::class,
+        'cors' => \App\Http\Middleware\Cors::class,
+
         /*
          * Access Middleware
          */

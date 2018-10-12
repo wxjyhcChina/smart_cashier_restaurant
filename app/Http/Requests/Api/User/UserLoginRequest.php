@@ -1,10 +1,16 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: billy
+ * Date: 22/02/2017
+ * Time: 8:45 PM
+ */
 
-namespace App\Http\Requests\Backend\DinningTime;
+namespace App\Http\Requests\Api\User;
 
-use App\Http\Requests\Request;
+use App\Http\Requests\ApiBaseRequest;
 
-class StoreDinningTimeRequest extends Request
+class UserLoginRequest extends ApiBaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +19,7 @@ class StoreDinningTimeRequest extends Request
      */
     public function authorize()
     {
-        return access()->allow('manage-dinning-time');
+        return true;
     }
 
     /**
@@ -25,9 +31,8 @@ class StoreDinningTimeRequest extends Request
     {
         return [
             //
-            'name' => 'required',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'username' => 'required',
+            'password' => 'required'
         ];
     }
 }
