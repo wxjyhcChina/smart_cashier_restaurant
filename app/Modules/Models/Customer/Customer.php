@@ -11,4 +11,14 @@ class Customer extends Model
     use CustomerAttribute, CustomerRelationship;
 
     protected $fillable = ['restaurant_id', 'user_name', 'telephone', 'id_license', 'birthday', 'department_id', 'consume_category_id', 'enabled'];
+
+    protected $appends = ['balance'];
+
+    /**
+     * @return int
+     */
+    public function getBalanceAttribute()
+    {
+        return $this->account->balance;
+    }
 }
