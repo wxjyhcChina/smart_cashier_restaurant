@@ -36,7 +36,7 @@ class CardRepository extends BaseCardRepository
 
         if ($card == null)
         {
-            throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
+            throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'), 404);
         }
 
         return $card;

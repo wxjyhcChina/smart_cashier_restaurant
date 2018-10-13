@@ -28,5 +28,6 @@ class ErrorCode
     //dinning time related
     const DINNING_TIME_CONFLICT = "DINNING_TIME_CONFLICT";
 
-
+    //card related
+    const CARD_STATUS_INCORRECT = "CARD_STATUS_INCORRECT";
 }

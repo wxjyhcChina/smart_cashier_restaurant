@@ -450,11 +450,11 @@ class UserRepository extends BaseRepository
         try {
             // attempt to verify the credentials and create a token for the user
             if (! $token = Auth('api')->attempt($credentials)) {
-                throw new ApiException(ErrorCode::LOGIN_FAILED, trans('api.error.login_failed'), 401);
+                throw new ApiException(ErrorCode::LOGIN_FAILED, trans('api.error.login_failed'), 400);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            throw new ApiException(ErrorCode::CREATE_TOKEN_FAILED, trans('api.error.create_token_failed'), 401);
+            throw new ApiException(ErrorCode::CREATE_TOKEN_FAILED, trans('api.error.create_token_failed'), 400);
         }
 
         $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
@@ -478,9 +478,9 @@ class UserRepository extends BaseRepository
             $token = Auth('api')->refresh($old_token);
         }
         catch (TokenExpiredException $e) {
-            throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), 401);
+            throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), 400);
         } catch (JWTException $e) {
-            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), 401);
+            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), 400);
         }
 
         $expire = Auth('api')->setToken($token)->getPayload()->get('exp');

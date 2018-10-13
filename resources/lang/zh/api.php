@@ -29,6 +29,7 @@ return [
         'qr_code_invalid' => '二维码不正确',
 
         'card_not_exist' => '卡不存在',
+        'card_status_incorrect' => '卡状态不正确，请换卡后操作'
     ],
 
     'pay' => [

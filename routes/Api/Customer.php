@@ -1,14 +1,14 @@
 <?php
 
 Route::group([
-    'prefix'  => 'dinningTime',
-    'as' => 'dinningTime.'
+    'prefix'  => 'customers',
+    'as' => 'customers.'
 ], function() {
     Route::group([
         'middleware' => 'apiAuth'
     ], function() {
-        Route::get('/', 'DinningTimeController@index')->name('index');
-        Route::post('/', 'DinningTimeController@create')->name('create');
-        Route::put('/{dinningTime}', 'DinningTimeController@update')->name('update');
+        Route::get('/', 'CustomerController@index')->name('index');
+        Route::post('/', 'CustomerController@create')->name('create');
+        Route::put('/{customer}', 'CustomerController@update')->name('update');
     });
 });

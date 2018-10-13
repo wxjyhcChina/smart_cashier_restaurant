@@ -10,5 +10,5 @@ class Customer extends Model
 {
     use CustomerAttribute, CustomerRelationship;
 
-    protected $fillable = ['restaurant_id', 'user_name', 'id_license', 'birthday', 'department_id', 'consume_category_id', 'enabled'];
+    protected $fillable = ['restaurant_id', 'user_name', 'telephone', 'id_license', 'birthday', 'department_id', 'consume_category_id', 'enabled'];
 }

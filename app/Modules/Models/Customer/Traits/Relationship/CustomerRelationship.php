@@ -2,6 +2,7 @@
 
 namespace App\Modules\Models\Customer\Traits\Relationship;
 
+use App\Modules\Enums\CardStatus;
 use App\Modules\Models\Card\Card;
 use App\Modules\Models\ConsumeCategory\ConsumeCategory;
 use App\Modules\Models\Department\Department;
@@ -14,7 +15,7 @@ trait CustomerRelationship
 {
     public function card()
     {
-        return $this->hasOne(Card::class)->where('status', 1);
+        return $this->hasOne(Card::class)->where('status', CardStatus::ACTIVATED);
     }
 
     public function department()
