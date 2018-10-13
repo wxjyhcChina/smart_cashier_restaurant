@@ -12,7 +12,7 @@ class DinningTime extends Model
 {
     use DinningTimeAttribute, DinningTimeRelationship;
 
-    protected $fillable = ['name', 'start_time', 'end_time'];
+    protected $fillable = ['name', 'start_time', 'end_time', 'enabled'];
 
     protected $table = 'dinning_time';
 

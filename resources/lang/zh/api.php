@@ -10,6 +10,7 @@ return [
     'error' => [
         'database_error' => '数据库更新错误',
         'param_error' => '参数错误',
+        'resource_not_exist' => '资源不存在',
 
         'token_not_provide' => 'token未提供',
         'token_expire' => 'token已经过期',
@@ -27,19 +28,7 @@ return [
 
         'qr_code_invalid' => '二维码不正确',
 
-        'he_cloud_api_error' => '接口错误',
-        'device_not_online' => '当前设备不在线，请稍后重试!',
-        'device_not_exist' => '设备不存在',
-        'not_have_battery' => '没有可用充电宝',
-        'already_have_order' => '当前已经有在使用的充电宝，请归还后再试!',
-        'not_have_order' => '当前没有充电宝订单',
-        'device_create_failed' => '设备创建失败',
-
-        'box_not_exist' => '充电箱不存在',
-        'box_already_binded' => '充电箱已经被绑定',
-        'box_locked' => '充电箱正忙，请稍后',
-
-        'sn_not_exist' => '二维码不存在',
+        'card_not_exist' => '卡不存在',
     ],
 
     'pay' => [

@@ -28,19 +28,19 @@ class ApiAuthenticate
     public function handle($request, Closure $next, $guard = null)
     {
         if (! $token = Auth('api')->setRequest($request)->getToken()) {
-            throw new ApiException(ErrorCode::TOKEN_NOT_PROVIDED, trans("api.error.token_not_provide"), array());
+            throw new ApiException(ErrorCode::TOKEN_NOT_PROVIDED, trans("api.error.token_not_provide"), 401);
         }
 
         try {
             $payload = AuthUtil::checkOrFail('api');
         } catch (TokenExpiredException $e) {
-            throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), array());
+            throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), 401);
         } catch (JWTException $e) {
-            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), array());
+            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), 401);
         }
 
         if (! $payload) {
-            throw new ApiException(ErrorCode::USER_NOT_EXIST, trans("api.error.user_not_exist"), array());
+            throw new ApiException(ErrorCode::USER_NOT_EXIST, trans("api.error.user_not_exist"), 401);
         }
 
         config()->set('auth.defaults.guard','api');

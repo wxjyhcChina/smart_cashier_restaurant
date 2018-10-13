@@ -11,5 +11,5 @@ class Card extends Model
 {
     use CardAttribute, CardRelationship;
 
-    protected $fillable = ['restaurant_id', 'number', 'internal_number', 'customer_id', 'status', 'enabled'];
+    protected $fillable = ['id', 'restaurant_id', 'customer_id', 'number', 'internal_number', 'customer_id', 'status', 'enabled'];
 }

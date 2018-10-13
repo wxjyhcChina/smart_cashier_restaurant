@@ -7,6 +7,7 @@ use App\Modules\Enums\ErrorCode;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -76,6 +77,18 @@ class Handler extends ExceptionHandler
             else
             {
                 return redirect()->back()->withInput()->withFlashDanger($exception->getMessage());
+            }
+        }
+
+        if ($exception instanceof ModelNotFoundException)
+        {
+            if ($request->is('api/*'))
+            {
+                $responseArray = [
+                    'error_code' => ErrorCode::RESOURCE_NOT_FOUND,
+                    'error_message'=> trans('api.error.resource_not_exist')
+                ];
+                return response()->json($responseArray, 404);
             }
         }
 

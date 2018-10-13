@@ -6,15 +6,15 @@
  * Time: 16:33
  */
 
-namespace App\Repositories\Api\DinningTime;
+namespace App\Repositories\Api\ConsumeCategory;
 
-use App\Modules\Repositories\DinningTime\BaseDinningTimeRepository;
+use App\Modules\Repositories\ConsumeCategory\BaseConsumeCategoryRepository;
 
 /**
- * Class DinningTimeRepository
- * @package App\Repositories\Backend\DinningTime
+ * Class ConsumeCategoryRepository
+ * @package App\Repositories\Backend\ConsumeCategory
  */
-class DinningTimeRepository extends BaseDinningTimeRepository
+class ConsumeCategoryRepository extends BaseConsumeCategoryRepository
 {
     /**
      * @param $restaurant_id

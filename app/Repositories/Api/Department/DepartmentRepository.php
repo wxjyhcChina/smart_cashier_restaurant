@@ -6,15 +6,15 @@
  * Time: 16:33
  */
 
-namespace App\Repositories\Api\DinningTime;
+namespace App\Repositories\Api\Department;
 
-use App\Modules\Repositories\DinningTime\BaseDinningTimeRepository;
+use App\Modules\Repositories\Department\BaseDepartmentRepository;
 
 /**
- * Class DinningTimeRepository
- * @package App\Repositories\Backend\DinningTime
+ * Class DepartmentRepository
+ * @package App\Repositories\Backend\Department
  */
-class DinningTimeRepository extends BaseDinningTimeRepository
+class DepartmentRepository extends BaseDepartmentRepository
 {
     /**
      * @param $restaurant_id

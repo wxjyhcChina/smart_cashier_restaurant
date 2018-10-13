@@ -13,6 +13,8 @@ class ErrorCode
     const DATABASE_ERROR = "DATABASE_ERROR";
     const PARAM_ERROR = "PARAM_ERROR";
 
+    const RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND";
+
     //user_related
     const TOKEN_NOT_PROVIDED = "TOKEN_NOT_PROVIDED";
     const TOKEN_EXPIRE = "TOKEN_EXPIRE";
@@ -25,4 +27,6 @@ class ErrorCode
 
     //dinning time related
     const DINNING_TIME_CONFLICT = "DINNING_TIME_CONFLICT";
+
+
 }

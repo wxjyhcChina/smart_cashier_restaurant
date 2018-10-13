@@ -31,15 +31,15 @@ class ApiException extends Exception
      * ApiException constructor.
      * @param string $code
      * @param int $message
-     * @param array $param
      * @param int $response_code
+     * @param array $param
      */
-    public function __construct($code, $message, $param=array(), $response_code=200)
+    public function __construct($code, $message, $response_code=400, $param=array())
     {
         $this->code = $code;
         $this->message = $message;
-        $this->param = $param;
         $this->response_code = $response_code;
+        $this->param = $param;
     }
 
     /**

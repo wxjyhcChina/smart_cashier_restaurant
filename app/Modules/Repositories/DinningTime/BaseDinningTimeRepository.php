@@ -30,14 +30,6 @@ class BaseDinningTimeRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
-    /**
-     * @param $restaurant_id
-     * @return mixed
-     */
-    public function getByRestaurant($restaurant_id)
-    {
-        return $this->getByRestaurantQuery($restaurant_id)->get();
-    }
 
     /**
      * @param $restaurant_id
