@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\DinningTime\StoreDinningTimeRequest;
+use App\Http\Requests\Api\DinningTime\UpdateDinningTimeRequest;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Repositories\Api\DinningTime\DinningTimeRepository;
 use Illuminate\Http\Request;
@@ -81,11 +82,11 @@ class DinningTimeController extends Controller
 
     /**
      * @param DinningTime $dinningTime
-     * @param Request $request
+     * @param UpdateDinningTimeRequest $request
      * @return mixed
      * @throws \App\Exceptions\Api\ApiException
      */
-    public function update(DinningTime $dinningTime, Request $request)
+    public function update(DinningTime $dinningTime, UpdateDinningTimeRequest $request)
     {
         //
         $dinningTime = $this->dinningTimeRepo->update($dinningTime, $request->all());

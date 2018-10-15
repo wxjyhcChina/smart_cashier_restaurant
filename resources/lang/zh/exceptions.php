@@ -90,6 +90,12 @@ return [
             'update_error' => '更新商品失败，请稍后重试',
             'create_error' => '创建商品失败，请稍后重试',
         ],
+
+        'consumeRule' => [
+            'mark_error' => '更新消费规则失败，请稍后重试',
+            'update_error' => '更新消费规则失败，请稍后重试',
+            'create_error' => '创建消费规则失败，请稍后重试',
+        ],
     ],
 
     'frontend' => [

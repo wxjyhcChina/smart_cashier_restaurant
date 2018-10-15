@@ -6,15 +6,15 @@
  * Time: 16:33
  */
 
-namespace App\Repositories\Api\Customer;
+namespace App\Repositories\Api\ConsumeRule;
 
-use App\Modules\Repositories\Customer\BaseCustomerRepository;
+use App\Modules\Repositories\ConsumeRule\BaseConsumeRuleRepository;
 
 /**
  * Class CustomerRepository
  * @package App\Repositories\Backend\Customer
  */
-class CustomerRepository extends BaseCustomerRepository
+class ConsumeRuleRepository extends BaseConsumeRuleRepository
 {
     /**
      * @param $restaurant_id
@@ -22,9 +22,9 @@ class CustomerRepository extends BaseCustomerRepository
      */
     public function getByRestaurant($restaurant_id)
     {
-        return $this->query()->with('card')
-            ->with('department')
-            ->with('consume_category')
+        return $this->query()
+            ->with('dinning_time')
+            ->with('consume_categories')
             ->where('restaurant_id', $restaurant_id)
             ->get();
     }
