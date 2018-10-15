@@ -10,5 +10,6 @@ Route::group([
         Route::get('/', 'CustomerController@index')->name('index');
         Route::post('/', 'CustomerController@create')->name('create');
         Route::put('/{customer}', 'CustomerController@update')->name('update');
+        Route::get('/{customer}/accountRecords', 'CustomerController@accountRecords')->name('accountRecords');
     });
 });

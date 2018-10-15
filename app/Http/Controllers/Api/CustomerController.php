@@ -57,6 +57,14 @@ class CustomerController extends Controller
     }
 
     /**
+     * @param Request $request
+     */
+    public function accountRecords(Request $request)
+    {
+
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -81,7 +89,7 @@ class CustomerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $idg
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
