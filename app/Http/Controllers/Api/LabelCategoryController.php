@@ -39,9 +39,13 @@ class LabelCategoryController extends Controller
         return $this->responseSuccess($labelCategories);
     }
 
+    /**
+     * @param LabelCategory $labelCategory
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getLabels(LabelCategory $labelCategory)
     {
-        
+        return $this->responseSuccess($this->labelCategoryRepo->getLabels($labelCategory));
     }
 
     /**

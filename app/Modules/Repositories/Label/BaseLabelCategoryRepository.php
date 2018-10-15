@@ -24,4 +24,13 @@ class BaseLabelCategoryRepository extends BaseRepository
     {
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
+
+    /**
+     * @param $labelCategory
+     * @return mixed
+     */
+    public function getLabels($labelCategory)
+    {
+        return $labelCategory->labels;
+    }
 }
