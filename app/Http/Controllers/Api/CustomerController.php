@@ -45,7 +45,7 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\Api\ApiException
      */
-    public function create(StoreCustomerRequest $request)
+    public function store(StoreCustomerRequest $request)
     {
         //
         $input = $request->all();
@@ -62,17 +62,6 @@ class CustomerController extends Controller
     public function accountRecords(Request $request)
     {
 
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**

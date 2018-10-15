@@ -9,4 +9,4 @@ Route::group([
     ], function() {
         Route::get('/', 'ShopController@index')->name('index');
     });
-});g
+});

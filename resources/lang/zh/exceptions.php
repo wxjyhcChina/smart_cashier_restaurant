@@ -84,6 +84,12 @@ return [
             'update_error' => '更新消费类别失败，请稍后重试',
             'create_error' => '创建消费类别失败，请稍后重试',
         ],
+
+        'goods' => [
+            'mark_error' => '更新商品失败，请稍后重试',
+            'update_error' => '更新商品失败，请稍后重试',
+            'create_error' => '创建商品失败，请稍后重试',
+        ],
     ],
 
     'frontend' => [

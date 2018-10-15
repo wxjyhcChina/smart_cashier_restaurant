@@ -45,7 +45,7 @@ class DinningTimeController extends Controller
      * @return mixed
      * @throws \App\Exceptions\Api\ApiException
      */
-    public function create(StoreDinningTimeRequest $request)
+    public function store(StoreDinningTimeRequest $request)
     {
         //
         $input = $request->all();
@@ -54,17 +54,6 @@ class DinningTimeController extends Controller
         $dinningTime = $this->dinningTimeRepo->create($input);
 
         return $this->responseSuccessWithObject($dinningTime);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
