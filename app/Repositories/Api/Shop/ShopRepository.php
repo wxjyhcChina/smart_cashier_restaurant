@@ -6,7 +6,7 @@
  * Time: 16:33
  */
 
-namespace App\Repositories\Backend\Shop;
+namespace App\Repositories\Api\Shop;
 
 use App\Modules\Repositories\Shop\BaseShopRepository;
 
@@ -16,5 +16,12 @@ use App\Modules\Repositories\Shop\BaseShopRepository;
  */
 class ShopRepository extends BaseShopRepository
 {
-
+    /**
+     * @param $restaurant_id
+     * @return mixed
+     */
+    public function getByRestaurant($restaurant_id)
+    {
+        return $this->getByRestaurantQuery($restaurant_id)->get();
+    }
 }
