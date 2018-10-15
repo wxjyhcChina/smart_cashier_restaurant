@@ -40,6 +40,7 @@ class GoodsController extends Controller
         return $this->responseSuccess($goods);
     }
 
+    //TODO:policy
     /**
      * @param Goods $goods
      * @return Goods

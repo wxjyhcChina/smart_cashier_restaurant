@@ -47,6 +47,7 @@ class BaseGoodsRepository extends BaseRepository
      */
     public function create($input)
     {
+        //TODO: check shop/dinning_time
         $goods = $this->createGoodsStub($input);
 
         if ($goods->save())
