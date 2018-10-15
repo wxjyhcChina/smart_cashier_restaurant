@@ -2,12 +2,13 @@
 
 namespace App\Modules\Models\Label;
 
-use Carbon\Carbon;
+use App\Modules\Models\Label\Traits\Attribute\LabelAttribute;
+use App\Modules\Models\Label\Traits\Relationship\LabelRelationship;
 use Illuminate\Database\Eloquent\Model;
 
 class Label extends Model
 {
-    protected $fillable = ['id', 'label_category_id', 'rfid'];
+    use LabelAttribute, LabelRelationship;
 
-    protected $table = 'goods';
+    protected $fillable = ['id', 'label_category_id', 'rfid'];
 }

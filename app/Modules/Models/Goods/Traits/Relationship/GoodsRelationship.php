@@ -2,6 +2,7 @@
 
 namespace App\Modules\Models\Goods\Traits\Relationship;
 use App\Modules\Models\DinningTime\DinningTime;
+use App\Modules\Models\Label\LabelCategory;
 use App\Modules\Models\Shop\Shop;
 
 /**
@@ -24,5 +25,13 @@ trait GoodsRelationship
     public function dinning_time()
     {
         return $this->belongsTo(DinningTime::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function labelCategories()
+    {
+        return $this->hasMany(LabelCategory::class);
     }
 }

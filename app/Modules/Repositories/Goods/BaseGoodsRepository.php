@@ -5,6 +5,7 @@ namespace App\Modules\Repositories\Goods;
 use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Goods\Goods;
+use App\Modules\Models\Label\Label;
 use App\Modules\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -39,6 +40,55 @@ class BaseGoodsRepository extends BaseRepository
         return $goods->load('shop', 'dinning_time');
     }
 
+    /**
+     * @param Goods $goods
+     * @return mixed
+     */
+    public function getLabelCategories(Goods $goods)
+    {
+        return $goods->labelCategories;
+    }
+
+    /**
+     * @param $goods
+     * @param $label
+     * @param bool $overwrite
+     * @return mixed
+     * @throws ApiException
+     */
+    public function storeLabelCategory($goods, $label, $overwrite = false)
+    {
+        $label = Label::where('rfid', $label)->first();
+
+        if ($label == null)
+        {
+            throw new ApiException(ErrorCode::LABEL_NOT_EXIST, trans('api.error.label_not_exist'));
+        }
+
+        $labelCategory = $label->labelCategory;
+        if ($labelCategory == null)
+        {
+            throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
+        }
+
+        if ($labelCategory->goods_id != null)
+        {
+            if ($labelCategory->goods_id == $goods->id)
+            {
+                return $labelCategory;
+            }
+            else if ($overwrite == false)
+            {
+                throw new ApiException(ErrorCode::LABEL_CATEGORY_ALREADY_BINDED, trans('api.error.label_category_already_binded'));
+            }
+        }
+
+        $labelCategory->goods_id = $goods->id;
+        $labelCategory->save();
+
+        return $labelCategory;
+    }
+    
 
     /**
      * @param $input

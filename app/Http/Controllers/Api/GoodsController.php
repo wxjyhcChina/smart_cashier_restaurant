@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Api\Goods\BindLabelCategoryRequest;
 use App\Http\Requests\Api\Goods\StoreGoodsRequest;
 use App\Modules\Models\Goods\Goods;
 use App\Repositories\Api\Goods\GoodsRepository;
@@ -64,6 +65,33 @@ class GoodsController extends Controller
         $goods = $this->goodsRepo->create($input);
 
         return $this->responseSuccessWithObject($goods);
+    }
+
+    /**
+     * @param Goods $goods
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLabelCategories(Goods $goods)
+    {
+        $labelCategories = $this->goodsRepo->getLabelCategories($goods);
+
+        return $this->responseSuccess($labelCategories);
+    }
+
+    /**
+     * @param Goods $goods
+     * @param BindLabelCategoryRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
+     */
+    public function storeLabelCategory(Goods $goods, BindLabelCategoryRequest $request)
+    {
+        $label = $request->get('label');
+        $overwrite = $request->get('overwrite');
+
+        $labelCategory = $this->goodsRepo->storeLabelCategory($goods, $label, $overwrite);
+
+        return $this->responseSuccessWithObject($labelCategory);
     }
 
     /**

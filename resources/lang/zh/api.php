@@ -29,7 +29,11 @@ return [
         'qr_code_invalid' => '二维码不正确',
 
         'card_not_exist' => '卡不存在',
-        'card_status_incorrect' => '卡状态不正确，请换卡后操作'
+        'card_status_incorrect' => '卡状态不正确，请换卡后操作',
+
+        'label_not_exist' => '餐盘不存在',
+        'label_category_not_binded' => '餐盘未绑定类别',
+        'label_category_already_binded' => '餐盘已经绑定其他商品',
     ],
 
     'pay' => [
