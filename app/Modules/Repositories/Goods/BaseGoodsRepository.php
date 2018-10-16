@@ -73,11 +73,11 @@ class BaseGoodsRepository extends BaseRepository
             throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
         }
 
-
         try
         {
             DB::beginTransaction();
 
+            //一个用餐时间一种盘子只能绑定一种商品
             $existingGoods = $labelCategory->goods()->where('dinning_time_id', $goods->dinning_time_id)->first();
 
             if ($existingGoods != null)
