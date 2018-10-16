@@ -27,7 +27,9 @@ class BaseGoodsRepository extends BaseRepository
      */
     public function getByRestaurantQuery($restaurant_id)
     {
-        return $this->query()->where('restaurant_id', $restaurant_id);
+        return $this->query()
+            ->where('restaurant_id', $restaurant_id)
+            ->where('is_temp', 0);
     }
 
 
@@ -160,6 +162,7 @@ class BaseGoodsRepository extends BaseRepository
         $goods->name = $input['name'];
         $goods->price = $input['price'];
         $goods->image = isset($input['image']) ? $input['image'] : '';
+        $goods->is_temp = isset($input['is_temp']) ? $input['is_temp'] : 0;
 
         return $goods;
     }
