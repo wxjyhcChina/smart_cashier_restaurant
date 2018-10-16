@@ -10,4 +10,6 @@ class LabelCategory extends Model
     use LabelCategoryRelationship;
 
     protected $fillable = ['name', 'image'];
+
+    protected $hidden = ['pivot'];
 }

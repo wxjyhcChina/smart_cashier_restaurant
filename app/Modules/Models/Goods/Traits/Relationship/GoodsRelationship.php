@@ -32,6 +32,6 @@ trait GoodsRelationship
      */
     public function labelCategories()
     {
-        return $this->hasMany(LabelCategory::class);
+        return $this->belongsToMany(LabelCategory::class, 'label_category_goods', 'goods_id', 'label_category_id');
     }
 }

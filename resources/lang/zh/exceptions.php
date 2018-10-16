@@ -89,6 +89,7 @@ return [
             'mark_error' => '更新商品失败，请稍后重试',
             'update_error' => '更新商品失败，请稍后重试',
             'create_error' => '创建商品失败，请稍后重试',
+            'bind_error' => '绑定餐盘失败，请稍后重试',
         ],
 
         'consumeRule' => [

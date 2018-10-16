@@ -73,22 +73,46 @@ class BaseGoodsRepository extends BaseRepository
             throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
         }
 
-        if ($labelCategory->goods_id != null)
+
+        try
         {
-            if ($labelCategory->goods_id == $goods->id)
+            DB::beginTransaction();
+
+            $existingGoods = $labelCategory->goods()->where('dinning_time_id', $goods->dinning_time_id)->first();
+
+            if ($existingGoods != null)
             {
-                return $labelCategory;
+                if ($existingGoods->id == $goods->id)
+                {
+                    return $labelCategory;
+                }
+                else if ($overwrite == false)
+                {
+                    throw new ApiException(ErrorCode::LABEL_CATEGORY_ALREADY_BINDED, trans('api.error.label_category_already_binded'));
+                }
+                else
+                {
+                    $labelCategory->goods()->detach($existingGoods->id);
+                }
             }
-            else if ($overwrite == false)
+
+            $labelCategory->goods()->attach($goods->id);
+
+            DB::commit();
+        }
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+
+            if ($exception instanceof ApiException)
             {
-                throw new ApiException(ErrorCode::LABEL_CATEGORY_ALREADY_BINDED, trans('api.error.label_category_already_binded'));
+                throw $exception;
             }
+
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.goods.bind_error'));
         }
 
-        $labelCategory->goods_id = $goods->id;
-        $labelCategory->save();
-
-        return $labelCategory;
+        return $labelCategory->load('goods');
     }
     
 
