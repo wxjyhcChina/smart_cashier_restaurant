@@ -40,7 +40,9 @@ return [
         'label_category_already_binded' => '餐盘已经绑定其他商品',
         'label_category_not_bind_good' => '餐盘类别未绑定商品',
 
-        'goods_not_exist' => '商品不存在'
+        'goods_not_exist' => '商品不存在',
+
+        'order_goods_not_exist' => '订单中不存在商品'
     ],
 
     'pay' => [

@@ -43,4 +43,7 @@ class ErrorCode
 
     //goods related
     const GOODS_NOT_EXIST = 'GOODS_NOT_EXIST';
+
+    //order related
+    const ORDER_GOODS_NOT_EXIST = 'ORDER_GOODS_NOT_EXIST';
 }

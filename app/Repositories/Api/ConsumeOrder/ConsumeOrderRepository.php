@@ -161,6 +161,11 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $discountPrice = bcmul($price, $forceDiscount, 2);
         }
 
+        if (count($goodsArray) == 0)
+        {
+            throw  new ApiException(ErrorCode::ORDER_GOODS_NOT_EXIST, trans('api.error.order_goods_not_exist'));
+        }
+
         $response = [];
         $response['goods_count'] = count($goodsArray);
         $response['dinning_time_id'] = $dinningTime->id;
