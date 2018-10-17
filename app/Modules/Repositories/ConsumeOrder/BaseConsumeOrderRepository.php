@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Repositories\ConsumeOrde;
+namespace App\Modules\Repositories\ConsumeOrder;
 
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Repositories\BaseRepository;
@@ -18,6 +18,8 @@ class BaseConsumeOrderRepository extends BaseRepository
 
     public function getByRestaurantQuery($restaurant_id)
     {
-        return $this->query()->where('restaurant_id', $restaurant_id);
+        return $this->query()
+            ->where('restaurant_id', $restaurant_id)
+            ->with('goods');
     }
 }

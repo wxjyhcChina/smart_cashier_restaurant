@@ -84,7 +84,7 @@ class BaseGoodsRepository extends BaseRepository
             {
                 if ($existingGoods->id == $goods->id)
                 {
-                    return $labelCategory;
+                    return $labelCategory->load('goods');
                 }
                 else if ($overwrite == false)
                 {

@@ -74,4 +74,8 @@ return [
         'api_key' => env('HE_CLOUD_API_KEY'),
         'token' => env('HE_CLOUD_TOKEN'),
     ],
+
+    'order' => [
+        'exclude_time' => env('ORDER_EXCLUDE_TIME')
+    ]
 ];

@@ -12,15 +12,15 @@ class ConsumeOrderController extends Controller
     /**
      * @var ConsumeOrderRepository
      */
-    private $consumeRepo;
+    private $consumeOrderRepo;
 
     /**
      * ConsumeOrderController constructor.
-     * @param $consumeRepo
+     * @param $consumeOrderRepo
      */
-    public function __construct(ConsumeOrderRepository $consumeRepo)
+    public function __construct(ConsumeOrderRepository $consumeOrderRepo)
     {
-        $this->consumeRepo = $consumeRepo;
+        $this->consumeOrderRepo = $consumeOrderRepo;
     }
 
     /**
@@ -33,21 +33,52 @@ class ConsumeOrderController extends Controller
         //
         $user = Auth::User();
 
-        $orders = $this->consumeRepo->getByRestaurant($user->restaurant_id);
+        $orders = $this->consumeOrderRepo->getByRestaurant($user->restaurant_id);
 
         return $this->responseSuccess($orders);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
+     */
+    public function preCreate(Request $request)
+    {
+        $input = $request->all();
+        $input['restaurant_id'] = Auth::User()->restaurant_id;
+
+        $response = $this->consumeOrderRepo->preCreate($input);
+
+        return $this->responseSuccess($response);
+    }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
      */
     public function store(Request $request)
     {
         //
+        $input = $request->all();
+        $user = Auth::User();
+        $input['restaurant_id'] = $user->restaurant_id;
+        $input['restaurant_user_id'] = $user->id;
+
+        $order = $this->consumeOrderRepo->create($input);
+
+        return $this->responseSuccess($order);
+    }
+
+
+    public function latestOrder(Request $request)
+    {
+        $restaurant_id = Auth::User()->restaurant_id;
+
+        $order = $this->consumeOrderRepo->latestOrder($restaurant_id);
+
+        return $this->responseSuccess($order);
     }
 
     /**

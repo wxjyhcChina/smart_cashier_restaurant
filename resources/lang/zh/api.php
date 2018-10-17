@@ -31,11 +31,16 @@ return [
         'card_not_exist' => '卡不存在',
         'card_status_incorrect' => '卡状态不正确，请换卡后操作',
 
+        'not_in_dinning_time' => '当前时间不在用餐时间',
+
         'consume_rule_conflict' => '消费规则时间冲突，请检查后再试',
 
         'label_not_exist' => '餐盘不存在',
         'label_category_not_binded' => '餐盘未绑定类别',
         'label_category_already_binded' => '餐盘已经绑定其他商品',
+        'label_category_not_bind_good' => '餐盘类别未绑定商品',
+
+        'goods_not_exist' => '商品不存在'
     ],
 
     'pay' => [

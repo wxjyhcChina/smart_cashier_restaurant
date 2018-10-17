@@ -27,6 +27,7 @@ class ErrorCode
 
     //dinning time related
     const DINNING_TIME_CONFLICT = "DINNING_TIME_CONFLICT";
+    const NOT_IN_DINNING_TIME = "NOT_IN_DINNING_TIME";
 
     //consume rule conflict
     const CONSUME_RULE_CONFLICT = "CONSUME_RULE_CONFLICT";
@@ -38,4 +39,8 @@ class ErrorCode
     const LABEL_NOT_EXIST = "LABEL_NOT_EXIST";
     const LABEL_CATEGORY_NOT_BINDED = "LABEL_CATEGORY_NOT_BINDED";
     const LABEL_CATEGORY_ALREADY_BINDED = "LABEL_CATEGORY_ALREADY_BINDED";
+    const LABEL_CATEGORY_NOT_BIND_GOOD = "LABEL_CATEGORY_NOT_BIND_GOOD";
+
+    //goods related
+    const GOODS_NOT_EXIST = 'GOODS_NOT_EXIST';
 }

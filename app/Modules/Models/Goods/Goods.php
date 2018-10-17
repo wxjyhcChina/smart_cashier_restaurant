@@ -16,4 +16,6 @@ class Goods extends Model
     protected $fillable = ['id', 'restaurant_id', 'shop_id', 'dinning_time_id', 'name', 'price', 'image', 'is_temp'];
 
     protected $table = 'goods';
+
+    protected $hidden = ['pivot'];
 }
