@@ -1,6 +1,6 @@
 <?php
 Route::group([
-    'namespace' => 'device',
+    'namespace' => 'Device',
     'middleware' => 'access.routeNeedsPermission:manage-device',
 ], function() {
     Route::resource('device', 'DeviceController', ['except' => ['show']]);

@@ -1,6 +1,6 @@
 <?php
 Route::group([
-    'namespace' => 'customer',
+    'namespace' => 'Customer',
     'middleware' => 'access.routeNeedsPermission:manage-customer',
 ], function() {
     Route::resource('customer', 'CustomerController', ['except' => ['show']]);

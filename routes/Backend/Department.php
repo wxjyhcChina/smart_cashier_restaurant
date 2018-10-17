@@ -1,6 +1,6 @@
 <?php
 Route::group([
-    'namespace' => 'department',
+    'namespace' => 'Department',
     'middleware' => 'access.routeNeedsPermission:manage-department',
 ], function() {
     Route::resource('department', 'DepartmentController', ['except' => ['show']]);

@@ -1,6 +1,6 @@
 <?php
 Route::group([
-    'namespace' => 'consumeCategory',
+    'namespace' => 'ConsumeCategory',
     'middleware' => 'access.routeNeedsPermission:manage-consume-category',
 ], function() {
     Route::resource('consumeCategory', 'ConsumeCategoryController', ['except' => ['show']]);

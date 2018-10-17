@@ -1,6 +1,6 @@
 <?php
 Route::group([
-    'namespace' => 'shop',
+    'namespace' => 'Shop',
     'middleware' => 'access.routeNeedsPermission:manage-shop',
 ], function() {
     Route::resource('shop', 'ShopController', ['except' => ['show']]);
