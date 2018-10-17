@@ -33,6 +33,7 @@ class ErrorCode
     const CONSUME_RULE_CONFLICT = "CONSUME_RULE_CONFLICT";
 
     //card related
+    const CARD_NOT_EXIST = "CARD_NOT_EXIST";
     const CARD_STATUS_INCORRECT = "CARD_STATUS_INCORRECT";
 
     //label related
@@ -46,4 +47,5 @@ class ErrorCode
 
     //order related
     const ORDER_GOODS_NOT_EXIST = 'ORDER_GOODS_NOT_EXIST';
+    const ORDER_STATUS_INCORRECT = 'ORDER_STATUS_INCORRECT';
 }

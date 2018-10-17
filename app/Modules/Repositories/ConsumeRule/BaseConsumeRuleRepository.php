@@ -60,7 +60,7 @@ class BaseConsumeRuleRepository extends BaseRepository
 
             if ($rule_id != null)
             {
-                $query->where('id', '<>', $rule_id);
+                $query->where('consume_rules.id', '<>', $rule_id);
             }
 
             $rule = $query->first();

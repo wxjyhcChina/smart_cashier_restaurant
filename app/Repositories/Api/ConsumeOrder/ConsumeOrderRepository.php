@@ -8,9 +8,12 @@
 
 namespace App\Repositories\Api\ConsumeOrder;
 
+use App\Common\Enums\PayMethod;
 use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ConsumeOrderStatus;
 use App\Modules\Enums\ErrorCode;
+use App\Modules\Enums\PayMethodType;
+use App\Modules\Models\Card\Card;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\ConsumeRule\ConsumeRule;
 use App\Modules\Models\DinningTime\DinningTime;
@@ -280,5 +283,51 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         }
 
         return $goods;
+    }
+
+
+    private function payWithCard(ConsumeOrder $order, $cardId)
+    {
+        $card = Card::find($cardId);
+
+        if ($card == null)
+        {
+            throw new ApiException(ErrorCode::CARD_NOT_EXIST, trans('api.error.card_not_exist'));
+        }
+
+
+
+    }
+
+    /**
+     * @param ConsumeOrder $order
+     * @param $input
+     * @throws ApiException
+     */
+    public function pay(ConsumeOrder $order, $input)
+    {
+        if ($order->status != ConsumeOrderStatus::WAIT_PAY)
+        {
+            throw  new ApiException(ErrorCode::ORDER_STATUS_INCORRECT, trans('api.error.order_status_incorrect'));
+        }
+
+        $payMethod = $input['pay_method'];
+
+        if ($payMethod == PayMethodType::CASH)
+        {
+            $order->payMethod = $payMethod;
+            $order->status = ConsumeOrderStatus::COMPLETE;
+            $order->save();
+        }
+        else if ($payMethod == PayMethodType::CARD)
+        {
+            if (isset($input['cardId']))
+            {
+                throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
+            }
+
+            $this->payWithCard($order, $input['cardId']);
+        }
+
     }
 }

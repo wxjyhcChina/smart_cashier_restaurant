@@ -72,11 +72,15 @@ class ConsumeRuleController extends Controller
      * @param ConsumeRule $consumeRule
      * @param UpdateConsumeRuleRequest $request
      * @return \Illuminate\Http\JsonResponse
+     * @throws ApiException
      */
     public function update(ConsumeRule $consumeRule, UpdateConsumeRuleRequest $request)
     {
         //
-        $goods = $this->consumeRuleRepo->update($consumeRule, $request->all());
+        $input = $request->all();
+        $input['restaurant_id'] = Auth::User()->restaurant_id;
+
+        $goods = $this->consumeRuleRepo->update($consumeRule, $input);
 
         return $this->responseSuccessWithObject($goods);
     }

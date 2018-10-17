@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Repositories\Api\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -79,6 +80,14 @@ class ConsumeOrderController extends Controller
         $order = $this->consumeOrderRepo->latestOrder($restaurant_id);
 
         return $this->responseSuccess($order);
+    }
+
+    //TODO:policy
+    public function pay(ConsumeOrder $order, Request $request)
+    {
+        $order = $this->consumeOrderRepo->pay($order, $request->all());
+
+        return $this->responseSuccess();
     }
 
     /**
