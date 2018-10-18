@@ -161,7 +161,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         if ($forceDiscount != null)
         {
-            $discountPrice = bcmul($price, $forceDiscount, 2);
+            $discountPrice = bcmul($price, bcdiv($forceDiscount, 10, 2), 2);
         }
 
         if (count($goodsArray) == 0)
@@ -173,7 +173,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $response['goods_count'] = count($goodsArray);
         $response['dinning_time_id'] = $dinningTime->id;
         $response['price'] = $price;
-        $response['discount'] = $forceDiscount;
+        $response['force_discount'] = $forceDiscount;
         $response['discount_price'] = $discountPrice;
         $response['goods'] = $goodsArray;
 
@@ -222,7 +222,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $consumeOrder->dinning_time_id = $response['dinning_time_id'];
             $consumeOrder->price = $response['price'];
             $consumeOrder->discount_price = $response['discount_price'];
-            $consumeOrder->discount = $response['discount'];
+            $consumeOrder->force_discount = $response['force_discount'];
             $consumeOrder->goods_count = $response['goods_count'];
             $consumeOrder->status = ConsumeOrderStatus::WAIT_PAY;
             $consumeOrder->save();
@@ -285,7 +285,22 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         return $goods;
     }
 
+    /**
+     * @param ConsumeOrder $order
+     */
+    private function payWithCash(ConsumeOrder $order)
+    {
+        $order->payMethod = PayMethodType::CASH;
+        $order->status = ConsumeOrderStatus::COMPLETE;
+        $order->save();
+    }
 
+    /**
+     * @param ConsumeOrder $order
+     * @param $cardId
+     * @return bool
+     * @throws ApiException
+     */
     private function payWithCard(ConsumeOrder $order, $cardId)
     {
         $card = Card::find($cardId);
@@ -295,8 +310,170 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             throw new ApiException(ErrorCode::CARD_NOT_EXIST, trans('api.error.card_not_exist'));
         }
 
+        $customer = $card->customer;
+
+        if ($customer == null)
+        {
+            throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
+        }
+
+        $discount = null;
+        if ($order->force_discount == null && $customer->consume_category_id != null)
+        {
+            $weekday = Carbon::parse($order->created_at)->dayOfWeek;
+
+            //calculate discount
+            $rule = ConsumeRule::whereHas('dinning_time', function ($query) use ($order){
+                $query->where('id', $order->dinning_time_id);
+            })->whereHas('consume_categories', function ($query) use ($customer){
+                $query->where('id', $customer->consume_category_id);
+            })->whereRaw('weekday &'.$weekday.' > 0')->first();
+
+            if ($rule != null)
+            {
+                $discount = $rule->discount;
+            }
+        }
+
+        //check account balance
+        $account = $customer->account;
+        $original_price = $order->price;
+        $discount_price = $original_price;
+
+        $orderDiscount = $order->force_discount;
+        if ($orderDiscount == null)
+        {
+            $orderDiscount = $discount;
+        }
+
+        if ($orderDiscount != null)
+        {
+            $discount_price = bcmul($original_price, bcdiv($orderDiscount, 10, 2), 2);
+        }
+
+        if (bccomp($account->balance, $discount_price, 2) == -1)
+        {
+            throw  new ApiException(ErrorCode::BALANCE_NOT_ENOUGH, trans('api.error.balance_not_enough'));
+        }
+
+        try
+        {
+            DB::beginTransaction();
+
+            //add account record
 
 
+            //modify order status
+            $order->customer_id = $customer->id;
+            $order->card_id = $card->id;
+            $order->department_id = $customer->department_id;
+            $order->consume_category_id = $customer->consume_category_id;
+            $order->discount_price = $discount_price;
+            $order->discount = $discount;
+            $order->status = ConsumeOrderStatus::COMPLETE;
+            $order->save();
+
+            DB::commit();
+        }
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+
+            if ($exception instanceof ApiException)
+            {
+                throw $exception;
+            }
+
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.database_error'));
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $barcode
+     * @param $price
+     */
+    private function payWithWechatPay($barcode, $price)
+    {
+        //call api to pay
+
+
+        //get result
+
+
+        //update order status
+
+    }
+
+    /**
+     * @param $barcode
+     * @param $price
+     */
+    private function payWithAlipay($barcode, $price)
+    {
+
+    }
+
+    /**
+     * @param $barcode
+     * @return bool
+     */
+    private function isWechatPay($barcode)
+    {
+        return starts_with($barcode, '10')
+            || starts_with($barcode, '11')
+            || starts_with($barcode, '12')
+            || starts_with($barcode, '13')
+            || starts_with($barcode, '14')
+            || starts_with($barcode, '15');
+    }
+
+    /**
+     * @param $barcode
+     * @return bool
+     */
+    private function isAliPay($barcode)
+    {
+        return starts_with($barcode, '25')
+            || starts_with($barcode, '26')
+            || starts_with($barcode, '27')
+            || starts_with($barcode, '28')
+            || starts_with($barcode, '29')
+            || starts_with($barcode, '30');
+    }
+
+
+    /**
+     * @param ConsumeOrder $order
+     * @param $barcode
+     * @throws ApiException
+     */
+    private function payWithBarcode(ConsumeOrder $order, $barcode)
+    {
+        //check alipay code or wechat code
+        if ($this->isWechatPay($barcode))
+        {
+            $payMethod = PayMethod::WECHATPAY;
+        }
+        else if ($this->isAliPay($barcode))
+        {
+            $payMethod = PayMethod::ALIPAY;
+        }
+        else
+        {
+            throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
+        }
+
+        //pay with respond method
+        if ($payMethod == PayMethod::ALIPAY)
+        {
+            $this->payWithAlipay($barcode, $order->discount_price);
+        }
+        else if ($payMethod == PayMethod::WECHATPAY)
+        {
+            $this->payWithWechatPay($barcode, $order->discount_price);
+        }
     }
 
     /**
@@ -313,11 +490,15 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         $payMethod = $input['pay_method'];
 
+        $method = PayMethod::where('method', $payMethod)->where('enabled', 1)->first();
+        if ($method == null)
+        {
+            throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
+        }
+
         if ($payMethod == PayMethodType::CASH)
         {
-            $order->payMethod = $payMethod;
-            $order->status = ConsumeOrderStatus::COMPLETE;
-            $order->save();
+            $this->payWithCash($order);
         }
         else if ($payMethod == PayMethodType::CARD)
         {
@@ -328,6 +509,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
             $this->payWithCard($order, $input['cardId']);
         }
-
+        else if ($payMethod == PayMethodType::ALIPAY || $payMethod == PayMethod::WECHATPAY)
+        {
+            $this->payWithBarcode($order, $input['barcode']);
+        }
     }
 }

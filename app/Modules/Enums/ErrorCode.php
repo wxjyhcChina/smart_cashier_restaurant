@@ -12,6 +12,7 @@ class ErrorCode
 {
     const DATABASE_ERROR = "DATABASE_ERROR";
     const PARAM_ERROR = "PARAM_ERROR";
+    const FATAL_ERROR = "FATAL_ERROR";
 
     const RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND";
 
@@ -28,6 +29,7 @@ class ErrorCode
     //dinning time related
     const DINNING_TIME_CONFLICT = "DINNING_TIME_CONFLICT";
     const NOT_IN_DINNING_TIME = "NOT_IN_DINNING_TIME";
+    const DINNING_TIME_NOT_EXIST = "DINNING_TIME_NOT_EXIST";
 
     //consume rule conflict
     const CONSUME_RULE_CONFLICT = "CONSUME_RULE_CONFLICT";
@@ -35,6 +37,9 @@ class ErrorCode
     //card related
     const CARD_NOT_EXIST = "CARD_NOT_EXIST";
     const CARD_STATUS_INCORRECT = "CARD_STATUS_INCORRECT";
+
+    //customer related
+    const BALANCE_NOT_ENOUGH = 'BALANCE_NOT_ENOUGH';
 
     //label related
     const LABEL_NOT_EXIST = "LABEL_NOT_EXIST";
@@ -48,4 +53,7 @@ class ErrorCode
     //order related
     const ORDER_GOODS_NOT_EXIST = 'ORDER_GOODS_NOT_EXIST';
     const ORDER_STATUS_INCORRECT = 'ORDER_STATUS_INCORRECT';
+
+    //pay method related
+    const PAY_METHOD_NOT_SUPPORTED = 'PAY_METHOD_NOT_SUPPORTED';
 }

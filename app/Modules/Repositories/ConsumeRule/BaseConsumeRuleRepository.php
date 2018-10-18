@@ -46,6 +46,7 @@ class BaseConsumeRuleRepository extends BaseRepository
      * @param $dinningTimeArray
      * @param null $rule_id
      * @return bool
+     * @throws ApiException
      */
     private function isRuleConflict($restaurant_id, $weekdayArray, $dinningTimeArray, $rule_id = null)
     {
@@ -53,8 +54,14 @@ class BaseConsumeRuleRepository extends BaseRepository
 
         foreach ($dinningTimeArray as $dinning_time)
         {
-            $query = DinningTime::find($dinning_time)
-                ->consume_rules()
+            $dinning_time = DinningTime::find($dinning_time);
+
+//            if ($dinning_time == null)
+//            {
+//                throw new ApiException(ErrorCode::DINNING_TIME_NOT_EXIST, trans('api.error.dinning_time_not_exist'))
+//            }
+
+            $query = $dinning_time->consume_rules()
                 ->where('restaurant_id', $restaurant_id)
                 ->whereRaw('weekday & '.$weekday.' > 0');
 

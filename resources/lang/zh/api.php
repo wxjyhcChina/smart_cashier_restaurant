@@ -31,7 +31,10 @@ return [
         'card_not_exist' => '卡不存在',
         'card_status_incorrect' => '卡状态不正确，请换卡后操作',
 
+        'balance_not_enough' => '账户余额不足',
+
         'not_in_dinning_time' => '当前时间不在用餐时间',
+        'dinning_time_not_exist' => '用餐时间不存在',
 
         'consume_rule_conflict' => '消费规则时间冲突，请检查后再试',
 
@@ -43,7 +46,9 @@ return [
         'goods_not_exist' => '商品不存在',
 
         'order_goods_not_exist' => '订单中不存在商品',
-        'order_status_incorrect' => '订单状态不正确'
+        'order_status_incorrect' => '订单状态不正确',
+
+        'pay_method_not_supported' => '当前收银台不支持该支付方式',
     ],
 
     'pay' => [

@@ -10,6 +10,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\Debug\Exception\FatalErrorException;
 
 class Handler extends ExceptionHandler
 {
@@ -96,6 +97,21 @@ class Handler extends ExceptionHandler
             $responseArray = ['error_message'=>'unauthorized'];
 
             return response()->json($responseArray, '403');
+        }
+
+        if ($exception instanceof FatalErrorException)
+        {
+            if ($request->is('api/*'))
+            {
+                $filename = substr($exception->getFile(), strrpos($exception->getFile(), '/')+1);
+                $line = $exception->getLine();
+
+                $responseArray = [
+                    'error_code' => ErrorCode::FATAL_ERROR,
+                    'error_message'=> "$filename, line $line, ".$exception->getMessage()
+                ];
+                return response()->json($responseArray, 500);
+            }
         }
 
         return parent::render($request, $exception);
