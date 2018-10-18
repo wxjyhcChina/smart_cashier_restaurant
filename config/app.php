@@ -213,6 +213,8 @@ return [
         App\Providers\MacroServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Modules\Services\Account\AccountServiceProvider::class,
+        App\Modules\Services\Card\CardServiceProvider::class,
+        App\Modules\Services\Pay\PayServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
@@ -265,6 +267,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Account' => App\Modules\Services\Account\Facades\Account::class,
+        'CardService' =>  App\Modules\Services\Card\Facades\CardService::class,
+        'Pay' =>  App\Modules\Services\Pay\Facades\Pay::class,
 
         /*
          * Third Party Aliases

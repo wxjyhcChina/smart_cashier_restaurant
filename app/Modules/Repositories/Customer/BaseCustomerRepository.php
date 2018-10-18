@@ -38,7 +38,7 @@ class BaseCustomerRepository extends BaseRepository
 
             if ($customer->save())
             {
-                $card = Card::find($input['card_id']);
+                $card = Card::where('internal_number', $input['card_id'])->first();
                 if ($card == null)
                 {
                     throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));

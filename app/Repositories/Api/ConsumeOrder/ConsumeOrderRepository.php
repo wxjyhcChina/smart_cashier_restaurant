@@ -21,6 +21,8 @@ use App\Modules\Models\Label\Label;
 use App\Modules\Models\PayMethod\PayMethod;
 use App\Modules\Repositories\ConsumeOrder\BaseConsumeOrderRepository;
 use App\Modules\Services\Account\Facades\Account;
+use App\Modules\Services\Card\Facades\CardService;
+use App\Modules\Services\Pay\Facades\Pay;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -333,19 +335,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      */
     private function payWithCard(ConsumeOrder $order, $cardId)
     {
-        $card = Card::where('internal_number', $cardId)->first();
+        $card = CardService::getCardByInternalNumber($cardId);
 
-        if ($card == null)
-        {
-            throw new ApiException(ErrorCode::CARD_NOT_EXIST, trans('api.error.card_not_exist'));
-        }
-
-        $customer = $card->customer;
-
-        if ($customer == null)
-        {
-            throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
-        }
+        $customer = CardService::getCustomerByCard($card);
 
         $discount = $this->getCardDiscount($order, $customer);
 
@@ -427,33 +419,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
     }
 
-    /**
-     * @param $barcode
-     * @return bool
-     */
-    private function isWechatPay($barcode)
-    {
-        return starts_with($barcode, '10')
-            || starts_with($barcode, '11')
-            || starts_with($barcode, '12')
-            || starts_with($barcode, '13')
-            || starts_with($barcode, '14')
-            || starts_with($barcode, '15');
-    }
 
-    /**
-     * @param $barcode
-     * @return bool
-     */
-    private function isAliPay($barcode)
-    {
-        return starts_with($barcode, '25')
-            || starts_with($barcode, '26')
-            || starts_with($barcode, '27')
-            || starts_with($barcode, '28')
-            || starts_with($barcode, '29')
-            || starts_with($barcode, '30');
-    }
 
 
     /**
@@ -464,11 +430,11 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     private function payWithBarcode(ConsumeOrder $order, $barcode)
     {
         //check alipay code or wechat code
-        if ($this->isWechatPay($barcode))
+        if (Pay::isWechatPay($barcode))
         {
             $payMethod = PayMethod::WECHATPAY;
         }
-        else if ($this->isAliPay($barcode))
+        else if (Pay::isAliPay($barcode))
         {
             $payMethod = PayMethod::ALIPAY;
         }
