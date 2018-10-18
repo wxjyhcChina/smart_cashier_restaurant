@@ -21,6 +21,30 @@ use App\Common\Enums\PaySource;
 class WechatPay
 {
     /**
+     * @var
+     */
+    private $app_id;
+
+    /**
+     * @var
+     */
+    private $mch_id;
+
+    /**
+     * @var
+     */
+    private $api_key;
+
+    /**
+     * @var
+     */
+    private $ssl_cert_path;
+
+    /**
+     * @var
+     */
+    private $ssl_key_path;
+    /**
      * order Id
      * @var
      */
@@ -85,6 +109,86 @@ class WechatPay
         $this->body = $body;
         $this->call_back_url = $call_back_url;
         $this->pay_type = $pay_type;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAppId()
+    {
+        return $this->app_id;
+    }
+
+    /**
+     * @param mixed $app_id
+     */
+    public function setAppId($app_id)
+    {
+        $this->app_id = $app_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMchId()
+    {
+        return $this->mch_id;
+    }
+
+    /**
+     * @param mixed $mch_id
+     */
+    public function setMchId($mch_id)
+    {
+        $this->mch_id = $mch_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getApiKey()
+    {
+        return $this->api_key;
+    }
+
+    /**
+     * @param mixed $api_key
+     */
+    public function setApiKey($api_key)
+    {
+        $this->api_key = $api_key;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSslCertPath()
+    {
+        return $this->ssl_cert_path;
+    }
+
+    /**
+     * @param mixed $ssl_cert_path
+     */
+    public function setSslCertPath($ssl_cert_path)
+    {
+        $this->ssl_cert_path = $ssl_cert_path;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSslKeyPath()
+    {
+        return $this->ssl_key_path;
+    }
+
+    /**
+     * @param mixed $ssl_key_path
+     */
+    public function setSslKeyPath($ssl_key_path)
+    {
+        $this->ssl_key_path = $ssl_key_path;
     }
 
     /**
@@ -189,28 +293,6 @@ class WechatPay
     }
 
     /**
-     * @return mixed|string
-     */
-    private function getAppId()
-    {
-        switch ($this->pay_type)
-        {
-            case PaySource::APP:
-            case PaySource::NATIVE:
-                return config('constants.wechat.app_id');
-                break;
-            case PaySource::JS:
-                return config('constants.wechat.js_id');
-                break;
-            case PaySource::MINI_PROGRAM:
-                return config('constants.wechat.mini_program_id');
-                break;
-        }
-
-        return "";
-    }
-
-    /**
      * @return string
      */
     private function getTradeType()
@@ -244,7 +326,7 @@ class WechatPay
         $param = array(
             "appid" => $this->getAppId(),
             "body" => $this->body,
-            "mch_id" => config('constants.wechat.mch_id'),
+            "mch_id" => $this->getMchId(),
             "nonce_str" => $this->getNonceStr(),
             "notify_url" => $this->call_back_url,
             "out_trade_no" => $this->order_id,
@@ -279,7 +361,7 @@ class WechatPay
             "appid" => $this->getAppId(),
             "noncestr" => $this->getNonceStr(),
             "package" => "Sign=WXPay",
-            "partnerid" => config('constants.wechat.mch_id'),
+            "partnerid" => $this->getMchId(),
             "prepayid" => $prepay_id,
             "timestamp" => substr(time().'',0,10)
         ];
@@ -323,9 +405,9 @@ class WechatPay
 
         if ($this->getAppId() == "") {
             return "微信APPID未配置";
-        } elseif (config('constants.wechat.mch_id') == "") {
+        } elseif ($this->getMchId() == "") {
             return "微信商户号MCHID未配置";
-        } elseif (config('constants.wechat.api_key') == "") {
+        } elseif ($this->getApiKey() == "") {
             return "微信API密钥KEY未配置";
         }
 
@@ -343,7 +425,7 @@ class WechatPay
         $param = $this->getRefundInfo();
 
         //wechat unified order request
-        $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.refund_url'), true);
+        $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.refund_url'), true, $this->getSslCertPath(), $this->getSslKeyPath());
         $result = Utils::xmlToArray($resultXmlStr);
 
         if (!$this->checkRespSign($result))
@@ -360,13 +442,13 @@ class WechatPay
         $refund_fee = sprintf("%.2f", $this->refund_fee);
         $param = array(
             "appid" => $this->getAppId(),
-            "mch_id" => config('constants.wechat.mch_id'),
+            "mch_id" => $this->getMchId(),
             "nonce_str" => $this->getNonceStr(),
             "out_trade_no" => $this->order_id,
             "out_refund_no" => $this->refund_id,
             "total_fee" => $price * 100,
             "refund_fee" => $refund_fee * 100,
-            "op_user_id" => config('constants.wechat.mch_id'),
+            "op_user_id" => $this->getMchId(),
         );
 
         $sign = $this->sign($param);//生成签名
@@ -398,7 +480,7 @@ class WechatPay
             }
         }
 
-        $sign .= "key=" . config('constants.wechat.api_key');
+        $sign .= "key=" . $this->getApiKey();
         $sign = strtoupper(md5($sign));
         return $sign;
 

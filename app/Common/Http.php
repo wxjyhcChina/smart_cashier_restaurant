@@ -64,7 +64,7 @@ class Http
         return $return_str;
     }
 
-    public static function WechatPostWithSecurity($curlPost, $url, $useCert=false)
+    public static function WechatPostWithSecurity($curlPost, $url, $useCert=false, $ssl_cert_path, $ssl_key_path)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -78,9 +78,9 @@ class Http
             //设置证书
             //使用证书：cert 与 key 分别属于两个.pem文件
             curl_setopt($curl,CURLOPT_SSLCERTTYPE,'PEM');
-            curl_setopt($curl,CURLOPT_SSLCERT, config('constants.wechat.ssl_cert_path'));
+            curl_setopt($curl,CURLOPT_SSLCERT, $ssl_cert_path);
             curl_setopt($curl,CURLOPT_SSLKEYTYPE,'PEM');
-            curl_setopt($curl,CURLOPT_SSLKEY, config('constants.wechat.ssl_key_path'));
+            curl_setopt($curl,CURLOPT_SSLKEY, $ssl_key_path);
         }
 
         $return_str = curl_exec($curl);

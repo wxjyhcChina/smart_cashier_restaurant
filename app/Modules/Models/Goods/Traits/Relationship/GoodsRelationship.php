@@ -30,7 +30,7 @@ trait GoodsRelationship
     /**
      * @return mixed
      */
-    public function labelCategories()
+    public function label_categories()
     {
         return $this->belongsToMany(LabelCategory::class, 'label_category_goods', 'goods_id', 'label_category_id');
     }

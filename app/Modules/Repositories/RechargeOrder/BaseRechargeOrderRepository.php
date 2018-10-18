@@ -9,6 +9,7 @@ use App\Modules\Enums\RechargeOrderStatus;
 use App\Modules\Models\ConsumeOrder\RechargeOrder;
 use App\Modules\Repositories\BaseRepository;
 use App\Modules\Services\Card\Facades\CardService;
+use App\Modules\Services\Pay\Facades\Pay;
 
 /**
  * Class BaseRechargeOrderRepository.
@@ -52,6 +53,27 @@ class BaseRechargeOrderRepository extends BaseRepository
         }
 
         throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.database_error'));
+    }
+
+    /**
+     * @param RechargeOrder $rechargeOrder
+     * @param $barcode
+     * @throws ApiException
+     */
+    public function pay(RechargeOrder $rechargeOrder, $barcode)
+    {
+        if (Pay::isWechatPay($barcode))
+        {
+
+        }
+        else if (Pay::isAliPay($barcode))
+        {
+
+        }
+        else
+        {
+            throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
+        }
     }
 
     /**

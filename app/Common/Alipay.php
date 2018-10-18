@@ -13,11 +13,6 @@ namespace App\Common;
  * Class Alipay
  * @package App\Common
  */
-/**
- * Class Alipay
- * @package App\Common
- */
-
 use App\Common\Enums\AlipayLoginType;
 use App\Common\Util\OrderUtil;
 use Illuminate\Support\Facades\Log;
@@ -28,6 +23,21 @@ use Illuminate\Support\Facades\Log;
  */
 class Alipay
 {
+    /**
+     * @var
+     */
+    private $app_id;
+
+    /**
+     * @var
+     */
+    private $mch_private_key;
+
+    /**
+     * @var
+     */
+    private $alipay_pub_key;
+
     /**
      * order Id
      * @var
@@ -94,6 +104,54 @@ class Alipay
     }
 
     /**
+     * @return mixed
+     */
+    public function getAppId()
+    {
+        return $this->app_id;
+    }
+
+    /**
+     * @param mixed $app_id
+     */
+    public function setAppId($app_id)
+    {
+        $this->app_id = $app_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMchPrivateKey()
+    {
+        return $this->mch_private_key;
+    }
+
+    /**
+     * @param mixed $mch_private_key
+     */
+    public function setMchPrivateKey($mch_private_key)
+    {
+        $this->mch_private_key = $mch_private_key;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlipayPubKey()
+    {
+        return $this->alipay_pub_key;
+    }
+
+    /**
+     * @param mixed $alipay_pub_key
+     */
+    public function setAlipayPubKey($alipay_pub_key)
+    {
+        $this->alipay_pub_key = $alipay_pub_key;
+    }
+
+    /**
      * @param mixed $refund_fee
      */
     public function setRefundFee($refund_fee)
@@ -146,12 +204,12 @@ class Alipay
     {
         $aop = new \AopClient();
         $aop->gatewayUrl = "https://openapi.alipay.com/gateway.do";
-        $aop->appId = $type == AlipayLoginType::APP ? config('constants.alipay.app_id') : config('constants.alipay.app_miniprogram_id');
-        $aop->rsaPrivateKeyFilePath = $type == AlipayLoginType::APP ? config('constants.alipay.alipay_mch_private_key') : config('constants.alipay.alipay_miniprogram_private_key');
+        $aop->appId = $this->getAppId();
+        $aop->rsaPrivateKeyFilePath = $this->getMchPrivateKey();
         $aop->format = "json";
         $aop->charset = "UTF-8";
         $aop->signType = "RSA2";
-        $aop->alipayPublicKey=config('constants.alipay.alipay_pub_key');
+        $aop->alipayPublicKey= $this->getAlipayPubKey();
 
         return $aop;
     }
@@ -166,7 +224,7 @@ class Alipay
         $params = array(
             "apiname" => 'com.alipay.account.auth',
             "method" => 'alipay.open.auth.sdk.code.get',
-            "app_id"=> config('constants.alipay.app_id'),
+            "app_id"=> $this->getAppId(),
             "app_name"=>'mc',
             "biz_type" => 'openservice',
             'pid' => '2088721389489661',
@@ -190,6 +248,7 @@ class Alipay
      * @param $code
      * @param $type
      * @return bool|mixed|\SimpleXMLElement
+     * @throws \Exception
      */
     public function alipaySystemAccountAuth($code, $type = AlipayLoginType::APP)
     {
@@ -217,6 +276,7 @@ class Alipay
      * @param $access_token
      * @param $type
      * @return bool|mixed|\SimpleXMLElement
+     * @throws \Exception
      */
     public function alipayUserInfoShare($access_token,  $type = AlipayLoginType::APP)
     {
@@ -236,8 +296,53 @@ class Alipay
     }
 
     /**
+     * @param $barCode
+     * @return array|bool
+     * @throws \Exception
+     */
+    public function alipayTradePay($barCode)
+    {
+        $aop = $this->getAopClient();
+
+        $bizContent = $this->getTradePayBizContent($barCode);
+        $request = new \AlipayTradePayRequest();
+        $request->setNotifyUrl($this->call_back_url);
+        $request->setBizContent($bizContent);
+
+        $response = $aop->execute($request);
+        if (isset($response->alipay_trade_pay_response))
+        {
+            return (array)$response->alipay_trade_pay_response;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $property_id
+     *
+     * @return string
+     */
+    private function getTradePayBizContent($barcode)
+    {
+        $param = array(
+            "out_trade_no"=>$this->order_id,
+            "scene" => "bar_code",
+            "auth_code" => $barcode,
+            "subject" => $this->subject,
+            "total_amount" => $this->price,
+            "trans_currency" => "CNY",
+            "settle_currency" => "CNY",
+            "discountable_amount" => $this->price
+        );
+
+        return json_encode($param);
+    }
+
+    /**
      * @param $property_id
      * @return array|bool
+     * @throws \Exception
      */
     public function alipayTradePrecreate($property_id)
     {
@@ -266,7 +371,7 @@ class Alipay
     {
         $param = array(
             "out_trade_no"=>$this->order_id,
-            "subject" => "优卡充充值",
+            "subject" => "充值",
             'store_id' => $property_id,
             "total_amount" => $this->price,
             "timeout_express" => "10m",
@@ -316,22 +421,22 @@ class Alipay
     public function checkSign($input)
     {
         $aop = new \AopClient();
-        $aop->alipayPublicKey=config('constants.alipay.alipay_pub_key');
-        $flag = $aop->rsaCheckV1($input, config('constants.alipay.alipay_pub_key'), "RSA2");
+        $aop->alipayPublicKey= $this->getAlipayPubKey();
+        $flag = $aop->rsaCheckV1($input, $this->getAlipayPubKey(), "RSA2");
 
         return $flag;
     }
 
     /**
-     *
+     * @throws \Exception
      */
     public function refund()
     {
         $aop = new \AopClient();
         $aop->gatewayUrl = 'https://openapi.alipay.com/gateway.do';
-        $aop->appId = config('constants.alipay.app_id');
-        $aop->rsaPrivateKeyFilePath = config('constants.alipay.alipay_mch_private_key');
-        $aop->alipayPublicKey= config('constants.alipay.alipay_pub_key');
+        $aop->appId = $this->getAppId();
+        $aop->rsaPrivateKeyFilePath = $this->getMchPrivateKey();
+        $aop->alipayPublicKey= $this->getAlipayPubKey();
         $aop->postCharset='UTF-8';
         $aop->format='json';
         $request = new \AlipayTradeRefundRequest();

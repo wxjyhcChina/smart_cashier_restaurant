@@ -27,6 +27,7 @@ class GoodsRepository extends BaseGoodsRepository
         return $this->getByRestaurantQuery($restaurant_id)
             ->with('shop')
             ->with('dinning_time')
+            ->with('label_categories')
             ->paginate($size);
     }
 }

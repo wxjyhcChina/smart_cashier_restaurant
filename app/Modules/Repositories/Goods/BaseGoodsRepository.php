@@ -48,7 +48,7 @@ class BaseGoodsRepository extends BaseRepository
      */
     public function getLabelCategories(Goods $goods)
     {
-        return $goods->labelCategories;
+        return $goods->label_categories;
     }
 
     /**
