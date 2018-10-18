@@ -134,7 +134,7 @@ class BaseCustomerRepository extends BaseRepository
         $customer = new Customer();
         $customer->restaurant_id = $input['restaurant_id'];
         $customer->user_name = $input['user_name'];
-        $customer->user_name = isset($input['telephone']) ? $input['telephone']: '';
+        $customer->telephone = isset($input['telephone']) ? $input['telephone']: '';
         $customer->id_license = isset($input['id_license']) ? $input['id_license'] : '';
         $customer->birthday = isset($input['birthday']) ? $input['birthday'] : null;
         $customer->department_id = isset($input['department_id']) ? $input['department_id'] : null;
