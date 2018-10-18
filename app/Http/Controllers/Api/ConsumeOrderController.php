@@ -83,9 +83,15 @@ class ConsumeOrderController extends Controller
     }
 
     //TODO:policy
-    public function pay(ConsumeOrder $order, Request $request)
+    /**
+     * @param ConsumeOrder $consumeOrder
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
+     */
+    public function pay(ConsumeOrder $consumeOrder, Request $request)
     {
-        $order = $this->consumeOrderRepo->pay($order, $request->all());
+        $order = $this->consumeOrderRepo->pay($consumeOrder, $request->all());
 
         return $this->responseSuccess();
     }

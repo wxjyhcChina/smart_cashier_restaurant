@@ -212,6 +212,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\MacroServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Modules\Services\Account\AccountServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
@@ -263,6 +264,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        'Account' => App\Modules\Services\Account\Facades\Account::class,
 
         /*
          * Third Party Aliases

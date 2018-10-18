@@ -8,7 +8,6 @@
 
 namespace App\Repositories\Api\ConsumeOrder;
 
-use App\Common\Enums\PayMethod;
 use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ConsumeOrderStatus;
 use App\Modules\Enums\ErrorCode;
@@ -19,7 +18,9 @@ use App\Modules\Models\ConsumeRule\ConsumeRule;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Label\Label;
+use App\Modules\Models\PayMethod\PayMethod;
 use App\Modules\Repositories\ConsumeOrder\BaseConsumeOrderRepository;
+use App\Modules\Services\Account\Facades\Account;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -296,6 +297,35 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
+     * @param $order
+     * @param $customer
+     * @return mixed|null
+     */
+    private function getCardDiscount($order, $customer)
+    {
+        $discount = null;
+        if ($order->force_discount == null && $customer->consume_category_id != null)
+        {
+            $weekday = pow(2, Carbon::parse($order->created_at)->dayOfWeek);
+
+            //calculate discount
+            $rule = ConsumeRule::whereHas('dinning_time', function ($query) use ($order){
+                $query->where('dinning_time.id', $order->dinning_time_id);
+            })->whereHas('consume_categories', function ($query) use ($customer){
+                $query->where('consume_categories.id', $customer->consume_category_id);
+            })->whereRaw('weekday & '.$weekday.' > 0')->first();
+
+            if ($rule != null)
+            {
+                $discount = $rule->discount;
+            }
+        }
+
+        return $discount;
+    }
+
+
+    /**
      * @param ConsumeOrder $order
      * @param $cardId
      * @return bool
@@ -303,7 +333,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      */
     private function payWithCard(ConsumeOrder $order, $cardId)
     {
-        $card = Card::find($cardId);
+        $card = Card::where('internal_number', $cardId)->first();
 
         if ($card == null)
         {
@@ -317,23 +347,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
         }
 
-        $discount = null;
-        if ($order->force_discount == null && $customer->consume_category_id != null)
-        {
-            $weekday = Carbon::parse($order->created_at)->dayOfWeek;
-
-            //calculate discount
-            $rule = ConsumeRule::whereHas('dinning_time', function ($query) use ($order){
-                $query->where('id', $order->dinning_time_id);
-            })->whereHas('consume_categories', function ($query) use ($customer){
-                $query->where('id', $customer->consume_category_id);
-            })->whereRaw('weekday &'.$weekday.' > 0')->first();
-
-            if ($rule != null)
-            {
-                $discount = $rule->discount;
-            }
-        }
+        $discount = $this->getCardDiscount($order, $customer);
 
         //check account balance
         $account = $customer->account;
@@ -351,17 +365,14 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $discount_price = bcmul($original_price, bcdiv($orderDiscount, 10, 2), 2);
         }
 
-        if (bccomp($account->balance, $discount_price, 2) == -1)
-        {
-            throw  new ApiException(ErrorCode::BALANCE_NOT_ENOUGH, trans('api.error.balance_not_enough'));
-        }
+        Account::compareBalance($account, $discount_price);
 
         try
         {
             DB::beginTransaction();
 
             //add account record
-
+            Account::payAccount($order->id, $account, $discount_price);
 
             //modify order status
             $order->customer_id = $customer->id;
@@ -370,6 +381,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $order->consume_category_id = $customer->consume_category_id;
             $order->discount_price = $discount_price;
             $order->discount = $discount;
+            $order->payMethod = PayMethodType::CARD;
             $order->status = ConsumeOrderStatus::COMPLETE;
             $order->save();
 
@@ -479,6 +491,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     /**
      * @param ConsumeOrder $order
      * @param $input
+     * @return ConsumeOrder
      * @throws ApiException
      */
     public function pay(ConsumeOrder $order, $input)
@@ -502,16 +515,18 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         }
         else if ($payMethod == PayMethodType::CARD)
         {
-            if (isset($input['cardId']))
+            if (!isset($input['card_id']))
             {
                 throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
             }
 
-            $this->payWithCard($order, $input['cardId']);
+            $this->payWithCard($order, $input['card_id']);
         }
         else if ($payMethod == PayMethodType::ALIPAY || $payMethod == PayMethod::WECHATPAY)
         {
             $this->payWithBarcode($order, $input['barcode']);
         }
+
+        return $order->load('goods');
     }
 }
