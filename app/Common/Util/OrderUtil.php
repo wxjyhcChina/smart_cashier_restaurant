@@ -22,11 +22,11 @@ class OrderUtil
 
     public static function generateRechargeOrderId()
     {
-        return 'ykr'.self::generateOrderId();
+        return 'scr'.self::generateOrderId();
     }
 
-    public static function generateCosumeOrderId()
+    public static function generateConsumeOrderId()
     {
-        return 'ykc'.self::generateOrderId();
+        return 'sccc'.self::generateOrderId();
     }
 }

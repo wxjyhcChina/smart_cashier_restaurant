@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Models\ConsumeOrder;
+namespace App\Modules\Models\RechargeOrder;
 
 use App\Modules\Models\RechargeOrder\Traits\Attribute\RechargeOrderAttribute;
 use App\Modules\Models\RechargeOrder\Traits\Relationship\RechargeOrderRelationship;

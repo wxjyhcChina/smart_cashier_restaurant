@@ -48,18 +48,12 @@ return [
     ],
 
     'wechat' => [
-        'app_id' => env('WECHAT_APPID'),
-        'mini_program_id' => env('WECHAT_MINI_PROGRAM_ID'),
-        'js_id' => env('WECHAT_JS_ID'),
-        'app_secret' => env('WECHAT_APPSECRET'),
-        'mini_program_secret' => env('WECHAT_MINI_PROGRAM_SECRET'),
-        'mch_id' => env('WECHAT_MCHID'),
-        'api_key' => env('WECHAT_KEY'),
         'unified_order_url' => env('WECHAT_UNIFIED_ORDER_URL'),
         'open_id_url' => env('WECHAT_OPEN_ID_URL'),
         'refund_url' => env('WECHAT_REFUND_URL'),
-        'ssl_cert_path' => __DIR__."/../".env('WECHAT_SSL_CERT_PATH'),
-        'ssl_key_path' => __DIR__."/../".env('WECHAT_SSL_KEY_PATH'),
+        'micropay_url' => env('WECHAT_MICROPAY_URL'),
+        'order_query_url' => env('WECHAT_ORDER_QUERY_URL'),
+        'order_reverse_url' => env('WECHAT_ORDER_REVERSE_URL'),
     ],
 
     'alipay' => [

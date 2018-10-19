@@ -45,6 +45,8 @@ return [
 
         'goods_not_exist' => '商品不存在',
 
+        'recharge_order_canceled' => '支付已取消',
+
         'order_goods_not_exist' => '订单中不存在商品',
         'order_status_incorrect' => '订单状态不正确',
 

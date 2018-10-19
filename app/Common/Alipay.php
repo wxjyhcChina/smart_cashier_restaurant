@@ -8,11 +8,6 @@
 
 namespace App\Common;
 
-
-/**
- * Class Alipay
- * @package App\Common
- */
 use App\Common\Enums\AlipayLoginType;
 use App\Common\Util\OrderUtil;
 use Illuminate\Support\Facades\Log;
@@ -88,19 +83,16 @@ class Alipay
     private $pay_no;
 
     /**
-     * WechatPay constructor.
-     * @param $order_id
-     * @param $price
-     * @param $body
-     * @param $call_back_url
+     * Alipay constructor.
+     * @param $app_id
+     * @param $mch_private_key
+     * @param $alipay_pub_key
      */
-    public function __construct($order_id="", $price=0, $body="",  $call_back_url="", $subject="")
+    public function __construct($app_id, $mch_private_key, $alipay_pub_key)
     {
-        $this->order_id = $order_id;
-        $this->price = $price;
-        $this->body = $body;
-        $this->call_back_url = $call_back_url;
-        $this->subject = $subject;
+        $this->app_id = $app_id;
+        $this->mch_private_key = $mch_private_key;
+        $this->alipay_pub_key = $alipay_pub_key;
     }
 
     /**
@@ -181,6 +173,86 @@ class Alipay
     public function setPayNo($pay_no)
     {
         $this->pay_no = $pay_no;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderId()
+    {
+        return $this->order_id;
+    }
+
+    /**
+     * @param mixed $order_id
+     */
+    public function setOrderId($order_id)
+    {
+        $this->order_id = $order_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param mixed $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * @param mixed $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSubject()
+    {
+        return $this->subject;
+    }
+
+    /**
+     * @param mixed $subject
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCallBackUrl()
+    {
+        return $this->call_back_url;
+    }
+
+    /**
+     * @param mixed $call_back_url
+     */
+    public function setCallBackUrl($call_back_url)
+    {
+        $this->call_back_url = $call_back_url;
     }
 
     /**
@@ -319,7 +391,7 @@ class Alipay
     }
 
     /**
-     * @param $property_id
+     * @param $barcode
      *
      * @return string
      */
@@ -334,6 +406,73 @@ class Alipay
             "trans_currency" => "CNY",
             "settle_currency" => "CNY",
             "discountable_amount" => $this->price
+        );
+
+        return json_encode($param);
+    }
+
+
+    /**
+     * @return array|bool
+     * @throws \Exception
+     */
+    public function tradeQuery()
+    {
+        $aop = $this->getAopClient();
+
+        $bizContent = $this->getTradeQueryBizContent();
+        $request = new \AlipayTradeQueryRequest();
+        $request->setBizContent($bizContent);
+
+        $response = $aop->execute($request);
+        if (isset($response->alipay_trade_query_response))
+        {
+            return (array)$response->alipay_trade_query_response;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    private function getTradeQueryBizContent()
+    {
+        $param = array(
+            "out_trade_no"=>$this->order_id,
+        );
+
+        return json_encode($param);
+    }
+
+    /**
+     * @return array|bool
+     * @throws \Exception
+     */
+    public function tradeCancel()
+    {
+        $aop = $this->getAopClient();
+
+        $bizContent = $this->getTradeCancelBizContent();
+        $request = new \AlipayTradeQueryRequest();
+        $request->setBizContent($bizContent);
+
+        $response = $aop->execute($request);
+        if (isset($response->alipay_trade_cancel_response))
+        {
+            return (array)$response->alipay_trade_cancel_response;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
+    private function getTradeCancelBizContent()
+    {
+        $param = array(
+            "out_trade_no"=>$this->order_id,
         );
 
         return json_encode($param);

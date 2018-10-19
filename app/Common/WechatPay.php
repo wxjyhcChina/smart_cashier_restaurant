@@ -28,12 +28,12 @@ class WechatPay
     /**
      * @var
      */
-    private $mch_id;
+    private $api_key;
 
     /**
      * @var
      */
-    private $api_key;
+    private $mch_id;
 
     /**
      * @var
@@ -94,20 +94,23 @@ class WechatPay
      */
     private $op_user_id;
 
+
     /**
      * WechatPay constructor.
-     * @param $order_id
-     * @param $price
-     * @param $body
-     * @param $pay_type
-     * @param $call_back_url
+     * @param $app_id
+     * @param $api_key
+     * @param $mch_id
+     * @param $ssl_cert_path
+     * @param $ssl_key_path
+     * @param int $pay_type
      */
-    public function __construct($order_id="", $price=0, $body="",  $call_back_url="", $pay_type=PaySource::APP)
+    public function __construct($app_id, $api_key, $mch_id, $ssl_cert_path, $ssl_key_path, $pay_type=PaySource::APP)
     {
-        $this->order_id = $order_id;
-        $this->price = $price;
-        $this->body = $body;
-        $this->call_back_url = $call_back_url;
+        $this->app_id = $app_id;
+        $this->api_key = $api_key;
+        $this->mch_id = $mch_id;
+        $this->ssl_cert_path = $ssl_cert_path;
+        $this->ssl_key_path = $ssl_key_path;
         $this->pay_type = $pay_type;
     }
 
@@ -130,22 +133,6 @@ class WechatPay
     /**
      * @return mixed
      */
-    public function getMchId()
-    {
-        return $this->mch_id;
-    }
-
-    /**
-     * @param mixed $mch_id
-     */
-    public function setMchId($mch_id)
-    {
-        $this->mch_id = $mch_id;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getApiKey()
     {
         return $this->api_key;
@@ -157,6 +144,22 @@ class WechatPay
     public function setApiKey($api_key)
     {
         $this->api_key = $api_key;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMchId()
+    {
+        return $this->mch_id;
+    }
+
+    /**
+     * @param mixed $mch_id
+     */
+    public function setMchId($mch_id)
+    {
+        $this->mch_id = $mch_id;
     }
 
     /**
@@ -230,6 +233,71 @@ class WechatPay
     {
         $this->refund_id = $refund_id;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getOrderId()
+    {
+        return $this->order_id;
+    }
+
+    /**
+     * @param mixed $order_id
+     */
+    public function setOrderId($order_id)
+    {
+        $this->order_id = $order_id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+
+    /**
+     * @param mixed $price
+     */
+    public function setPrice($price)
+    {
+        $this->price = $price;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBody()
+    {
+        return $this->body;
+    }
+
+    /**
+     * @param mixed $body
+     */
+    public function setBody($body)
+    {
+        $this->body = $body;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getCallBackUrl()
+    {
+        return $this->call_back_url;
+    }
+
+    /**
+     * @param mixed $call_back_url
+     */
+    public function setCallBackUrl($call_back_url)
+    {
+        $this->call_back_url = $call_back_url;
+    }
+
 
     /**
      * @param $success
@@ -414,6 +482,9 @@ class WechatPay
         return "";
     }
 
+    /**
+     * @return array
+     */
     public function refund()
     {
         $check_result = $this->checkConfigParam();
@@ -436,6 +507,9 @@ class WechatPay
         return $this->response(true, "", $result);
     }
 
+    /**
+     * @return string
+     */
     private function getRefundInfo()
     {
         $price=sprintf("%.2f",$this->price);
@@ -463,6 +537,157 @@ class WechatPay
         return $paramXml;
     }
 
+    /**
+     * @param $barcode
+     * @return array
+     */
+    public function micropay($barcode)
+    {
+        $check_result = $this->checkConfigParam();
+        if (!empty($check_result))
+        {
+            return $this->response(false, $check_result);
+        }
+
+        $param = $this->getMicropayInfo($barcode);
+        //wechat unified order request
+        $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.micropay_url'));
+        $result = Utils::xmlToArray($resultXmlStr);
+
+        if (!$this->checkRespSign($result))
+        {
+            return $this->response(false, "付款失败");
+        }
+
+        return $this->response(true, "", $result);
+    }
+
+    /**
+     * @param $barcode
+     * @return string
+     */
+    private function getMicropayInfo($barcode)
+    {
+        $price=sprintf("%.2f",$this->price);
+        $param = array(
+            "appid" => $this->getAppId(),
+            "body" => $this->body,
+            "mch_id" => $this->getMchId(),
+            "nonce_str" => $this->getNonceStr(),
+            "out_trade_no" => $this->order_id,
+            "total_fee" => $price * 100,
+            "auth_code" => $barcode,
+            "spbill_create_ip" => '10.10.10.10',
+        );
+
+        $sign = $this->sign($param);//生成签名
+        $param['sign'] = $sign;
+        $paramXml = "<xml>";
+        foreach ($param as $k => $v) {
+            $paramXml .= "<" . $k . ">" . $v . "</" . $k . ">";
+
+        }
+        $paramXml .= "</xml>";
+
+        return $paramXml;
+    }
+
+    /**
+     * @return array|bool
+     * @throws \Exception
+     */
+    public function tradeQuery()
+    {
+        $check_result = $this->checkConfigParam();
+        if (!empty($check_result))
+        {
+            return $this->response(false, $check_result);
+        }
+
+        $param = $this->getTradeQueryInfo();
+        //wechat unified order request
+        $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.order_query_url'));
+        $result = Utils::xmlToArray($resultXmlStr);
+
+        if (!$this->checkRespSign($result))
+        {
+            return $this->response(false, "获取订单失败");
+        }
+
+        return $this->response(true, "", $result);
+    }
+
+    /**
+     * @return string
+     */
+    private function getTradeQueryInfo()
+    {
+        $param = array(
+            "appid" => $this->getAppId(),
+            "mch_id" => $this->getMchId(),
+            "nonce_str" => $this->getNonceStr(),
+            "out_trade_no" => $this->order_id,
+        );
+
+        $sign = $this->sign($param);//生成签名
+        $param['sign'] = $sign;
+        $paramXml = "<xml>";
+        foreach ($param as $k => $v) {
+            $paramXml .= "<" . $k . ">" . $v . "</" . $k . ">";
+
+        }
+        $paramXml .= "</xml>";
+
+        return $paramXml;
+    }
+
+    /**
+     * @return array
+     */
+    public function tradeCancel()
+    {
+        $check_result = $this->checkConfigParam();
+        if (!empty($check_result))
+        {
+            return $this->response(false, $check_result);
+        }
+
+        $param = $this->getTradeCancelInfo();
+        //wechat unified order request
+        $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.order_reverse_url'));
+        $result = Utils::xmlToArray($resultXmlStr);
+
+        if (!$this->checkRespSign($result))
+        {
+            return $this->response(false, "撤销订单失败");
+        }
+
+        return $this->response(true, "", $result);
+    }
+
+    /**
+     * @return string
+     */
+    private function getTradeCancelInfo()
+    {
+        $param = array(
+            "appid" => $this->getAppId(),
+            "mch_id" => $this->getMchId(),
+            "nonce_str" => $this->getNonceStr(),
+            "out_trade_no" => $this->order_id,
+        );
+
+        $sign = $this->sign($param);//生成签名
+        $param['sign'] = $sign;
+        $paramXml = "<xml>";
+        foreach ($param as $k => $v) {
+            $paramXml .= "<" . $k . ">" . $v . "</" . $k . ">";
+
+        }
+        $paramXml .= "</xml>";
+
+        return $paramXml;
+    }
 
     /**
      * sign拼装获取

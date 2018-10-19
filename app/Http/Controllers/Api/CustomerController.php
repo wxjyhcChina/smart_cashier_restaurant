@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\Customer\StoreCustomerRequest;
+use App\Modules\Models\ConsumeOrder\RechargeOrder;
 use App\Modules\Models\Customer\Customer;
 use App\Repositories\Api\Customer\CustomerRepository;
+use App\Repositories\Api\RechargeOrder\RechargeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -17,12 +19,19 @@ class CustomerController extends Controller
     private $customerRepo;
 
     /**
+     * @var RechargeOrderRepository
+     */
+    private $rechargeOrderRepo;
+
+    /**
      * CustomerController constructor.
      * @param CustomerRepository $customerRepo
+     * @param RechargeOrderRepository $rechargeOrderRepo
      */
-    public function __construct(CustomerRepository $customerRepo)
+    public function __construct(CustomerRepository $customerRepo, RechargeOrderRepository $rechargeOrderRepo)
     {
         $this->customerRepo = $customerRepo;
+        $this->rechargeOrderRepo = $rechargeOrderRepo;
     }
 
     /**

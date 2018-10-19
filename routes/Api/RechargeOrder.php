@@ -4,6 +4,8 @@ Route::group([
     'prefix'  => 'rechargeOrders',
     'as' => 'rechargeOrders.'
 ], function() {
+    Route::post('/recharge_alipay_resp', 'RechargeOrderController@recharge_alipay_resp')->name('recharge_alipay_resp');
+
     Route::group([
         'middleware' => 'apiAuth'
     ], function() {

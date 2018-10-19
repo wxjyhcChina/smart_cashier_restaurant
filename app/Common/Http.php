@@ -64,7 +64,7 @@ class Http
         return $return_str;
     }
 
-    public static function WechatPostWithSecurity($curlPost, $url, $useCert=false, $ssl_cert_path, $ssl_key_path)
+    public static function WechatPostWithSecurity($curlPost, $url, $useCert=false, $ssl_cert_path=null, $ssl_key_path=null)
     {
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

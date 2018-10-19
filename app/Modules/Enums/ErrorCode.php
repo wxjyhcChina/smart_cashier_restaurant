@@ -50,10 +50,14 @@ class ErrorCode
     //goods related
     const GOODS_NOT_EXIST = 'GOODS_NOT_EXIST';
 
+    //recharge order
+    const RECHARGE_ORDER_CANCELED = 'RECHARGE_ORDER_CANCELED';
+
     //order related
     const ORDER_GOODS_NOT_EXIST = 'ORDER_GOODS_NOT_EXIST';
     const ORDER_STATUS_INCORRECT = 'ORDER_STATUS_INCORRECT';
 
     //pay method related
     const PAY_METHOD_NOT_SUPPORTED = 'PAY_METHOD_NOT_SUPPORTED';
+    const PAY_FAILED = 'PAY_FAILED';
 }

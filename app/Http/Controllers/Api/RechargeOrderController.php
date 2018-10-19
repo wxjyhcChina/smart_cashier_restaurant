@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Common\Alipay;
+use App\Common\Utils;
 use App\Exceptions\Api\ApiException;
-use App\Modules\Models\ConsumeOrder\RechargeOrder;
+use App\Modules\Models\RechargeOrder\RechargeOrder;
 use App\Repositories\Api\RechargeOrder\RechargeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class RechargeOrderController extends Controller
 {
@@ -59,10 +62,40 @@ class RechargeOrderController extends Controller
         return $this->responseSuccess($order);
     }
 
-
+    /**
+     * @param RechargeOrder $rechargeOrder
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws ApiException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
     public function pay(RechargeOrder $rechargeOrder, Request $request)
     {
+        $response = $this->rechargeOrderRepo->pay($rechargeOrder, $request->get('barcode'));
 
+        return $this->responseSuccess($response);
+    }
+
+    /**
+     * @return string
+     */
+    public function recharge_wechat_resp()
+    {
+        $xmlInfo = file_get_contents('php://input');
+
+        $param = Utils::xmlToArray($xmlInfo);
+
+        Log::info("params".json_encode($param));
+    }
+
+    /**
+     * @return string
+     */
+    public function recharge_alipay_resp(Request $request)
+    {
+        $param = $_POST;
+
+        Log::info("[recharge_alipay_resp]params".json_encode($param));
     }
 
     /**
