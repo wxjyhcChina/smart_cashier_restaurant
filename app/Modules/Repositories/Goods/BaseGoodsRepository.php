@@ -39,7 +39,7 @@ class BaseGoodsRepository extends BaseRepository
      */
     public function getGoodsInfo(Goods $goods)
     {
-        return $goods->load('shop', 'dinning_time');
+        return $goods->load('shop', 'dinning_time', 'label_categories');
     }
 
     /**
