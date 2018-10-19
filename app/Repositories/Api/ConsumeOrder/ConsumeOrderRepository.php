@@ -290,12 +290,15 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
     /**
      * @param ConsumeOrder $order
+     * @return ConsumeOrder
      */
     private function payWithCash(ConsumeOrder $order)
     {
         $order->payMethod = PayMethodType::CASH;
         $order->status = ConsumeOrderStatus::COMPLETE;
         $order->save();
+
+        return $order;
     }
 
     /**
@@ -330,7 +333,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     /**
      * @param ConsumeOrder $order
      * @param $cardId
-     * @return bool
+     * @return ConsumeOrder
      * @throws ApiException
      */
     private function payWithCard(ConsumeOrder $order, $cardId)
@@ -391,74 +394,79 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.database_error'));
         }
 
-        return true;
+        return $order;
     }
-
-    /**
-     * @param $barcode
-     * @param $price
-     */
-    private function payWithWechatPay($barcode, $price)
-    {
-        //call api to pay
-
-
-        //get result
-
-
-        //update order status
-
-    }
-
-    /**
-     * @param $barcode
-     * @param $price
-     */
-    private function payWithAlipay($barcode, $price)
-    {
-
-    }
-
-
-
 
     /**
      * @param ConsumeOrder $order
      * @param $barcode
+     * @return ConsumeOrder
      * @throws ApiException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function payWithBarcode(ConsumeOrder $order, $barcode)
     {
         //check alipay code or wechat code
         if (Pay::isWechatPay($barcode))
         {
-            $payMethod = PayMethod::WECHATPAY;
+            $response = Pay::barcodeWechatPay($order->order_id, $barcode, $order->price, '消费');
         }
         else if (Pay::isAliPay($barcode))
         {
-            $payMethod = PayMethod::ALIPAY;
+            $response = Pay::barcodeAlipay($order->order_id, $barcode, $order->price, '消费');
         }
         else
         {
             throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
         }
 
-        //pay with respond method
-        if ($payMethod == PayMethod::ALIPAY)
+        if ($response->getTradeStatus() == "SUCCESS")
         {
-            $this->payWithAlipay($barcode, $order->discount_price);
+            $this->paySuccess($order, Pay::isWechatPay($barcode) ? PayMethodType::WECHAT_PAY : PayMethodType::ALIPAY, $response->getTradeNo());
+            return $order;
         }
-        else if ($payMethod == PayMethod::WECHATPAY)
+        else if ($response->getTradeStatus() == "CLOSED")
         {
-            $this->payWithWechatPay($barcode, $order->discount_price);
+            $this->payClosed($order, Pay::isWechatPay($barcode) ? PayMethodType::WECHAT_PAY : PayMethodType::ALIPAY);
+            throw new ApiException(ErrorCode::RECHARGE_ORDER_CANCELED, trans('api.error.recharge_order_canceled'));
+        }
+        else
+        {
+            $this->payClosed($order, Pay::isWechatPay($barcode) ? PayMethodType::WECHAT_PAY : PayMethodType::ALIPAY);
+            throw new ApiException(ErrorCode::PAY_FAILED, $response->getErrorMessage());
         }
     }
 
     /**
      * @param ConsumeOrder $order
+     * @param $pay_method
+     * @param $trade_no
+     */
+    public function paySuccess(ConsumeOrder $order, $pay_method, $trade_no=null)
+    {
+        $order->status = ConsumeOrderStatus::COMPLETE;
+        $order->pay_method = $pay_method;
+        $order->external_pay_no = $trade_no;
+        $order->save();
+    }
+
+    /**
+     * @param ConsumeOrder $order
+     * @param $pay_method
+     */
+    public function payClosed(ConsumeOrder $order, $pay_method)
+    {
+        $order->status = ConsumeOrderStatus::CLOSED;
+        $order->pay_method = $pay_method;
+        $order->save();
+    }
+
+    /**
+     * @param ConsumeOrder $order
      * @param $input
-     * @return ConsumeOrder
+     * @return $this
      * @throws ApiException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function pay(ConsumeOrder $order, $input)
     {
@@ -477,7 +485,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         if ($payMethod == PayMethodType::CASH)
         {
-            $this->payWithCash($order);
+            $order = $this->payWithCash($order);
         }
         else if ($payMethod == PayMethodType::CARD)
         {
@@ -486,11 +494,11 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
                 throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
             }
 
-            $this->payWithCard($order, $input['card_id']);
+            $order = $this->payWithCard($order, $input['card_id']);
         }
         else if ($payMethod == PayMethodType::ALIPAY || $payMethod == PayMethod::WECHATPAY)
         {
-            $this->payWithBarcode($order, $input['barcode']);
+            $order = $this->payWithBarcode($order, $input['barcode']);
         }
 
         return $order->load('goods');

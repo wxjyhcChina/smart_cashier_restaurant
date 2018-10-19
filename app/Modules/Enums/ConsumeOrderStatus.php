@@ -16,4 +16,5 @@ class ConsumeOrderStatus
     const WAIT_PAY = 'WAIT_PAY';
     const PAY_IN_PROGRESS = 'PAY_IN_PROGRESS';
     const COMPLETE = 'COMPLETE';
+    const CLOSED = 'CLOSED';
 }

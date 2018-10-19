@@ -71,31 +71,9 @@ class RechargeOrderController extends Controller
      */
     public function pay(RechargeOrder $rechargeOrder, Request $request)
     {
-        $response = $this->rechargeOrderRepo->pay($rechargeOrder, $request->get('barcode'));
+        $rechargeOrder = $this->rechargeOrderRepo->pay($rechargeOrder, $request->get('barcode'));
 
-        return $this->responseSuccess($response);
-    }
-
-    /**
-     * @return string
-     */
-    public function recharge_wechat_resp()
-    {
-        $xmlInfo = file_get_contents('php://input');
-
-        $param = Utils::xmlToArray($xmlInfo);
-
-        Log::info("params".json_encode($param));
-    }
-
-    /**
-     * @return string
-     */
-    public function recharge_alipay_resp(Request $request)
-    {
-        $param = $_POST;
-
-        Log::info("[recharge_alipay_resp]params".json_encode($param));
+        return $this->responseSuccess($rechargeOrder);
     }
 
     /**

@@ -91,9 +91,9 @@ class ConsumeOrderController extends Controller
      */
     public function pay(ConsumeOrder $consumeOrder, Request $request)
     {
-        $order = $this->consumeOrderRepo->pay($consumeOrder, $request->all());
+        $consumeOrder = $this->consumeOrderRepo->pay($consumeOrder, $request->all());
 
-        return $this->responseSuccess();
+        return $this->responseSuccess($consumeOrder);
     }
 
     /**
