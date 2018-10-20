@@ -11,6 +11,7 @@ return [
         'database_error' => '数据库更新错误',
         'param_error' => '参数错误',
         'resource_not_exist' => '资源不存在',
+        'server_error' => '服务器错误, 请稍后再试',
 
         'token_not_provide' => 'token未提供',
         'token_expire' => 'token已经过期',
@@ -44,6 +45,7 @@ return [
         'label_category_not_bind_good' => '餐盘类别未绑定商品',
 
         'goods_not_exist' => '商品不存在',
+        'no_default_shop' => '没有默认的商家，请联系管理员',
 
         'recharge_order_canceled' => '支付已取消',
 

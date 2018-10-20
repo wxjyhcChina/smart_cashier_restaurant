@@ -23,13 +23,18 @@ class StoreGoodsRequest extends ApiBaseRequest
      */
     public function rules()
     {
-        return [
-            //
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'dinning_time_id' => 'required',
-            'shop_id' => 'required'
-        ];
+        $rules = ['price' => 'required|numeric'];
+
+        if (!$this->has('is_temp') || $this->get('is_temp') == 0 )
+        {
+            $rules = array_merge($rules, [
+                'name' => 'required',
+                'dinning_time_id' => 'required',
+                'shop_id' => 'required'
+            ]);
+        }
+
+        return $rules;
     }
 }
 

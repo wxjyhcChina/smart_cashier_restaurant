@@ -60,6 +60,7 @@ class GoodsController extends Controller
     {
         //
         $input = $request->all();
+
         $input['restaurant_id'] = Auth::User()->restaurant_id;
 
         $goods = $this->goodsRepo->create($input);

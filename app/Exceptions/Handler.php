@@ -114,7 +114,20 @@ class Handler extends ExceptionHandler
             }
         }
 
-        return parent::render($request, $exception);
+        if ($request->is('api/*'))
+        {
+            $responseArray = [
+                'error_code' => ErrorCode::SERVER_ERROR,
+//                'error_message'=> trans('api.error.server_error')
+                'error_message' => $exception->getMessage()
+            ];
+
+            return response()->json($responseArray, 500);
+        }
+        else
+        {
+            return parent::render($request, $exception);
+        }
     }
 
     /**

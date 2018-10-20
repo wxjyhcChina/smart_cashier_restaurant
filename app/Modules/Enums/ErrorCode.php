@@ -13,6 +13,7 @@ class ErrorCode
     const DATABASE_ERROR = "DATABASE_ERROR";
     const PARAM_ERROR = "PARAM_ERROR";
     const FATAL_ERROR = "FATAL_ERROR";
+    const SERVER_ERROR = "SERVER_ERROR";
 
     const RESOURCE_NOT_FOUND = "RESOURCE_NOT_FOUND";
 
@@ -49,6 +50,7 @@ class ErrorCode
 
     //goods related
     const GOODS_NOT_EXIST = 'GOODS_NOT_EXIST';
+    const NO_DEFAULT_SHOP = 'NO_DEFAULT_SHOP';
 
     //recharge order
     const RECHARGE_ORDER_CANCELED = 'RECHARGE_ORDER_CANCELED';

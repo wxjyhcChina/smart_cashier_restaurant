@@ -6,6 +6,7 @@ use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Label\Label;
+use App\Modules\Models\Shop\Shop;
 use App\Modules\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -172,17 +173,31 @@ class BaseGoodsRepository extends BaseRepository
         return true;
     }
 
-
     /**
      * @param $input
      * @return Goods
+     * @throws ApiException
      */
     private function createGoodsStub($input)
     {
+        if (isset($input['is_temp']) && $input['is_temp'] == 1)
+        {
+            $input['name'] = '临时商品';
+            $shop = Shop::where('default', true)
+                ->where('restaurant_id', $input['restaurant_id'])
+                ->first();
+
+            if ($shop == null)
+            {
+                throw new ApiException(ErrorCode::NO_DEFAULT_SHOP, trans('api.error.no_default_shop'));
+            }
+            $input['shop_id'] = $shop->id;
+        }
+
         $goods = new Goods();
         $goods->restaurant_id = $input['restaurant_id'];
         $goods->shop_id = $input['shop_id'];
-        $goods->dinning_time_id = $input['dinning_time_id'];
+        $goods->dinning_time_id = isset($input['dinning_time_id']) ? $input['dinning_time_id'] : null;
         $goods->name = $input['name'];
         $goods->price = $input['price'];
         $goods->image = isset($input['image']) ? $input['image'] : '';
