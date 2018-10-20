@@ -11,7 +11,7 @@ class AccountRecord extends Model
 
     public function getMoneyAttribute($value)
     {
-        if ($this->type == AccountRecordType::CONSUME || AccountRecordType::SYSTEM_MINUS)
+        if ($this->type == AccountRecordType::CONSUME || $this->type == AccountRecordType::SYSTEM_MINUS)
         {
             $value = -$value;
         }

@@ -115,6 +115,17 @@ class BaseCustomerRepository extends BaseRepository
     }
 
     /**
+     * @param Customer $customer
+     * @return mixed
+     */
+    public function getAccountRecord(Customer $customer)
+    {
+        $records = $customer->account_records()->paginate(15);
+
+        return $records;
+    }
+
+    /**
      * @param $entityCardId
      */
     private function createAccount($customer_id, $balance)

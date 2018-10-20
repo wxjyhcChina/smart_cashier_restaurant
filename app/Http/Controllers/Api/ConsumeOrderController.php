@@ -73,6 +73,10 @@ class ConsumeOrderController extends Controller
     }
 
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function latestOrder(Request $request)
     {
         $restaurant_id = Auth::User()->restaurant_id;
@@ -88,6 +92,7 @@ class ConsumeOrderController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\Api\ApiException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function pay(ConsumeOrder $consumeOrder, Request $request)
     {

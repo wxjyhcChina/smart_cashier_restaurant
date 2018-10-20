@@ -65,12 +65,17 @@ class CustomerController extends Controller
         return $this->responseSuccessWithObject($dinningTime);
     }
 
+    //TODO:policy
     /**
+     * @param Customer $customer
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function accountRecords(Request $request)
+    public function accountRecords(Customer $customer, Request $request)
     {
+        $records = $this->customerRepo->getAccountRecord($customer);
 
+        return $this->responseSuccessWithObject($records);
     }
 
     /**
