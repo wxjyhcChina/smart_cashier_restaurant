@@ -18,4 +18,14 @@ class Goods extends Model
     protected $table = 'goods';
 
     protected $hidden = ['pivot'];
+
+    public function getImageAttribute($value)
+    {
+        if ($value == '' || strpos($value, 'http') === 0)
+        {
+            return $value;
+        }
+
+        return config('constants.qiniu.image_bucket_url').$value;
+    }
 }
