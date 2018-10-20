@@ -93,17 +93,22 @@ class ShopController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  Shop $shop
-     * @param  ManageShopRequest $request
-     * @return \Illuminate\Http\Response
-     * @throws GeneralException
+     * @param Shop $shop
+     * @param ManageShopRequest $request
+     * @return mixed
+     * @throws \App\Exceptions\Api\ApiException
      */
     public function update(Shop $shop, ManageShopRequest $request)
     {
         //
-        $this->shopRepo->update($shop, $request->all());
+        $input = $request->all();
+        $input['restaurant_id'] = Auth::User()->restaurant_id;
+        if (isset($input['default']))
+        {
+            $input['default'] = true;
+        }
+
+        $this->shopRepo->update($shop, $input);
 
         return redirect()->route('admin.shop.index')->withFlashSuccess(trans('alerts.backend.shop.updated'));
     }

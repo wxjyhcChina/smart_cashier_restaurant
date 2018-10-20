@@ -149,6 +149,7 @@ return [
             'table' => [
                 'id' => '编号',
                 'name' => '子商户名',
+                'default' => '默认商户',
                 'created_at' => '创建时间',
             ]
         ],

@@ -173,7 +173,8 @@ return [
             ],
 
             'shop' => [
-                'name' => '子商户名'
+                'name' => '子商户名',
+                'default' => '默认'
             ],
 
             'dinningTime' => [

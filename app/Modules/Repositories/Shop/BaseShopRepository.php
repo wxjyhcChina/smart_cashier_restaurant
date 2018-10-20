@@ -55,6 +55,13 @@ class BaseShopRepository extends BaseRepository
         try
         {
             DB::beginTransaction();
+            if (isset($input['default']) && $shop->default == false)
+            {
+                Shop::where('default', 1)
+                    ->where('restaurant_id', $input['restaurant_id'])
+                    ->update(['default' => false]);
+            }
+
             $shop->update($input);
 
             DB::commit();
@@ -94,6 +101,17 @@ class BaseShopRepository extends BaseRepository
         $shop = new Shop();
         $shop->restaurant_id = $input['restaurant_id'];
         $shop->name = $input['name'];
+        $shop->default = isset($input['default']) ? true : false;
+
+        $default_shop = Shop::where('default', 1)
+            ->where('restaurant_id', $input['restaurant_id'])
+            ->first();
+
+        if ($default_shop != null && isset($input['default']))
+        {
+            $default_shop->default = false;
+            $default_shop->save();
+        }
 
         return $shop;
     }

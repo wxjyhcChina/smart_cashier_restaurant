@@ -30,6 +30,7 @@
                         <tr>
                             <th>{{ trans('labels.backend.shop.table.id') }}</th>
                             <th>{{ trans('labels.backend.shop.table.name') }}</th>
+                            <th>{{ trans('labels.backend.shop.table.default') }}</th>
                             <th>{{ trans('labels.backend.shop.table.created_at') }}</th>
                             <th>{{ trans('labels.general.actions') }}</th>
                         </tr>
@@ -66,6 +67,14 @@
                 columns: [
                     {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
+                    {data: 'default', name: 'default', render:function (data, type, row, meta){
+                            if (data === '1')
+                            {
+                                return '<span class="label label-primary">' + '{{trans('labels.backend.shop.table.default')}}' + '</span>';
+                            }
+
+                            return '';
+                    }},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],

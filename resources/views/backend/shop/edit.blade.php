@@ -29,6 +29,14 @@
                     {{ Form::text('name', $shop->name, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.shop.name')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
+
+            <div class="form-group">
+                {{ Form::label('default', trans('validation.attributes.backend.shop.default').":", ['class' => 'col-lg-2 control-label']) }}
+
+                <div class="col-lg-10" style="margin-top: 8px">
+                    {{ Form::checkbox('default', $shop->default, $shop->default, ['id' => 'default_checkbox']) }}
+                </div><!--col-lg-1-->
+            </div><!--form control-->
         </div><!-- /.box-body -->
     </div><!--box-->
 
