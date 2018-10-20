@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Common\Qiniu;
 use App\Http\Requests\Api\Goods\BindLabelCategoryRequest;
 use App\Http\Requests\Api\Goods\StoreGoodsRequest;
 use App\Modules\Models\Goods\Goods;
@@ -95,6 +96,16 @@ class GoodsController extends Controller
         return $this->responseSuccessWithObject($labelCategory);
     }
 
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function imageUploadToken()
+    {
+        $response = Qiniu::getUpToken(config('constants.qiniu.image_bucket'), 'png', array());
+
+        return $this->responseSuccess(['token'=>$response]);
+    }
+    
     /**
      * Display the specified resource.
      *

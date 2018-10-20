@@ -11,30 +11,13 @@ return [
         'temp_file_location' => env('TEMP_FILE_LOCATION'),
     ],
 
-    //sms configuration
-    'sms' => [
-        //sms related config
-        'base_url' => env('SMS_BASE_URL'),
-        'template_url' => env('SMS_TEMPLATE_URL'),
-        'code_url' => env('SMS_CODE_URL'),
-        'verify_url' => env('SMS_VERIFY_URL'),
-        'app_key' => env('SMS_APP_KEY'),
-        'app_Secret' => env('SMS_APP_SECRET'),
-        'code_len' => env('SMS_CODE_LEN'),
-        'template_id' => env('SMS_TEMPLATE_ID'),
-    ],
 
     //qiniu configuration
     'qiniu' => [
         'access_key' => env('QINIU_ACCESS_KEY'),
         'secret' => env('QINIU_SECRET'),
-        'callback_base_url' => env('QINIU_CALLBACK_BASE_URL'),
-        'user_bucket' => env('QINIU_USER_BUCKET'),
-        'user_bucket_url' => env('QINIU_USER_BUCKET_URL'),
-        'shop_bucket' => env('QINIU_SHOP_BUCKET'),
-        'shop_bucket_url' => env('QINIU_SHOP_BUCKET_URL'),
-        'repair_bucket' => env('QINIU_REPAIR_BUCKET'),
-        'repair_bucket_url' => env('QINIU_REPAIR_BUCKET_URL'),
+        'image_bucket' => env('QINIU_IMAGE_BUCKET'),
+        'image_bucket_url' => env('QINIU_IMAGE_BUCKET_URL'),
     ],
 
     'jpush' => [
