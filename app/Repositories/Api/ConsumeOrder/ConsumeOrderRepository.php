@@ -35,11 +35,18 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 {
     /**
      * @param $restaurant_id
+     * @param $input
      * @return mixed
      */
-    public function getByRestaurant($restaurant_id)
+    public function getByRestaurant($restaurant_id, $input)
     {
-        return $this->getByRestaurantQuery($restaurant_id)->get();
+        $query = $this->getByRestaurantQuery($restaurant_id);
+        if (isset($input['start_time']) && isset($input['end_time']))
+        {
+            $query = $query->whereBetween('created_at', [$input['start_time'].' 00:00:00', $input['end_time']." 23:59:59"]);
+        }
+
+        return $query->paginate(15);
     }
 
     /**

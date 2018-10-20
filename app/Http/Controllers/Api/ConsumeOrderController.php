@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Api\ConsumeOrder\ConsumeOrderQueryRequest;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Repositories\Api\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
@@ -27,16 +28,18 @@ class ConsumeOrderController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ConsumeOrderQueryRequest $request)
     {
         //
         $user = Auth::User();
 
-        $orders = $this->consumeOrderRepo->getByRestaurant($user->restaurant_id);
+        $input = $request->all();
+        $orders = $this->consumeOrderRepo->getByRestaurant($user->restaurant_id, $input);
 
-        return $this->responseSuccess($orders);
+        return $this->responseSuccessWithObject($orders);
     }
 
     /**
