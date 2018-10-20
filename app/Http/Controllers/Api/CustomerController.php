@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Api\Customer\CustomerAccountQueryRequest;
 use App\Http\Requests\Api\Customer\StoreCustomerRequest;
 use App\Modules\Models\ConsumeOrder\RechargeOrder;
 use App\Modules\Models\Customer\Customer;
@@ -68,12 +69,13 @@ class CustomerController extends Controller
     //TODO:policy
     /**
      * @param Customer $customer
-     * @param Request $request
+     * @param CustomerAccountQueryRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function accountRecords(Customer $customer, Request $request)
+    public function accountRecords(Customer $customer, CustomerAccountQueryRequest $request)
     {
-        $records = $this->customerRepo->getAccountRecord($customer);
+        $input = $request->all();
+        $records = $this->customerRepo->getAccountRecord($customer, $input);
 
         return $this->responseSuccessWithObject($records);
     }

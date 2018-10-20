@@ -118,9 +118,15 @@ class BaseCustomerRepository extends BaseRepository
      * @param Customer $customer
      * @return mixed
      */
-    public function getAccountRecord(Customer $customer)
+    public function getAccountRecord(Customer $customer, $input)
     {
-        $records = $customer->account_records()->paginate(15);
+        $query = $customer->account_records();
+        if (isset($input['start_time']) && isset($input['end_time']))
+        {
+            $query = $query->whereBetween('created_at', [$input['start_time'].' 00:00:00', $input['end_time']." 23:59:59"]);
+        }
+
+        $records = $query->paginate(15);
 
         return $records;
     }
