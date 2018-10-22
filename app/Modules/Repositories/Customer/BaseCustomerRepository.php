@@ -156,6 +156,7 @@ class BaseCustomerRepository extends BaseRepository
         $customer->birthday = isset($input['birthday']) ? $input['birthday'] : null;
         $customer->department_id = isset($input['department_id']) ? $input['department_id'] : null;
         $customer->consume_category_id = isset($input['consume_category_id']) ? $input['consume_category_id'] : null;
+        $customer->enabledd = isset($input['enabled']) ? $input['enabled'] : true;
 
         return $customer;
     }
