@@ -16,4 +16,9 @@ class BaseDeviceRepository extends BaseRepository
      */
     const MODEL = Device::class;
 
+    public function getByRestaurantQuery($restaurant_id)
+    {
+        return $this->query()->where('restaurant_id', $restaurant_id);
+    }
+
 }
