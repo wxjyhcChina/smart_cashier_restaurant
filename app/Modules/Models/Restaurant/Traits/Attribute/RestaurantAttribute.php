@@ -27,9 +27,25 @@ trait RestaurantAttribute
     /**
      * @return string
      */
+    public function getAccountButtonAttribute()
+    {
+        return '<a href="' . route('admin.restaurant.accounts', $this) . '" class="btn btn-xs btn-success"><i class="fa fa-users" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.restaurant.account') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
     public function getAssignCardButtonAttribute()
     {
-        return '<a href="' . route('admin.restaurant.assignCard', $this, false) . '" class="btn btn-xs btn-success"><i class="fa fa-credit-card" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.backend.agent.assignCard') . '"></i></a> ';
+        return '<a href="' . route('admin.restaurant.assignCard', $this, false) . '" class="btn btn-xs btn-success"><i class="fa fa-credit-card" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.restaurant.assignCard') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
+    public function getAssignDeviceButtonAttribute()
+    {
+        return '<a href="' . route('admin.restaurant.assignDevice', $this, false) . '" class="btn btn-xs btn-success"><i class="fa fa-hdd-o" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.restaurant.assignDevice') . '"></i></a> ';
     }
 
     /**
@@ -64,8 +80,10 @@ trait RestaurantAttribute
     {
         return
             $this->info_button .
+            $this->account_button .
             $this->edit_button .
             $this->assign_card_button .
+            $this->assign_device_button .
             $this->enabled_button ;
     }
 }
