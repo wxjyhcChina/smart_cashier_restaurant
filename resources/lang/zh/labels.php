@@ -199,6 +199,20 @@ return [
                 'created_at' => '创建时间',
             ]
         ],
+
+        'payMethod' => [
+            'management' => '支付方式管理',
+            'active' => '所有支付方式',
+            'edit' => '编辑支付方式',
+            'alipay' => '编辑支付宝',
+            'wechatPay' => '编辑微信支付',
+
+            'table' => [
+                'id' => '编号',
+                'method' => '支付代码',
+                'show_method' => '支付方式',
+            ]
+        ]
     ],
 
     'frontend' => [

@@ -97,6 +97,12 @@ return [
             'update_error' => '更新消费规则失败，请稍后重试',
             'create_error' => '创建消费规则失败，请稍后重试',
         ],
+
+        'payMethod' => [
+            'mark_error' => '更新支付方式失败，请稍后重试',
+            'update_error' => '更新支付方式失败，请稍后重试',
+            'mark_pay_detail_error' => '请先补齐支付信息后启用。',
+        ],
     ],
 
     'frontend' => [

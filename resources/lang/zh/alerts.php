@@ -62,6 +62,10 @@ return [
             'created' => '消费类别添加成功.',
             'updated' => '消费类别更新成功.',
         ],
+
+        'payMethod' => [
+            'updated' => '支付方式更新成功.',
+        ],
     ],
 
     'frontend' => [

@@ -123,6 +123,15 @@
             </li>
             @endauth
 
+            @permission('manage-pay-method')
+            <li class="{{ active_class(Active::checkUriPattern('admin/payMethod*')) }}">
+                <a href="{{ route('admin.payMethod.index') }}">
+                    <i class="fa fa-hdd-o"></i>
+                    <span>{{ trans('menus.backend.payMethod.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
             <li class="{{ active_class(Active::checkUriPattern('admin/log-viewer*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>

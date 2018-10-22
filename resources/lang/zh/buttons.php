@@ -54,6 +54,7 @@ return [
             'edit'   => '编辑',
             'update' => '更新',
             'view'   => '查看',
+            'edit_enable' => '编辑并启用'
         ],
 
         'save' => '保存',

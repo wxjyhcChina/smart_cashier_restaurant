@@ -196,6 +196,23 @@ return [
             'consumeCategory' => [
                 'name' => '类别名'
             ],
+
+            'payMethod' => [
+                'alipay' => [
+                    'app_id' => '支付宝应用ID（APPID）',
+                    'pid' => '合作伙伴身份（PID）',
+                    'alipay_public_key' => '支付宝公钥',
+                    'mch_private_key' => '应用私钥'
+                ],
+
+                'wechat_pay' => [
+                    'app_id' => '应用ID（APPID）',
+                    'mch_id' => '微信支付商户号',
+                    'mch_api_key' => 'API 密钥',
+                    'ssl_cert' => 'API 证书',
+                    'ssl_key' => 'API 证书密钥',
+                ]
+            ]
         ],
 
         'frontend' => [

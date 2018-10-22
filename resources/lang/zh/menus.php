@@ -75,6 +75,10 @@ return [
             'create' => '创建卡用户',
         ],
 
+        'payMethod' => [
+            'title' => '支付管理',
+        ],
+
 
         'log-viewer' => [
             'main'      => '日志查看器',
