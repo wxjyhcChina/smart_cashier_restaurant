@@ -84,8 +84,10 @@ class PayMethodRepository extends BasePayMethodRepository
      */
     public function mark(PayMethod $payMethod, $enabled)
     {
-        if (($payMethod->method == PayMethodType::ALIPAY && $payMethod->alipay_detail == null)
+        if ($enabled == 1 &&
+            (($payMethod->method == PayMethodType::ALIPAY && $payMethod->alipay_detail == null)
             || ($payMethod->method == PayMethodType::WECHAT_PAY && $payMethod->wechat_pay_detail == null))
+        )
         {
             throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('exceptions.backend.payMethod.mark_pay_detail_error'));
         }
