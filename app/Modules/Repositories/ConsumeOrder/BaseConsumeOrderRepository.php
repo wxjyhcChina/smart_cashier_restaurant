@@ -20,6 +20,8 @@ class BaseConsumeOrderRepository extends BaseRepository
     {
         return $this->query()
             ->where('restaurant_id', $restaurant_id)
-            ->with('goods');
+            ->with('goods')
+            ->with('customer')
+            ->with('card');
     }
 }

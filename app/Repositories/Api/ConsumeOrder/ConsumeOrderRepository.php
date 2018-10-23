@@ -246,7 +246,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
             DB::commit();
 
-            return $consumeOrder->load('goods');
+            return $consumeOrder->load('goods', 'customer', 'card');
         }
         catch (\Exception $exception)
         {
@@ -508,6 +508,6 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $order = $this->payWithBarcode($order, $input['barcode']);
         }
 
-        return $order->load('goods');
+        return $order->load('goods', 'customer', 'card');
     }
 }

@@ -14,6 +14,8 @@ class Customer extends Model
 
     protected $appends = ['balance'];
 
+    protected $hidden = ['account'];
+
     /**
      * @return int
      */

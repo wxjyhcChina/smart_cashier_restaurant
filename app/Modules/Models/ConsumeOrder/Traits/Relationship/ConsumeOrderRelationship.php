@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Modules\Models\ConsumeOrder\Traits\Relationship;
+use App\Modules\Models\Card\Card;
+use App\Modules\Models\Customer\Customer;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Label\Label;
 
@@ -25,5 +27,21 @@ trait ConsumeOrderRelationship
     public function label()
     {
         return $this->belongsToMany(Label::class, 'consume_order_goods', 'consume_order_id', 'label_id');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function card()
+    {
+        return $this->belongsTo(Card::class);
     }
 }
