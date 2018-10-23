@@ -187,6 +187,22 @@ return [
             ]
         ],
 
+        'goods' => [
+            'management' => '商品管理',
+            'active' => '所有商品',
+            'edit' => '编辑商品',
+            'create' => '创建商品',
+
+            'table' => [
+                'id' => '编号',
+                'name' => '用户名',
+                'price' => '身份证号码',
+                'shop' => '小店',
+                'dinning_time' => '用餐时间',
+                'created_at' => '创建时间',
+            ]
+        ],
+
         'consumeCategory' => [
             'management' => '消费类别管理',
             'active' => '所有消费类别',

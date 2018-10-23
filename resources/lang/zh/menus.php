@@ -69,10 +69,28 @@ return [
             'create' => '创建消费类别',
         ],
 
+        'consumeRule' => [
+            'title' => '消费规则管理',
+            'all' => '所有消费规则',
+            'create' => '创建消费规则',
+        ],
+
         'customer' => [
             'title' => '卡用户管理',
             'all' => '所有卡用户',
             'create' => '创建卡用户',
+        ],
+
+        'goods' => [
+            'title' => '商品管理',
+            'all' => '所有商品',
+            'create' => '创建商品',
+        ],
+
+        'labelCategory' => [
+            'title' => '餐盘类别管理',
+            'all' => '所有餐盘类别',
+            'create' => '创建餐盘类别',
         ],
 
         'payMethod' => [

@@ -78,24 +78,6 @@
             </li>
             @endauth
 
-            @permission('manage-dinning-time')
-            <li class="{{ active_class(Active::checkUriPattern('admin/dinningTime*')) }}">
-                <a href="{{ route('admin.dinningTime.index') }}">
-                    <i class="fa fa-calendar"></i>
-                    <span>{{ trans('menus.backend.dinningTime.title') }}</span>
-                </a>
-            </li>
-            @endauth
-
-            @permission('manage-consume-category')
-            <li class="{{ active_class(Active::checkUriPattern('admin/consumeCategory*')) }}">
-                <a href="{{ route('admin.consumeCategory.index') }}">
-                    <i class="fa fa-bars"></i>
-                    <span>{{ trans('menus.backend.consumeCategory.title') }}</span>
-                </a>
-            </li>
-            @endauth
-
             @permission('manage-customer')
             <li class="{{ active_class(Active::checkUriPattern('admin/customer*')) }}">
                 <a href="{{ route('admin.customer.index') }}">
@@ -114,11 +96,56 @@
             </li>
             @endauth
 
+            @permission('manage-goods')
+            <li class="{{ active_class(Active::checkUriPattern('admin/goods*')) }}">
+                <a href="{{ route('admin.goods.index') }}">
+                    <i class="fa fa-cutlery"></i>
+                    <span>{{ trans('menus.backend.goods.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-label-category')
+            <li class="{{ active_class(Active::checkUriPattern('admin/labelCategory*')) }}">
+                <a href="{{ route('admin.labelCategory.index') }}">
+                    <i class="fa fa-tag"></i>
+                    <span>{{ trans('menus.backend.labelCategory.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
             @permission('manage-device')
             <li class="{{ active_class(Active::checkUriPattern('admin/device*')) }}">
                 <a href="{{ route('admin.device.index') }}">
                     <i class="fa fa-hdd-o"></i>
                     <span>{{ trans('menus.backend.device.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-dinning-time')
+            <li class="{{ active_class(Active::checkUriPattern('admin/dinningTime*')) }}">
+                <a href="{{ route('admin.dinningTime.index') }}">
+                    <i class="fa fa-calendar"></i>
+                    <span>{{ trans('menus.backend.dinningTime.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-consume-category')
+            <li class="{{ active_class(Active::checkUriPattern('admin/consumeCategory*')) }}">
+                <a href="{{ route('admin.consumeCategory.index') }}">
+                    <i class="fa fa-bars"></i>
+                    <span>{{ trans('menus.backend.consumeCategory.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-consume-rule')
+            <li class="{{ active_class(Active::checkUriPattern('admin/consumeRule*')) }}">
+                <a href="{{ route('admin.consumeRule.index') }}">
+                    <i class="fa fa-book"></i>
+                    <span>{{ trans('menus.backend.consumeRule.title') }}</span>
                 </a>
             </li>
             @endauth
