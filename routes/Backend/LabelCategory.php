@@ -1,6 +1,6 @@
 <?php
 Route::group([
-    'namespace' => 'labelCategory',
+    'namespace' => 'LabelCategory',
     'middleware' => 'access.routeNeedsPermission:manage-label-category',
 ], function() {
     Route::resource('labelCategory', 'LabelCategoryController', ['except' => ['show', 'edit']]);
