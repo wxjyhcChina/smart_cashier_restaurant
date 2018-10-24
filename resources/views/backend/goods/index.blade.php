@@ -70,8 +70,8 @@
                     {data: 'id', name: 'id'},
                     {data: 'name', name: 'name'},
                     {data: 'price', name: 'price'},
-                    {data: 'shop_name', name: 'shop_id'},
-                    {data: 'dinning_time_name', name: 'dinning_time_id'},
+                    {data: 'shop_name', name: 'shops.name'},
+                    {data: 'dinning_time_name', name: 'dinning_time.name'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],

@@ -193,6 +193,14 @@ return [
                 'card' => 'IC卡'
             ],
 
+            'goods' => [
+                'image' => '图片',
+                'name' => '商品名',
+                'price' => '价格',
+                'shop_id' => '所属小店',
+                'dinning_time_id' => '用餐时间',
+            ],
+
             'consumeCategory' => [
                 'name' => '类别名'
             ],

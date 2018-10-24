@@ -58,6 +58,13 @@ return [
             'updated' => '卡用户更新成功.',
         ],
 
+        'goods' => [
+            'created' => '商品添加成功.',
+            'updated' => '商品更新成功.',
+            'deleted' => '商品删除成功.',
+            'labelCategoryAssigned' => '餐盘类别分配成功',
+        ],
+
         'consumeCategory' => [
             'created' => '消费类别添加成功.',
             'updated' => '消费类别更新成功.',

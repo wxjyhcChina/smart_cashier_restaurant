@@ -29,6 +29,7 @@ return [
         'none'              => '空',
         'show'              => '显示',
         'toggle_navigation' => '切换导航',
+
     ],
 
     'backend' => [
@@ -192,13 +193,28 @@ return [
             'active' => '所有商品',
             'edit' => '编辑商品',
             'create' => '创建商品',
+            'uploadImage' => '上传图片',
+            'assignLabelCategory' => '分配餐盘类别',
 
             'table' => [
                 'id' => '编号',
-                'name' => '用户名',
-                'price' => '身份证号码',
+                'name' => '商品名',
+                'price' => '价格',
                 'shop' => '小店',
                 'dinning_time' => '用餐时间',
+                'created_at' => '创建时间',
+            ]
+        ],
+
+        'labelCategory' => [
+            'management' => '餐盘类别管理',
+            'active' => '所有餐盘类别',
+            'edit' => '编辑餐盘类别',
+            'create' => '创建餐盘类别',
+
+            'table' => [
+                'id' => '编号',
+                'name' => '类别名',
                 'created_at' => '创建时间',
             ]
         ],

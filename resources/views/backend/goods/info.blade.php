@@ -1,6 +1,6 @@
 @extends ('backend.layouts.app')
 
-@section ('title', trans('labels.backend.goods.management') . ' | ' . trans('labels.backend.goods.create'))
+@section ('title', trans('labels.backend.goods.management') . ' | ' . trans('labels.backend.goods.edit'))
 
 @section('after-styles')
     {{ Html::style("css/backend/plugin/datepicker/daterangepicker.css") }}
@@ -9,16 +9,16 @@
 @section('page-header')
     <h1>
         {{ trans('labels.backend.goods.management') }}
-        <small>{{ trans('labels.backend.goods.create') }}</small>
+        <small>{{ trans('labels.backend.goods.edit') }}</small>
     </h1>
 @endsection
 
 @section('content')
-    {{ Form::open(['route' => 'admin.goods.store', 'class' => 'form-horizontal', 'role' => 'form', 'id'=>'store-goods-form', 'method' => 'post']) }}
+    {{ Form::model($goods, ['route' => ['admin.shop.edit', $goods], 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'get']) }}
 
     <div class="box box-success">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ trans('labels.backend.goods.create') }}</h3>
+            <h3 class="box-title">{{ trans('labels.backend.goods.edit') }}</h3>
 
             <div class="box-tools pull-right">
                 @include('backend.goods.includes.partials.header-buttons')
@@ -30,15 +30,7 @@
                 {{ Form::label('image', trans('validation.attributes.backend.goods.image'), ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    <div id="crop-avatar">
-                        <div class="avatar-view avatar-view-customer custom-avatar-view" title="{{trans('labels.backend.goods.uploadImage')}}">
-                            <input class="aspectRatio1" name="aspectRatio1" type="hidden" value='1'>
-                            <input class="aspectRatio2" name="aspectRatio2" type="hidden" value='1'>
-                            <input class="image_type" name="image_type" type="hidden" value='1'>
-                            {{ Form::hidden('image', null, ['id' => 'image', 'class' => 'qiniuUrl']) }}
-                            <img src="../../img/add_1_1.png" alt="Avatar">
-                        </div>
-                    </div>
+                    <img height="100px" width="100px" src="{{empty($goods->image) ? "../../../header.png" : $goods->image}}" alt="Avatar">
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -46,7 +38,7 @@
                 {{ Form::label('name', trans('validation.attributes.backend.goods.name').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => trans('validation.attributes.backend.goods.name')]) }}
+                    <p style="padding-top: 7px">{{$goods->name}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -54,7 +46,7 @@
                 {{ Form::label('price', trans('validation.attributes.backend.goods.price').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('price', null, ['class' => 'form-control', 'required', 'placeholder' => trans('validation.attributes.backend.goods.price')]) }}
+                    <p style="padding-top: 7px">{{$goods->price}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -62,7 +54,7 @@
                 {{ Form::label('shop_id', trans('validation.attributes.backend.goods.shop_id').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::select('shop_id', $shops, null, ['class' => 'form-control', 'required']) }}
+                    <p style="padding-top: 7px">{{$goods->shop->name}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -70,7 +62,7 @@
                 {{ Form::label('dinning_time_id', trans('validation.attributes.backend.goods.dinning_time_id').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::select('dinning_time_id', $dinningTime, null, ['class' => 'form-control', 'required']) }}
+                    <p style="padding-top: 7px">{{$goods->dinning_time->name}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -84,7 +76,7 @@
             </div><!--pull-left-->
 
             <div class="pull-right">
-                {{ Form::submit(trans('buttons.general.crud.create'), ['class' => 'btn btn-success btn-xs']) }}
+                {{ Form::submit(trans('buttons.general.crud.edit'), ['class' => 'btn btn-success btn-xs']) }}
             </div><!--pull-right-->
 
             <div class="clearfix"></div>
@@ -92,20 +84,4 @@
     </div><!--box-->
 
     {{ Form::close() }}
-
-    @include('backend.includes.upload', ['uploadRoute' => 'admin.goods.uploadImage'])
-@stop
-
-@section('after-scripts')
-    {{ Html::script('js/backend/upload/upload.js') }}
-    {{ Html::style('css/backend/upload/upload.css') }}
-    {{ Html::script('js/backend/plugin/cropper/cropper.js') }}
-    {{ Html::style('css/backend/plugin/cropper/cropper.css') }}
-
-    <script>
-        $(function() {
-
-        });
-
-    </script>
 @stop

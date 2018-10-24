@@ -54,26 +54,22 @@ class BaseGoodsRepository extends BaseRepository
 
     /**
      * @param $goods
-     * @param $label
+     * @param $labelCategory
+     */
+    protected function detachLabelCategory($goods, $labelCategory)
+    {
+        $labelCategory->goods()->detach($goods->id);
+    }
+
+    /**
+     * @param $goods
+     * @param $labelCategory
      * @param bool $overwrite
      * @return mixed
      * @throws ApiException
      */
-    public function storeLabelCategory($goods, $label, $overwrite = false)
+    protected function bindLabelCategory($goods, $labelCategory, $overwrite = false)
     {
-        $label = Label::where('rfid', $label)->first();
-
-        if ($label == null)
-        {
-            throw new ApiException(ErrorCode::LABEL_NOT_EXIST, trans('api.error.label_not_exist'));
-        }
-
-        $labelCategory = $label->labelCategory;
-        if ($labelCategory == null)
-        {
-            throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
-        }
-
         try
         {
             DB::beginTransaction();
@@ -85,6 +81,7 @@ class BaseGoodsRepository extends BaseRepository
             {
                 if ($existingGoods->id == $goods->id)
                 {
+                    DB::commit();
                     return $labelCategory->load('goods');
                 }
                 else if ($overwrite == false)
@@ -112,6 +109,33 @@ class BaseGoodsRepository extends BaseRepository
 
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.goods.bind_error'));
         }
+
+        return $labelCategory;
+    }
+
+    /**
+     * @param $goods
+     * @param $label
+     * @param bool $overwrite
+     * @return mixed
+     * @throws ApiException
+     */
+    public function storeLabelCategory($goods, $label, $overwrite = false)
+    {
+        $label = Label::where('rfid', $label)->first();
+
+        if ($label == null)
+        {
+            throw new ApiException(ErrorCode::LABEL_NOT_EXIST, trans('api.error.label_not_exist'));
+        }
+
+        $labelCategory = $label->labelCategory;
+        if ($labelCategory == null)
+        {
+            throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
+        }
+
+        $labelCategory = $this->bindLabelCategory($goods, $labelCategory, $overwrite);
 
         return $labelCategory->load('goods');
     }
