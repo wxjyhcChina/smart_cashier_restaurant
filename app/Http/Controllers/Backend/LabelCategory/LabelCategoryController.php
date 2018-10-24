@@ -2,74 +2,123 @@
 
 namespace App\Http\Controllers\Backend\LabelCategory;
 
+use App\Http\Requests\Backend\LabelCategory\ManageLabelCategoryRequest;
+use App\Http\Requests\Backend\LabelCategory\StoreLabelCategoryRequest;
+use App\Modules\Models\Label\LabelCategory;
+use App\Repositories\Backend\Label\LabelCategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class LabelCategoryController extends Controller
 {
     /**
+     * @var LabelCategoryRepository
+     */
+    private $labelCategoryRepo;
+
+    /**
+     * LabelCategoryController constructor.
+     * @param $labelCategoryRepo
+     */
+    public function __construct(LabelCategoryRepository $labelCategoryRepo)
+    {
+        $this->labelCategoryRepo = $labelCategoryRepo;
+    }
+
+
+    /**
      * Display a listing of the resource.
      *
+     * @param ManageLabelCategoryRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ManageLabelCategoryRequest $request)
     {
         //
+        return view('backend.labelCategory.index');
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param ManageLabelCategoryRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(ManageLabelCategoryRequest $request)
     {
         //
+        return view('backend.labelCategory.create');
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param ManageLabelCategoryRequest $request
+     * @return string
      */
-    public function store(Request $request)
+    public function uploadImage(ManageLabelCategoryRequest $request)
     {
-        //
+        return Qiniu::fileUploadWithCorp($request->get('avatar_src'),
+            $request->get('avatar_data'),
+            $_FILES['avatar_file'],
+            $request->get('width'),
+            $request->get('height'),
+            config('constants.qiniu.image_bucket'),
+            config('constants.qiniu.image_bucket_url'));
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param StoreLabelCategoryRequest $request
+     * @return mixed
+     * @throws \App\Exceptions\Api\ApiException
      */
-    public function show($id)
+    public function store(StoreLabelCategoryRequest $request)
     {
         //
+        $input = $request->all();
+        $input['restaurant_id'] = Auth::User()->restaurant_id;
+
+        $this->labelCategoryRepo->create($input);
+
+        return redirect()->route('admin.labelCategory.index')->withFlashSuccess(trans('alerts.backend.labelCategory.created'));
+
+    }
+
+    /**
+     * @param LabelCategory $labelCategory
+     * @param ManageLabelCategoryRequest $request
+     * @return mixed
+     */
+    public function show(LabelCategory $labelCategory, ManageLabelCategoryRequest $request)
+    {
+        //
+        return view('backend.labelCategory.info')->withLabelCategory($labelCategory);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  LabelCategory $labelCategory
+     * @param   ManageLabelCategoryRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(LabelCategory $labelCategory, ManageLabelCategoryRequest $request)
     {
         //
+        return view('backend.labelCategory.edit')->withLabelCategory($labelCategory);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param LabelCategory $labelCategory
+     * @param StoreLabelCategoryRequest $request
+     * @return mixed
+     * @throws \App\Exceptions\Api\ApiException
      */
-    public function update(Request $request, $id)
+    public function update(LabelCategory $labelCategory, StoreLabelCategoryRequest $request)
     {
         //
+        $this->labelCategoryRepo->update($labelCategory, $request->all());
+
+        return redirect()->route('admin.labelCategory.index')->withFlashSuccess(trans('alerts.backend.labelCategory.updated'));
     }
 
     /**

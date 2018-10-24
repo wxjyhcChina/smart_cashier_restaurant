@@ -7,7 +7,7 @@ Route::group([
 
     Route::get('goods/get', 'GoodsTableController')->name('goods.get');
     Route::get('goods/getLabelCategories', 'GoodsTableController@getLabelCategories')->name('goods.getLabelCategories');
-    Route::post('uploadImage', 'GoodsController@uploadImage')->name('goods.uploadImage');
+    Route::post('goods/uploadImage', 'GoodsController@uploadImage')->name('goods.uploadImage');
 
     Route::group([
         'prefix' => 'goods/{goods}',

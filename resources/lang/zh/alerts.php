@@ -65,6 +65,13 @@ return [
             'labelCategoryAssigned' => '餐盘类别分配成功',
         ],
 
+        'labelCategory' => [
+            'created' => '餐盘类别添加成功.',
+            'updated' => '餐盘类别更新成功.',
+            'deleted' => '餐盘类别删除成功.',
+            'labelAssigned' => '餐盘分配成功',
+        ],
+
         'consumeCategory' => [
             'created' => '消费类别添加成功.',
             'updated' => '消费类别更新成功.',

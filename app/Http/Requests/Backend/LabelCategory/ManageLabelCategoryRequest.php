@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Backend\Goods;
+namespace App\Http\Requests\Backend\LabelCategory;
 
 use App\Http\Requests\Request;
 
-class StoreGoodsRequest extends Request
+class ManageLabelCategoryRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class StoreGoodsRequest extends Request
      */
     public function authorize()
     {
-        return access()->allow('manage-goods');
+        return access()->allow('manage-label-category');
     }
 
     /**
@@ -24,11 +24,7 @@ class StoreGoodsRequest extends Request
     public function rules()
     {
         return [
-            'price' => 'required|numeric',
-            'name' => 'required',
-            'dinning_time_id' => 'required',
-            'shop_id' => 'required'
+            //
         ];
     }
 }
-

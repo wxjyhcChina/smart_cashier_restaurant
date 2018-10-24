@@ -92,6 +92,12 @@ return [
             'bind_error' => '绑定餐盘失败，请稍后重试',
         ],
 
+        'labelCategory' => [
+            'mark_error' => '更新餐盘类别失败，请稍后重试',
+            'update_error' => '更新餐盘类别失败，请稍后重试',
+            'create_error' => '创建餐盘类别失败，请稍后重试',
+        ],
+
         'consumeRule' => [
             'mark_error' => '更新消费规则失败，请稍后重试',
             'update_error' => '更新消费规则失败，请稍后重试',

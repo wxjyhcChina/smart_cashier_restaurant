@@ -211,6 +211,7 @@ return [
             'active' => '所有餐盘类别',
             'edit' => '编辑餐盘类别',
             'create' => '创建餐盘类别',
+            'assignLabel' => '分配餐盘',
 
             'table' => [
                 'id' => '编号',

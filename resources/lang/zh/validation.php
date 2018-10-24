@@ -201,6 +201,11 @@ return [
                 'dinning_time_id' => '用餐时间',
             ],
 
+            'labelCategory' => [
+                'image' => '图片',
+                'name' => '类别名',
+            ],
+
             'consumeCategory' => [
                 'name' => '类别名'
             ],
