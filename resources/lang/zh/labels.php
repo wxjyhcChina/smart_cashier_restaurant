@@ -220,6 +220,14 @@ return [
             ]
         ],
 
+        'label' => [
+            'table' => [
+                'id' => '编号',
+                'rfid' => 'RFID',
+                'created_at' => '创建时间'
+            ]
+        ],
+
         'consumeCategory' => [
             'management' => '消费类别管理',
             'active' => '所有消费类别',

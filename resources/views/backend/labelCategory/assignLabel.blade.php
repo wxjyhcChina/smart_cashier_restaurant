@@ -14,7 +14,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($labelCategory, ['route' => ['admin.labelCategory.assignLabelCategoryStore', $labelCategory], 'class' => 'form-horizontal', 'id'=>'assign_label_form', 'role' => 'form', 'method' => 'post']) }}
+    {{ Form::model($labelCategory, ['route' => ['admin.labelCategory.assignLabelStore', $labelCategory], 'class' => 'form-horizontal', 'id'=>'assign_label_form', 'role' => 'form', 'method' => 'post']) }}
 
     {{ Form::hidden('label_category_id', $labelCategory->id, ['id' => 'label_category_id']) }}
     <div class="box box-success">
@@ -34,9 +34,9 @@
                         <th>
                             <input type="checkbox" name="select_all" value="1" id="select-all">
                         </th>
-                        <th>{{ trans('labels.backend.labelCategory.table.id') }}</th>
-                        <th>{{ trans('labels.backend.labelCategory.table.name') }}</th>
-                        <th>{{ trans('labels.backend.labelCategory.table.created_at') }}</th>
+                        <th>{{ trans('labels.backend.label.table.id') }}</th>
+                        <th>{{ trans('labels.backend.label.table.rfid') }}</th>
+                        <th>{{ trans('labels.backend.label.table.created_at') }}</th>
                     </tr>
                     </thead>
                 </table>
@@ -70,7 +70,7 @@
 
     <script>
         $(function() {
-            var table = $('#label-category-table').DataTable({
+            var table = $('#label-table').DataTable({
                 dom: 'lfrtip',
                 pagingType: "page_select_with_ellipses",
                 processing: false,
@@ -95,7 +95,7 @@
                         }
                     },
                     {data: 'id', name: 'id'},
-                    {data: 'name', name: 'name'},
+                    {data: 'rfid', name: 'rfid'},
                     {data: 'created_at', name: 'created_at'},
                 ],
                 'select': {

@@ -131,4 +131,29 @@ class LabelCategoryController extends Controller
     {
         //
     }
+
+    /**
+     * @param LabelCategory $labelCategory
+     * @param ManageLabelCategoryRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function assignLabel(LabelCategory $labelCategory, ManageLabelCategoryRequest $request)
+    {
+        return view('backend.labelCategory.assignLabel')->withLabelCategory($labelCategory);
+    }
+
+    /**
+     * @param LabelCategory $labelCategory
+     * @param ManageLabelCategoryRequest $request
+     * @return mixed
+     * @throws \Throwable
+     */
+    public function assignLabelStore(LabelCategory $labelCategory, ManageLabelCategoryRequest $request)
+    {
+        $input = $request->all();
+
+        $this->labelCategoryRepo->assignLabel($labelCategory, $input);
+
+        return redirect()->route('admin.labelCategory.index')->withFlashSuccess(trans('alerts.backend.labelCategory.labelAssigned'));
+    }
 }

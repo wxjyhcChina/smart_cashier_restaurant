@@ -17,6 +17,6 @@ Route::group([
         Route::get('info', 'LabelCategoryController@show')->name('labelCategory.info');
 
         Route::get('labels/create', 'LabelCategoryController@assignLabel')->name('labelCategory.assignLabel');
-        Route::post('labels/store', 'LabelCategoryController@assignLabelStore')->name('labelCategory.assignLabel');
+        Route::post('labels/store', 'LabelCategoryController@assignLabelStore')->name('labelCategory.assignLabelStore');
     });
 });

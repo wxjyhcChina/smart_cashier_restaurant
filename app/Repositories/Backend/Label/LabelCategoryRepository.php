@@ -10,6 +10,7 @@ namespace App\Repositories\Backend\Label;
 
 use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ErrorCode;
+use App\Modules\Models\Label\Label;
 use App\Modules\Models\Label\LabelCategory;
 use App\Modules\Repositories\Label\BaseLabelCategoryRepository;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +64,31 @@ class LabelCategoryRepository extends BaseLabelCategoryRepository
 
         throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.labelCategory.update_error'));
     }
+
+    /**
+     * @param $labelCategory
+     * @param $input
+     * @throws \Throwable
+     */
+    public function assignLabel($labelCategory, $input)
+    {
+        DB::transaction(function() use ($input, $labelCategory) {
+            Label::where('label_category_id', $labelCategory->id)->update(['label_category_id' => null]);
+
+            if(array_key_exists('id', $input))
+            {
+                $ids = $input['id'];
+
+                for($i =0 ; $i < count($ids); $i++)
+                {
+                    $card = Label::find($ids[$i]);
+                    $card->label_category_id = $labelCategory->id;
+                    $card->save();
+                }
+            }
+        });
+    }
+
 
     /**
      * @param $input

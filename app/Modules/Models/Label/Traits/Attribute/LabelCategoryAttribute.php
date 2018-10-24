@@ -29,7 +29,7 @@ trait LabelCategoryAttribute
      */
     public function getAssignLabelButtonAttribute()
     {
-        return '<a href="' . route('admin.labelCategory.assignLabel', $this, false) . '" class="btn btn-xs btn-success"><i class="fa fa-tag" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.goods.assignLabelCategory') . '"></i></a> ';
+        return '<a href="' . route('admin.labelCategory.assignLabel', $this, false) . '" class="btn btn-xs btn-success"><i class="fa fa-tag" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.labelCategory.assignLabel') . '"></i></a> ';
     }
 
     /**
