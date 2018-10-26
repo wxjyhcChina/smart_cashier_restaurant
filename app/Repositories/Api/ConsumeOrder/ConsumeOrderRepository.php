@@ -169,6 +169,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             }
         }
 
+        $discountPrice = $price;
         if ($forceDiscount != null)
         {
             $discountPrice = bcmul($price, bcdiv($forceDiscount, 10, 2), 2);
