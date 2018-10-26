@@ -241,6 +241,22 @@ return [
             ]
         ],
 
+        'consumeRule' => [
+            'management' => '消费规则管理',
+            'active' => '所有消费规则',
+            'edit' => '编辑消费规则',
+            'create' => '创建消费规则',
+
+            'table' => [
+                'id' => '编号',
+                'weekday' => '日期',
+                'dinningTime' => '用餐时间',
+                'name' => '规则名称',
+                'consumeCategory' => '消费类别',
+                'discount' => '折扣'
+            ]
+        ],
+
         'payMethod' => [
             'management' => '支付方式管理',
             'active' => '所有支付方式',
