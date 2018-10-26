@@ -8,6 +8,7 @@
 
 namespace App\Repositories\Api\ConsumeOrder;
 
+use App\Common\Util\OrderUtil;
 use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ConsumeOrderStatus;
 use App\Modules\Enums\ErrorCode;
@@ -229,6 +230,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             DB::beginTransaction();
 
             $consumeOrder = new ConsumeOrder();
+            $consumeOrder->order_id = OrderUtil::generateConsumeOrderId();
             $consumeOrder->restaurant_id = $restaurant_id;
             $consumeOrder->restaurant_user_id = $restaurant_user_id;
             $consumeOrder->dinning_time_id = $response['dinning_time_id'];
@@ -254,7 +256,8 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         {
             DB::rollBack();
 
-            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.database_error'));
+            throw $exception;
+//            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.database_error'));
         }
     }
 
