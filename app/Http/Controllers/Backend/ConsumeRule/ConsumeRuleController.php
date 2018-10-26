@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Backend\ConsumeRule;
 
+use App\Http\Requests\Api\ConsumeRule\StoreConsumeRuleRequest;
+use App\Http\Requests\Backend\ConsumeRule\ManageConsumeRuleRequest;
+use App\Modules\Models\ConsumeRule\ConsumeRule;
 use App\Repositories\Backend\ConsumeRule\ConsumeRuleRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -39,15 +42,16 @@ class ConsumeRuleController extends Controller
     public function create()
     {
         //
+        return view('backend.consumeRule.create');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreConsumeRuleRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreConsumeRuleRequest $request)
     {
         //
     }
@@ -66,22 +70,24 @@ class ConsumeRuleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param ConsumeRule $consumeRule
+     * @param ManageConsumeRuleRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(ConsumeRule $consumeRule, ManageConsumeRuleRequest $request)
     {
         //
+        return view('backend.consumeRule.create');
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  ConsumeRule $consumeRule
+     * @param  ManageConsumeRuleRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ConsumeRule $consumeRule, ManageConsumeRuleRequest $request)
     {
         //
     }

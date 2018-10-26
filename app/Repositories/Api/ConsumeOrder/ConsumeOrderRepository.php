@@ -164,6 +164,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
             if ($foundGoods == null)
             {
+                $price = bcadd($price, $goods->price, 2);
                 $goods['labelId'] = null;
                 array_push($goodsArray, $goods);
             }
