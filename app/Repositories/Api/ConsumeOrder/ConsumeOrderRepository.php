@@ -306,7 +306,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      */
     private function payWithCash(ConsumeOrder $order)
     {
-        $order->payMethod = PayMethodType::CASH;
+        $order->pay_method = PayMethodType::CASH;
         $order->status = ConsumeOrderStatus::COMPLETE;
         $order->save();
 
@@ -388,7 +388,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $order->consume_category_id = $customer->consume_category_id;
             $order->discount_price = $discount_price;
             $order->discount = $discount;
-            $order->payMethod = PayMethodType::CARD;
+            $order->pay_method = PayMethodType::CARD;
             $order->status = ConsumeOrderStatus::COMPLETE;
             $order->save();
 
@@ -476,7 +476,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     /**
      * @param ConsumeOrder $order
      * @param $input
-     * @return $this
+     * @return ConsumeOrder
      * @throws ApiException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
@@ -487,28 +487,30 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             throw  new ApiException(ErrorCode::ORDER_STATUS_INCORRECT, trans('api.error.order_status_incorrect'));
         }
 
-        $payMethod = $input['pay_method'];
-
-        $method = PayMethod::where('method', $payMethod)->where('enabled', 1)->first();
-        if ($method == null)
+        if (isset($input['pay_method']))
         {
-            throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
-        }
-
-        if ($payMethod == PayMethodType::CASH)
-        {
-            $order = $this->payWithCash($order);
-        }
-        else if ($payMethod == PayMethodType::CARD)
-        {
-            if (!isset($input['card_id']))
+            $payMethod = $input['pay_method'];
+            $method = PayMethod::where('method', $payMethod)->where('enabled', 1)->first();
+            if ($method == null)
             {
-                throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
+                throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
             }
 
-            $order = $this->payWithCard($order, $input['card_id']);
+            if ($payMethod == PayMethodType::CASH)
+            {
+                $order = $this->payWithCash($order);
+            }
+            else if ($payMethod == PayMethodType::CARD)
+            {
+                if (!isset($input['card_id']))
+                {
+                    throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
+                }
+
+                $order = $this->payWithCard($order, $input['card_id']);
+            }
         }
-        else if ($payMethod == PayMethodType::ALIPAY || $payMethod == PayMethod::WECHATPAY)
+        else
         {
             $order = $this->payWithBarcode($order, $input['barcode']);
         }
