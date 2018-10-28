@@ -104,7 +104,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BIND_GOOD, trans('api.error.label_category_not_bind_good'));
         }
 
-        $goods['labelId'] = $label->id;
+        $goods->label_id = $label->id;
         return $goods;
     }
 
@@ -141,7 +141,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     {
         $dinningTime = $this->getCurrentDinningTime($restaurant_id);
 
-        $excludeGoods = $this->excludeGoods($restaurant_id, $dinningTime->id);
+        $excludeLabels = $this->excludeLabels($restaurant_id, $dinningTime->id);
 
         $price = 0;
         $goodsArray = [];
@@ -149,9 +149,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         {
             $goods = $this->getLabelCategoryGoods($restaurant_id, $labelId, $dinningTime->id);
 
-            $foundGoods = $excludeGoods->where('id', $goods->id)->first();
+            $foundLabel = $excludeLabels->where('id', $goods->labelId)->first();
 
-            if ($foundGoods == null)
+            if ($foundLabel == null)
             {
                 $price = bcadd($price, $goods->price, 2);
                 array_push($goodsArray, $goods);
@@ -161,14 +161,10 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         foreach ($tempGoods as $goodsId)
         {
             $goods = $this->getGoods($restaurant_id, $goodsId);
-            $foundGoods = $excludeGoods->where('id', $goods->id)->first();
 
-            if ($foundGoods == null)
-            {
-                $price = bcadd($price, $goods->price, 2);
-                $goods['labelId'] = null;
-                array_push($goodsArray, $goods);
-            }
+            $price = bcadd($price, $goods->price, 2);
+            $goods->label_id = null;
+            array_push($goodsArray, $goods);
         }
 
         $discountPrice = $price;
@@ -244,7 +240,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $goodsIds = [];
             foreach ($response['goods'] as $goods)
             {
-                $goodsIds[$goods->id] = ['label_id' => $goods['labelId']];
+                $goodsIds[$goods->id] = ['label_id' => $goods->label_id];
             }
             $consumeOrder->goods()->attach($goodsIds);
 
@@ -280,7 +276,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      * @param $dinning_time_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      */
-    private function excludeGoods($restaurant_id, $dinning_time_id)
+    private function excludeLabels($restaurant_id, $dinning_time_id)
     {
         $now = Carbon::now();
         $excludeTime = Carbon::now()->subSeconds(config('constants.order.exclude_time'));
@@ -291,13 +287,13 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             ->orderBy('id', 'desc')
             ->first();
 
-        $goods = collect();
+        $labels = collect();
         if ($order != null)
         {
-            $goods = $order->goods;
+            $labels = $order->labels;
         }
 
-        return $goods;
+        return $labels;
     }
 
     /**
