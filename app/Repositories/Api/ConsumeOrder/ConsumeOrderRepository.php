@@ -402,7 +402,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.database_error'));
         }
 
-        return $order;
+        return $order->load('customer');
     }
 
     /**
