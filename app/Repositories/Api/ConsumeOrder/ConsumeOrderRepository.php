@@ -149,7 +149,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         {
             $goods = $this->getLabelCategoryGoods($restaurant_id, $labelId, $dinningTime->id);
 
-            $foundLabel = $excludeLabels->where('id', $goods->labelId)->first();
+            $foundLabel = $excludeLabels->where('id', $goods->label_id)->first();
 
             if ($foundLabel == null)
             {

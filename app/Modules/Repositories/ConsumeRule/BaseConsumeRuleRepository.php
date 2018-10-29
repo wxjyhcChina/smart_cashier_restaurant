@@ -55,11 +55,10 @@ class BaseConsumeRuleRepository extends BaseRepository
         foreach ($dinningTimeArray as $dinning_time)
         {
             $dinning_time = DinningTime::find($dinning_time);
-
-//            if ($dinning_time == null)
-//            {
-//                throw new ApiException(ErrorCode::DINNING_TIME_NOT_EXIST, trans('api.error.dinning_time_not_exist'))
-//            }
+            if ($dinning_time == null)
+            {
+                throw new ApiException(ErrorCode::DINNING_TIME_NOT_EXIST, trans('api.error.dinning_time_not_exist'));
+            }
 
             $query = $dinning_time->consume_rules()
                 ->where('restaurant_id', $restaurant_id)

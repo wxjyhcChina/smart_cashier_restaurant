@@ -77,6 +77,12 @@ return [
             'updated' => '消费类别更新成功.',
         ],
 
+        'consumeRule' => [
+            'created' => '消费规则添加成功.',
+            'updated' => '消费规则更新成功.',
+            'deleted' => '消费规则删除成功.',
+        ],
+
         'payMethod' => [
             'updated' => '支付方式更新成功.',
         ],

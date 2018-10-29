@@ -8,6 +8,9 @@
 
 namespace App\Repositories\Backend\ConsumeRule;
 
+use App\Exceptions\Api\ApiException;
+use App\Modules\Enums\ErrorCode;
+use App\Modules\Models\ConsumeRule\ConsumeRule;
 use App\Modules\Repositories\ConsumeRule\BaseConsumeRuleRepository;
 
 /**
@@ -16,5 +19,29 @@ use App\Modules\Repositories\ConsumeRule\BaseConsumeRuleRepository;
  */
 class ConsumeRuleRepository extends BaseConsumeRuleRepository
 {
+    /**
+     * @param $restaurant_id
+     * @return mixed
+     */
+    public function getByRestaurantWithRelationQuery($restaurant_id)
+    {
+        return $this->getByRestaurantQuery($restaurant_id)->with('dinning_time')->with('consume_categories');
+    }
 
+    /**
+     * @param ConsumeRule $consumeRule
+     * @param $status
+     * @return bool
+     * @throws ApiException
+     */
+    public function mark(ConsumeRule $consumeRule, $status)
+    {
+        $consumeRule->enabled = $status;
+
+        if ($consumeRule->save()) {
+            return true;
+        }
+
+        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.department.mark_error'));
+    }
 }

@@ -249,11 +249,13 @@ return [
 
             'table' => [
                 'id' => '编号',
+                'name' => '规则名',
                 'weekday' => '日期',
                 'dinningTime' => '用餐时间',
                 'name' => '规则名称',
                 'consumeCategory' => '消费类别',
-                'discount' => '折扣'
+                'discount' => '折扣',
+                'created_at' => '创建时间',
             ]
         ],
 

@@ -1,6 +1,6 @@
 @extends ('backend.layouts.app')
 
-@section ('title', trans('labels.backend.consumeCategory.management') . ' | ' . trans('labels.backend.department.create'))
+@section ('title', trans('labels.backend.consumeCategory.management') . ' | ' . trans('labels.backend.consumeCategory.create'))
 
 @section('page-header')
     <h1>

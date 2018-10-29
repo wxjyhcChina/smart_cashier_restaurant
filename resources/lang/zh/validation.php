@@ -210,6 +210,14 @@ return [
                 'name' => '类别名'
             ],
 
+            'consumeRule' => [
+                'name' => '类别名',
+                'dinning_time' => '用餐时间',
+                'weekday' => '日期',
+                'consumeCategory' => '消费类别',
+                'discount' => '折扣'
+            ],
+
             'payMethod' => [
                 'alipay' => [
                     'app_id' => '支付宝应用ID（APPID）',
