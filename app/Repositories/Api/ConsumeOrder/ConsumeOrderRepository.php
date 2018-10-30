@@ -417,11 +417,11 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         //check alipay code or wechat code
         if (Pay::isWechatPay($barcode))
         {
-            $response = Pay::barcodeWechatPay($order->order_id, $barcode, $order->price, '消费');
+            $response = Pay::barcodeWechatPay($order->order_id, $barcode, $order->discount_price, '消费');
         }
         else if (Pay::isAliPay($barcode))
         {
-            $response = Pay::barcodeAlipay($order->order_id, $barcode, $order->price, '消费');
+            $response = Pay::barcodeAlipay($order->order_id, $barcode, $order->discount_price, '消费');
         }
         else
         {
