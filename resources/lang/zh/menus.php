@@ -79,6 +79,8 @@ return [
             'title' => '卡用户管理',
             'all' => '所有卡用户',
             'create' => '创建卡用户',
+            'changeBalance' => '修改余额',
+            'changeAllBalance' => '修改所有用户余额',
         ],
 
         'goods' => [

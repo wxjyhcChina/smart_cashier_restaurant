@@ -56,6 +56,7 @@ return [
         'customer' => [
             'created' => '卡用户添加成功.',
             'updated' => '卡用户更新成功.',
+            'updated_balance' => '余额更新成功',
         ],
 
         'goods' => [

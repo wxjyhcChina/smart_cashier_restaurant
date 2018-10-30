@@ -9,14 +9,14 @@
 @section('page-header')
     <h1>
         {{ trans('labels.backend.customer.management') }}
-        <small>{{ trans('labels.backend.customer.active') }}</small>
+        <small>{{ $customer->user_name.trans('labels.backend.consumeOrder.orderFor') }}</small>
     </h1>
 @endsection
 
 @section('content')
     <div class="box box-success">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ trans('labels.backend.customer.active') }}</h3>
+            <h3 class="box-title">{{ $customer->user_name.trans('labels.backend.consumeOrder.orderFor') }}</h3>
 
             <div class="box-tools pull-right">
                 @include('backend.customer.includes.partials.header-buttons')
@@ -25,18 +25,19 @@
 
         <div class="box-body">
             <div class="table-responsive">
-                <table id="department-table" class="table table-condensed table-hover">
+                <table id="order-table" class="table table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th>{{ trans('labels.backend.customer.table.id') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.user_name') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.id_license') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.birthday') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.card') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.department') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.consume_category') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.balance') }}</th>
-                            <th>{{ trans('labels.backend.customer.table.created_at') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.id') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.order_id') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.customer_id') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.card_id') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.price') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.pay_method') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.dinning_time') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.created_at') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.restaurant_user_id') }}</th>
+                            <th>{{ trans('labels.backend.consumeOrder.table.status') }}</th>
                             <th>{{ trans('labels.general.actions') }}</th>
                         </tr>
                     </thead>
@@ -48,13 +49,14 @@
 
 @section('after-scripts')
     {{ Html::script("https://cdn.datatables.net/v/bs/dt-1.10.15/datatables.min.js") }}
+    {{ Html::script("js/backend/plugin/datatables/page_select_with_ellipses.js") }}
     {{ Html::script("js/backend/plugin/datatables/dataTables-extend.js") }}
     {{ Html::script("js/backend/plugin/datatables/dataTables_locale.js") }}
-    {{ Html::script("js/backend/plugin/datatables/page_select_with_ellipses.js") }}
 
     <script>
         $(function() {
-            $('#department-table').DataTable({
+
+            $('#order-table').DataTable({
                 dom: 'lfrtip',
                 pagingType: "page_select_with_ellipses",
                 processing: false,
@@ -62,7 +64,7 @@
                 autoWidth: false,
                 stateSave: true,
                 ajax: {
-                    url: '{{ route("admin.customer.get") }}',
+                    url: '{{ route("admin.customer.getConsumeOrders", $customer->id) }}',
                     type: 'get',
                     error: function (xhr, err) {
                         if (err === 'parsererror')
@@ -71,17 +73,18 @@
                 },
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'user_name', name: 'user_name'},
-                    {data: 'id_license', name: 'id_license'},
-                    {data: 'birthday', name: 'birthday'},
+                    {data: 'order_id', name: 'order_id'},
+                    {data: 'customer_name', name: 'customers.user_name'},
                     {data: 'card_number', name: 'cards.number'},
-                    {data: 'department_name', name: 'departments.name'},
-                    {data: 'consume_category_name', name: 'consume_categories.name'},
-                    {data: 'account_balance', name: 'accounts.balance'},
+                    {data: 'discount_price', name: 'discount_price'},
+                    {data: 'pay_method', name: 'pay_method'},
+                    {data: 'dinning_time_name', name: 'dinning_time.name'},
                     {data: 'created_at', name: 'created_at'},
+                    {data: 'restaurant_user_name', name: 'restaurant_users.username'},
+                    {data: 'show_status', name: 'status'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],
-                order: [[0, "asc"]],
+                order: [[0, "desc"]],
                 searchDelay: 500
             });
         });

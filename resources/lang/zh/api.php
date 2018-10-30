@@ -62,15 +62,18 @@ return [
 
     'wallet' => [
         'type' => [
-            'deposit' => '押金支付',
-            'deposit_refund' => '押金退款',
+            'system_add' => '系统增加',
+            'system_minus' => '系统减少',
             'recharge' => '充值',
+            'refund' => '充值退款',
             'consume' => '消费',
         ],
 
         'pay_method' => [
             'alipay' => '支付宝支付',
             'wechat' => '微信支付',
+            'cash' => '现金支付',
+            'card' => '卡支付'
         ]
     ]
 ];

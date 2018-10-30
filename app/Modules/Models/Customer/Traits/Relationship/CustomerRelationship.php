@@ -5,6 +5,7 @@ namespace App\Modules\Models\Customer\Traits\Relationship;
 use App\Modules\Enums\CardStatus;
 use App\Modules\Models\Card\Card;
 use App\Modules\Models\ConsumeCategory\ConsumeCategory;
+use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\Customer\Account;
 use App\Modules\Models\Customer\AccountRecord;
 use App\Modules\Models\Department\Department;
@@ -53,5 +54,13 @@ trait CustomerRelationship
     public function account_records()
     {
         return $this->hasMany(AccountRecord::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function consume_orders()
+    {
+        return $this->hasMany(ConsumeOrder::class);
     }
 }

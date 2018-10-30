@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Customer;
 use App\Exceptions\GeneralException;
 use App\Http\Requests\Backend\Customer\ManageCustomerRequest;
 use App\Http\Requests\Backend\Customer\StoreCustomerRequest;
+use App\Http\Requests\Backend\Customer\UpdateCustomerBalanceRequest;
 use App\Modules\Models\Customer\Customer;
 use App\Repositories\Backend\ConsumeCategory\ConsumeCategoryRepository;
 use App\Repositories\Backend\Customer\CustomerRepository;
@@ -138,13 +139,12 @@ class CustomerController extends Controller
             ->withConsumeCategories($this->getModelArray($consumeCategories));
     }
 
+
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  Customer $customer
-     * @param  ManageCustomerRequest $request
-     * @return \Illuminate\Http\Response
-     * @throws GeneralException
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     * @throws \App\Exceptions\Api\ApiException
      */
     public function update(Customer $customer, ManageCustomerRequest $request)
     {
@@ -152,6 +152,70 @@ class CustomerController extends Controller
         $this->customerRepo->update($customer, $request->all());
 
         return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.updated'));
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function accountRecords(Customer $customer, ManageCustomerRequest $request)
+    {
+        return view('backend.customer.accountRecord')->withCustomer($customer);
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function consumeOrders(Customer $customer, ManageCustomerRequest $request)
+    {
+        return view('backend.customer.consumeOrder')->withCustomer($customer);
+    }
+
+    /**
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function changeAllBalance(ManageCustomerRequest $request)
+    {
+        return view('backend.customer.change-all-balance');
+    }
+
+    /**
+     * @param UpdateCustomerBalanceRequest $request
+     * @return mixed
+     */
+    public function changeAllBalanceStore(UpdateCustomerBalanceRequest $request)
+    {
+        $user = Auth::User();
+        $this->customerRepo->changeAllBalance($request->get('source'), $request->get('balance'), $user->restaurant_id);
+
+        return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.updated_balance'));
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function changeBalance(Customer $customer, ManageCustomerRequest $request)
+    {
+        return view('backend.customer.change-balance')
+            ->withCustomer($customer);
+    }
+
+    /**
+     * @param Customer $customer
+     * @param UpdateCustomerBalanceRequest $request
+     * @return mixed
+     */
+    public function changeBalanceStore(Customer $customer, UpdateCustomerBalanceRequest $request)
+    {
+        $this->customerRepo->changeBalance($customer, $request->get('source'), $request->get('balance'));
+
+        return redirect()->route('admin.customer.accountRecords', $customer)->withFlashSuccess(trans('alerts.backend.customer.updated_balance'));
     }
 
     /**

@@ -175,6 +175,13 @@ return [
             'edit' => '编辑卡用户',
             'create' => '创建卡用户',
             'selectCard' => '选择IC卡',
+            'change_balance' => '修改余额',
+            'change_balance_for' => '为:user修改余额',
+            'change_all_balance' => '批量修改用户余额',
+            'account_record' => '消费记录',
+            'consume_order' => '订单记录',
+            'system_add' => '系统增加',
+            'system_minus' => '系统扣除',
 
             'table' => [
                 'id' => '编号',
@@ -183,9 +190,24 @@ return [
                 'birthday' => '生日',
                 'department' => '部门',
                 'consume_category' => '消费类别',
+                'balance' => '余额',
                 'card' => '绑定卡号',
                 'created_at' => '创建时间',
-            ]
+            ],
+
+            'accountRecord' => [
+                'record' => '的消费记录',
+
+                'table' => [
+                    'id' => '编号',
+                    'type' => '订单类型',
+                    'money' => '金额',
+                    'pay_method_id' => '支付方式',
+                    'consume_order' => '消费订单编号',
+                    'recharge_order' => '充值订单编号',
+                    'created_at' => '时间',
+                ],
+            ],
         ],
 
         'goods' => [
@@ -252,7 +274,6 @@ return [
                 'name' => '规则名',
                 'weekday' => '日期',
                 'dinningTime' => '用餐时间',
-                'name' => '规则名称',
                 'consumeCategory' => '消费类别',
                 'discount' => '折扣',
                 'created_at' => '创建时间',
@@ -270,6 +291,37 @@ return [
                 'id' => '编号',
                 'method' => '支付代码',
                 'show_method' => '支付方式',
+            ]
+        ],
+
+        'consumeOrder' => [
+            'management' => '支付方式管理',
+            'active' => '所有支付方式',
+            'edit' => '编辑支付方式',
+            'alipay' => '编辑支付宝',
+            'wechatPay' => '编辑微信支付',
+            'orderFor' => '的充电记录',
+
+            'table' => [
+                'id' => '编号',
+                'order_id' => '订单编号',
+                'customer_id' => '用户编号',
+                'card_id' => '卡编号',
+                'price' => '价格',
+                'pay_method' => '支付方式',
+                'dinning_time' => '用餐时间',
+                'created_at' => '消费时间',
+                'restaurant_user_id' => '营业员',
+                'status' => '状态'
+            ],
+
+            'status' => [
+                'refunded' => '已退款',
+                'refund_in_progress' => '退款中',
+                'wait_pay' => '等待支付',
+                'pay_in_progress' => '支付中',
+                'complete' => '已完成',
+                'closed' => '已关闭',
             ]
         ]
     ],

@@ -7,6 +7,9 @@ Route::group([
 
     Route::get('customer/get', 'CustomerTableController')->name('customer.get');
     Route::get('customer/availableCard', 'CustomerTableController@availableCard')->name('customer.availableCard');
+    Route::get('changeAllBalance', 'CustomerController@changeAllBalance')->name('customer.changeAllBalance');
+    Route::post('changeAllBalanceStore', 'CustomerController@changeAllBalanceStore')->name('customer.changeAllBalanceStore');
+
 
     Route::group([
         'prefix' => 'customer/{customer}',
@@ -14,5 +17,13 @@ Route::group([
     ], function() {
         Route::get('edit', 'CustomerController@edit')->name('customer.edit');
         Route::get('mark/{status}', 'CustomerController@mark')->name('customer.mark')->where(['status' => '[0,1]']);
+        Route::get('accountRecords', 'CustomerController@accountRecords')->name('customer.accountRecords');
+        Route::get('accountRecords/get', 'CustomerTableController@getAccountRecords')->name('customer.getAccountRecords');
+        Route::get('consumeOrders', 'CustomerController@consumeOrders')->name('customer.consumeOrders');
+        Route::get('consumeOrders/get', 'CustomerTableController@getConsumeOrders')->name('customer.getConsumeOrders');
+        Route::get('changeBalance', 'CustomerController@changeBalance')->name('customer.changeBalance');
+        Route::post('changeBalanceStore', 'CustomerController@changeBalanceStore')->name('customer.changeBalanceStore');
+        Route::get('recharge', 'CustomerController@recharge')->name('customer.recharge');
+        Route::get('recharge', 'CustomerController@recharge')->name('customer.recharge');
     });
 });

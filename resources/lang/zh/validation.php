@@ -190,7 +190,9 @@ return [
                 'birthday' => '生日',
                 'department' => '部门',
                 'consume_category' => '消费类别',
-                'card' => 'IC卡'
+                'card' => 'IC卡',
+                'balance' => '余额',
+                'source' => '类型',
             ],
 
             'goods' => [
