@@ -27,6 +27,7 @@ class ConsumeOrderQueryRequest extends ApiBaseRequest
             //
             'start_time' => 'date_format:Y-m-d',
             'end_time' => 'date_format:Y-m-d|after_or_equal:start_time',
+            
         ];
     }
 }

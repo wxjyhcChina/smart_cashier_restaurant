@@ -47,6 +47,17 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $query = $query->whereBetween('created_at', [$input['start_time'].' 00:00:00', $input['end_time']." 23:59:59"]);
         }
 
+        if (isset($input['key']))
+        {
+            $query->where('id', 'like', '%'.$input['key'].'%')
+                ->orWhereHas('customer', function ($query) use ($input){
+                   $query->where('user_name', 'like', '%'.$input['key'].'%');
+                })
+                ->orWhereHas('card', function ($query) use ($input){
+                    $query->where('number', 'like', '%'.$input['key'].'%');
+                });
+        }
+
         return $query->paginate(15);
     }
 

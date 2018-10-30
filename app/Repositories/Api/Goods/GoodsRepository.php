@@ -22,12 +22,26 @@ class GoodsRepository extends BaseGoodsRepository
      * @param $size
      * @return mixed
      */
-    public function getByRestaurant($restaurant_id, $size=15)
+    public function getByRestaurant($restaurant_id, $input, $size=15)
     {
-        return $this->getByRestaurantQuery($restaurant_id)
+        $query = $this->getByRestaurantQuery($restaurant_id)
             ->with('shop')
             ->with('dinning_time')
-            ->with('label_categories')
-            ->paginate($size);
+            ->with('label_categories');
+
+        if (isset($input['key']))
+        {
+            $query->where('id', 'like', '%'.$input['key'].'%')
+                ->orWhere('price', 'like', '%'.$input['key'].'%')
+                ->orWhere('name', 'like', '%'.$input['key'].'%')
+                ->orWhereHas('dinning_time', function ($query) use ($input){
+                    $query->where("name", 'like', '%'.$input['key'].'%');
+                })->orWhereHas('shop', function ($query) use ($input){
+                    $query->where('name', 'like', '%'.$input['key'].'%');
+                });
+        }
+
+
+        return $query->paginate($size);
     }
 }
