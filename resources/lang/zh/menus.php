@@ -103,6 +103,10 @@ return [
             'title' => '消费记录'
         ],
 
+        'rechargeOrder' => [
+            'title' => '充值记录'
+        ],
+
         'log-viewer' => [
             'main'      => '日志查看器',
             'dashboard' => '指示板',

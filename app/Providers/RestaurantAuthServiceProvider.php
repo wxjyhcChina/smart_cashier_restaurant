@@ -13,6 +13,7 @@ use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Label\LabelCategory;
 use App\Modules\Models\PayMethod\PayMethod;
+use App\Modules\Models\RechargeOrder\RechargeOrder;
 use App\Modules\Models\Shop\Shop;
 use App\Policies\CardPolicy;
 use App\Policies\ConsumeCategoryPolicy;
@@ -25,6 +26,7 @@ use App\Policies\DinningTimePolicy;
 use App\Policies\GoodsPolicy;
 use App\Policies\LabelCategoryPolicy;
 use App\Policies\PayMethodPolicy;
+use App\Policies\RechargeOrderPolicy;
 use App\Policies\ShopPolicy;
 
 /**
@@ -51,5 +53,6 @@ class RestaurantAuthServiceProvider extends AuthServiceProvider
         LabelCategory::class => LabelCategoryPolicy::class,
         ConsumeRule::class => ConsumeRulePolicy::class,
         ConsumeOrder::class => ConsumeOrderPolicy::class,
+        RechargeOrder::class => RechargeOrderPolicy::class,
     ];
 }

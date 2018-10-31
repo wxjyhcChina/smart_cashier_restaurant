@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Modules\Models\ConsumeOrder\Traits\Relationship;
+use App\Modules\Models\Agent\RestaurantUser;
 use App\Modules\Models\Card\Card;
 use App\Modules\Models\ConsumeCategory\ConsumeCategory;
 use App\Modules\Models\Customer\Customer;
@@ -55,4 +56,11 @@ trait ConsumeOrderRelationship
         return $this->belongsTo(ConsumeCategory::class);
     }
 
+    /**
+     * @return mixed
+     */
+    public function restaurant_user()
+    {
+        return $this->belongsTo(RestaurantUser::class);
+    }
 }

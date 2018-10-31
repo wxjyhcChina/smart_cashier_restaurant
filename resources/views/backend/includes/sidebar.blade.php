@@ -159,11 +159,20 @@
             </li>
             @endauth
 
-            @permission('manage-pay-method')
+            @permission('manage-consume-order')
             <li class="{{ active_class(Active::checkUriPattern('admin/consumeOrder*')) }}">
                 <a href="{{ route('admin.consumeOrder.index') }}">
                     <i class="fa fa-shopping-cart"></i>
                     <span>{{ trans('menus.backend.consumeOrder.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-recharge-order')
+            <li class="{{ active_class(Active::checkUriPattern('admin/rechargeOrder*')) }}">
+                <a href="{{ route('admin.rechargeOrder.index') }}">
+                    <i class="fa fa-exchange"></i>
+                    <span>{{ trans('menus.backend.rechargeOrder.title') }}</span>
                 </a>
             </li>
             @endauth

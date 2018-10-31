@@ -11,8 +11,8 @@ namespace App\Repositories\Backend\ConsumeOrder;
 use App\Modules\Repositories\ConsumeOrder\BaseConsumeOrderRepository;
 
 /**
- * Class ConsumeCategoryRepository
- * @package App\Repositories\Backend\ConsumeCategory
+ * Class ConsumeOrderRepository
+ * @package App\Repositories\Backend\ConsumeOrder
  */
 class ConsumeOrderRepository extends BaseConsumeOrderRepository
 {

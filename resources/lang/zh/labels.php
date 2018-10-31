@@ -297,9 +297,9 @@ return [
         ],
 
         'consumeOrder' => [
-            'management' => '消费记录',
+            'management' => '消费记录管理',
             'active' => '所有消费记录',
-            'info' => '消费记录详情',
+            'orderFor' => '的消费记录',
 
             'table' => [
                 'id' => '编号',
@@ -312,6 +312,33 @@ return [
                 'created_at' => '消费时间',
                 'restaurant_user_id' => '营业员',
                 'status' => '状态'
+            ],
+
+            'status' => [
+                'refunded' => '已退款',
+                'refund_in_progress' => '退款中',
+                'wait_pay' => '等待支付',
+                'pay_in_progress' => '支付中',
+                'complete' => '已完成',
+                'closed' => '已关闭',
+            ]
+        ],
+
+        'rechargeOrder' => [
+            'management' => '充值记录管理',
+            'active' => '所有充值记录',
+            'orderFor' => '的充值记录',
+
+            'table' => [
+                'id' => '编号',
+                'order_id' => '订单编号',
+                'customer_id' => '用户编号',
+                'card_id' => '卡编号',
+                'price' => '价格',
+                'pay_method' => '支付方式',
+                'restaurant_user_id' => '营业员',
+                'status' => '状态',
+                'created_at' => '充值时间',
             ],
 
             'status' => [

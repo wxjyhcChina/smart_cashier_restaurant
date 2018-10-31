@@ -31,8 +31,7 @@ class BaseRechargeOrderRepository extends BaseRepository
     public function getByRestaurantQuery($restaurant_id)
     {
         return $this->query()
-            ->where('restaurant_id', $restaurant_id)
-            ->with('goods');
+            ->where('recharge_orders.restaurant_id', $restaurant_id);
     }
 
     /**

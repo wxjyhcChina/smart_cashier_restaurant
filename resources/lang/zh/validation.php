@@ -249,7 +249,8 @@ return [
                 'goods' => '商品',
                 'pay_method' => '支付方式',
                 'status' => '状态',
-                'external_pay_no' => '支付号'
+                'external_pay_no' => '支付号',
+                'restaurant_user' => '操作用户'
             ]
         ],
 

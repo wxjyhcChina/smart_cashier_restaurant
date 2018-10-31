@@ -19,10 +19,6 @@
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">{{ trans('labels.backend.consumeOrder.info') }}</h3>
-
-            <div class="box-tools pull-right">
-                @include('backend.goods.includes.partials.header-buttons')
-            </div><!--box-tools pull-right-->
         </div><!-- /.box-header -->
 
         <div class="box-body">
@@ -121,6 +117,15 @@
                     <p style="padding-top: 7px">{{$consumeOrder->external_pay_no}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
+
+            <div class="form-group">
+                {{ Form::label('name', trans('validation.attributes.backend.consumeOrder.restaurant_user').":", ['class' => 'col-lg-2 control-label']) }}
+
+                <div class="col-lg-10">
+                    <p style="padding-top: 7px">{{$consumeOrder->restaurant_user != null ? $consumeOrder->restaurant_user->username : ''}}</p>
+                </div><!--col-lg-10-->
+            </div><!--form control-->
+
 
         </div><!-- /.box-body -->
     </div><!--box-->
