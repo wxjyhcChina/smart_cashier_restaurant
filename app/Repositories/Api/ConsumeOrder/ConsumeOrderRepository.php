@@ -48,7 +48,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         }
 
         if (isset($input['key'])) {
-            $query->orWhere(function ($query) use ($input) {
+            $query->where(function ($query) use ($input) {
                 $query->where('id', 'like', '%' . $input['key'] . '%')
                     ->orWhereHas('customer', function ($query) use ($input) {
                         $query->where('user_name', 'like', '%' . $input['key'] . '%');
