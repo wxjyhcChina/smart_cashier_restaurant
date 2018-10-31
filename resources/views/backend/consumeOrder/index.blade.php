@@ -29,7 +29,6 @@
                             <th>{{ trans('labels.backend.consumeOrder.table.customer_id') }}</th>
                             <th>{{ trans('labels.backend.consumeOrder.table.card_id') }}</th>
                             <th>{{ trans('labels.backend.consumeOrder.table.price') }}</th>
-                            <th>{{ trans('labels.backend.consumeOrder.table.shop') }}</th>
                             <th>{{ trans('labels.backend.consumeOrder.table.pay_method') }}</th>
                             <th>{{ trans('labels.backend.consumeOrder.table.dinning_time') }}</th>
                             <th>{{ trans('labels.backend.consumeOrder.table.created_at') }}</th>
