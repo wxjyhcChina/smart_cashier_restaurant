@@ -18,14 +18,39 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 {
     /**
      * @param $restaurant_id
+     * @param $start_time
+     * @param $end_time
+     * @param null $dinning_time_id
+     * @param null $pay_method
+     * @param null $restaurant_user_id
      * @return mixed
      */
-    public function getByRestaurantWithRelationQuery($restaurant_id)
+    public function getByRestaurantWithRelationQuery($restaurant_id, $start_time, $end_time, $dinning_time_id = null, $pay_method = null, $restaurant_user_id= null)
     {
-        return $this->getByRestaurantQuery($restaurant_id)->select('consume_orders.*', 'customers.user_name as customer_name', 'cards.number as card_number', 'dinning_time.name as dinning_time_name', 'restaurant_users.username as restaurant_user_name')
+        $query = $this->getByRestaurantQuery($restaurant_id)->select('consume_orders.*', 'customers.user_name as customer_name', 'cards.number as card_number', 'dinning_time.name as dinning_time_name', 'restaurant_users.username as restaurant_user_name')
             ->leftJoin('customers', 'consume_orders.customer_id', '=', 'customers.id')
             ->leftJoin('cards', 'consume_orders.card_id', '=', 'cards.id')
             ->leftJoin('dinning_time', 'consume_orders.dinning_time_id', '=', 'dinning_time.id')
-            ->leftJoin('restaurant_users', 'consume_orders.restaurant_user_id', '=', 'restaurant_users.id');
+            ->leftJoin('restaurant_users', 'consume_orders.restaurant_user_id', '=', 'restaurant_users.id')
+            ->where('consume_orders.created_at', '>=', $start_time)
+            ->where('consume_orders.created_at', '<=', $end_time);
+
+        if ($dinning_time_id != null)
+        {
+            $query->where('consume_orders.dinning_time_id', $dinning_time_id);
+        }
+
+        if ($pay_method != null)
+        {
+            $query->where('consume_order.pay_method', $pay_method);
+        }
+
+        if ($restaurant_user_id != null)
+        {
+            $query->where('consume_orders.restaurant_user_id', $restaurant_user_id);
+        }
+
+
+        return $query;
     }
 }
