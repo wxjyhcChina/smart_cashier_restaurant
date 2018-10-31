@@ -99,6 +99,9 @@ return [
             'title' => '支付管理',
         ],
 
+        'consumeOrder' => [
+            'title' => '消费记录'
+        ],
 
         'log-viewer' => [
             'main'      => '日志查看器',

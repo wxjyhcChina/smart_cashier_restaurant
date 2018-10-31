@@ -159,6 +159,15 @@
             </li>
             @endauth
 
+            @permission('manage-pay-method')
+            <li class="{{ active_class(Active::checkUriPattern('admin/consumeOrder*')) }}">
+                <a href="{{ route('admin.consumeOrder.index') }}">
+                    <i class="fa fa-shopping-cart"></i>
+                    <span>{{ trans('menus.backend.consumeOrder.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
             <li class="{{ active_class(Active::checkUriPattern('admin/log-viewer*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>

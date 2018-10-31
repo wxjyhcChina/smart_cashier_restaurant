@@ -25,5 +25,7 @@ Route::group([
         Route::post('changeBalanceStore', 'CustomerController@changeBalanceStore')->name('customer.changeBalanceStore');
         Route::get('recharge', 'CustomerController@recharge')->name('customer.recharge');
         Route::get('recharge', 'CustomerController@recharge')->name('customer.recharge');
+        Route::get('recharge', 'CustomerController@recharge')->name('customer.recharge');
+        Route::patch('getRechargeQrUrl', 'CustomerController@getRechargeQrUrl')->name('customer.getRechargeQrUrl');
     });
 });

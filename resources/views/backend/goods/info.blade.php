@@ -1,6 +1,6 @@
 @extends ('backend.layouts.app')
 
-@section ('title', trans('labels.backend.goods.management') . ' | ' . trans('labels.backend.goods.edit'))
+@section ('title', trans('labels.backend.goods.management') . ' | ' . trans('labels.backend.goods.info'))
 
 @section('after-styles')
     {{ Html::style("css/backend/plugin/datepicker/daterangepicker.css") }}
@@ -9,7 +9,7 @@
 @section('page-header')
     <h1>
         {{ trans('labels.backend.goods.management') }}
-        <small>{{ trans('labels.backend.goods.edit') }}</small>
+        <small>{{ trans('labels.backend.goods.info') }}</small>
     </h1>
 @endsection
 

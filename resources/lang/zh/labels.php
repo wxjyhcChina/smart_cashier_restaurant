@@ -182,6 +182,7 @@ return [
             'consume_order' => '订单记录',
             'system_add' => '系统增加',
             'system_minus' => '系统扣除',
+            'recharge' => '充值',
 
             'table' => [
                 'id' => '编号',
@@ -214,6 +215,7 @@ return [
             'management' => '商品管理',
             'active' => '所有商品',
             'edit' => '编辑商品',
+            'info' => '商品详情',
             'create' => '创建商品',
             'uploadImage' => '上传图片',
             'assignLabelCategory' => '分配餐盘类别',
@@ -295,12 +297,9 @@ return [
         ],
 
         'consumeOrder' => [
-            'management' => '支付方式管理',
-            'active' => '所有支付方式',
-            'edit' => '编辑支付方式',
-            'alipay' => '编辑支付宝',
-            'wechatPay' => '编辑微信支付',
-            'orderFor' => '的充电记录',
+            'management' => '消费记录',
+            'active' => '所有消费记录',
+            'info' => '消费记录详情',
 
             'table' => [
                 'id' => '编号',

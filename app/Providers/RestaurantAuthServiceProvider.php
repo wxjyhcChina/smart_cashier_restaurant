@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Modules\Models\Card\Card;
 use App\Modules\Models\ConsumeCategory\ConsumeCategory;
+use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\ConsumeRule\ConsumeRule;
 use App\Modules\Models\Customer\Customer;
 use App\Modules\Models\Department\Department;
@@ -15,6 +16,7 @@ use App\Modules\Models\PayMethod\PayMethod;
 use App\Modules\Models\Shop\Shop;
 use App\Policies\CardPolicy;
 use App\Policies\ConsumeCategoryPolicy;
+use App\Policies\ConsumeOrderPolicy;
 use App\Policies\ConsumeRulePolicy;
 use App\Policies\CustomerPolicy;
 use App\Policies\DepartmentPolicy;
@@ -48,5 +50,6 @@ class RestaurantAuthServiceProvider extends AuthServiceProvider
         Goods::class => GoodsPolicy::class,
         LabelCategory::class => LabelCategoryPolicy::class,
         ConsumeRule::class => ConsumeRulePolicy::class,
+        ConsumeOrder::class => ConsumeOrderPolicy::class,
     ];
 }

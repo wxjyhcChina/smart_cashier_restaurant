@@ -235,6 +235,21 @@ return [
                     'ssl_cert' => 'API 证书',
                     'ssl_key' => 'API 证书密钥',
                 ]
+            ],
+
+            'consumeOrder' => [
+                'order_id' => '订单编号',
+                'customer' => '用户名',
+                'card' => '卡号',
+                'consume_category' => '消费类别',
+                'goods_name' => '商品名',
+                'price' => '原价',
+                'label' => '标签',
+                'discount_price' => '实付金额',
+                'goods' => '商品',
+                'pay_method' => '支付方式',
+                'status' => '状态',
+                'external_pay_no' => '支付号'
             ]
         ],
 
