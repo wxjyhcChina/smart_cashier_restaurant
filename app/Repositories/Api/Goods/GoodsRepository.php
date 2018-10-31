@@ -31,14 +31,16 @@ class GoodsRepository extends BaseGoodsRepository
 
         if (isset($input['key']))
         {
-            $query->where('id', 'like', '%'.$input['key'].'%')
-                ->orWhere('price', 'like', '%'.$input['key'].'%')
-                ->orWhere('name', 'like', '%'.$input['key'].'%')
-                ->orWhereHas('dinning_time', function ($query) use ($input){
-                    $query->where("name", 'like', '%'.$input['key'].'%');
-                })->orWhereHas('shop', function ($query) use ($input){
-                    $query->where('name', 'like', '%'.$input['key'].'%');
-                });
+            $query->where(function ($query) use ($input){
+                $query->where('id', 'like', '%'.$input['key'].'%')
+                    ->orWhere('price', 'like', '%'.$input['key'].'%')
+                    ->orWhere('name', 'like', '%'.$input['key'].'%')
+                    ->orWhereHas('dinning_time', function ($query) use ($input){
+                        $query->where("name", 'like', '%'.$input['key'].'%');
+                    })->orWhereHas('shop', function ($query) use ($input){
+                        $query->where('name', 'like', '%'.$input['key'].'%');
+                    });
+            });
         }
 
 
