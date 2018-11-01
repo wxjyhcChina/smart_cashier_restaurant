@@ -2,7 +2,7 @@
 
 namespace App\Modules\Models\Restaurant\Traits\Relationship;
 
-use App\Modules\Models\Agent\RestaurantRole;
+use App\Modules\Models\Restaurant\RestaurantRole;
 use App\Modules\Models\Restaurant\Restaurant;
 
 /**
