@@ -139,7 +139,7 @@ class BaseRechargeOrderRepository extends BaseRepository
         $rechargeOrder->restaurant_id = $input['restaurant_id'];
         $rechargeOrder->restaurant_user_id = $input['restaurant_user_id'];
         $rechargeOrder->money = $input['money'];
-        $rechargeOrder->pay_method = $input['money'];
+        $rechargeOrder->pay_method = isset($input['pay_method']) ? $input['pay_method'] : '';
         $rechargeOrder->status = RechargeOrderStatus::WAIT_PAY;
 
         return $rechargeOrder;

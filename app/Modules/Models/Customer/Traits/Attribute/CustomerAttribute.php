@@ -36,6 +36,14 @@ trait CustomerAttribute
     /**
      * @return string
      */
+    public function getRechargeButtonAttribute()
+    {
+        return '<a href="' . route('admin.customer.recharge', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-cny" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.recharge') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
     public function getStatusButtonAttribute()
     {
         switch ($this->enabled) {
@@ -68,6 +76,7 @@ trait CustomerAttribute
             $this->edit_button.
             $this->consume_order_button .
             $this->account_record_button .
+            $this->recharge_button .
             $this->status_button;
     }
 
@@ -80,6 +89,7 @@ trait CustomerAttribute
             $this->edit_button.
             $this->consume_order_button .
             $this->account_record_button .
+            $this->recharge_button .
             $this->status_button;
     }
 }

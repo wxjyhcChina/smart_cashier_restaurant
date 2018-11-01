@@ -189,6 +189,7 @@ return [
                 'user_name' => '用户名',
                 'id_license' => '身份证号码',
                 'birthday' => '生日',
+                'telephone' => '联系电话',
                 'department' => '部门',
                 'consume_category' => '消费类别',
                 'balance' => '余额',

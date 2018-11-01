@@ -2,14 +2,19 @@
 
 namespace App\Http\Controllers\Backend\Customer;
 
+use App\Exceptions\Api\ApiException;
 use App\Exceptions\GeneralException;
 use App\Http\Requests\Backend\Customer\ManageCustomerRequest;
 use App\Http\Requests\Backend\Customer\StoreCustomerRequest;
 use App\Http\Requests\Backend\Customer\UpdateCustomerBalanceRequest;
+use App\Modules\Enums\PayMethodType;
+use App\Modules\Enums\RechargeOrderStatus;
 use App\Modules\Models\Customer\Customer;
+use App\Modules\Models\PayMethod\PayMethod;
 use App\Repositories\Backend\ConsumeCategory\ConsumeCategoryRepository;
 use App\Repositories\Backend\Customer\CustomerRepository;
 use App\Repositories\Backend\Department\DepartmentRepository;
+use App\Repositories\Backend\RechargeOrder\RechargeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -32,18 +37,26 @@ class CustomerController extends Controller
     private $consumeCategoryRepo;
 
     /**
+     * @var RechargeOrderRepository
+     */
+    private $rechargeOrderRepo;
+
+    /**
      * CustomerController constructor.
      * @param CustomerRepository $customerRepo
      * @param DepartmentRepository $departmentRepo
      * @param ConsumeCategoryRepository $consumeCategoryRepo
+     * @param RechargeOrderRepository $rechargeOrderRepo
      */
     public function __construct(CustomerRepository $customerRepo,
                                 DepartmentRepository $departmentRepo,
-                                ConsumeCategoryRepository $consumeCategoryRepo)
+                                ConsumeCategoryRepository $consumeCategoryRepo,
+                                RechargeOrderRepository $rechargeOrderRepo)
     {
         $this->customerRepo = $customerRepo;
         $this->departmentRepo = $departmentRepo;
         $this->consumeCategoryRepo = $consumeCategoryRepo;
+        $this->rechargeOrderRepo = $rechargeOrderRepo;
     }
 
     /**
@@ -216,6 +229,73 @@ class CustomerController extends Controller
         $this->customerRepo->changeBalance($customer, $request->get('source'), $request->get('balance'));
 
         return redirect()->route('admin.customer.accountRecords', $customer)->withFlashSuccess(trans('alerts.backend.customer.updated_balance'));
+    }
+
+    /**
+     * @return array
+     */
+    private function getEnabledPayMethod($restaurant_id)
+    {
+        $payMethods = PayMethod::where('restaurant_id', $restaurant_id)->where('enabled', 1)->get();
+
+        $array = [];
+        foreach ($payMethods as $payMethod) {
+            if ($payMethod->method != PayMethodType::CARD)
+            {
+                $array[$payMethod->method] = $payMethod->getShowMethodName();
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function recharge(Customer $customer, ManageCustomerRequest $request)
+    {
+        $user = Auth::User();
+        $payMethods = $this->getEnabledPayMethod($user->restaurant_id);
+
+        return view('backend.customer.recharge')
+            ->withCustomer($customer)
+            ->withPayMethods($payMethods);
+    }
+
+
+    /**
+     * @param Customer $customer
+     * @param StoreCustomerRequest $request
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function rechargeAndPay(Customer $customer, StoreCustomerRequest $request)
+    {
+        $input = $request->all();
+
+        $user = Auth::User();
+        $input['restaurant_id'] = $user->restaurant_id;
+        $input['restaurant_user_id'] = $user->id;
+        $input['customer_id'] = $customer->id;
+        $input['card_id'] = $customer->card->internal_number;
+
+        try
+        {
+            $rechargeOrder = $this->rechargeOrderRepo->create($input);
+
+            if ($rechargeOrder->status != RechargeOrderStatus::COMPLETE)
+            {
+                $rechargeOrder = $this->rechargeOrderRepo->pay($rechargeOrder, $input['barcode']);
+            }
+        }
+        catch (ApiException $exception)
+        {
+            return json_encode(['error_code'=>$exception->getCode(), 'error_message' => $exception->getMessage()]);
+        }
+
+        return json_encode([]);
     }
 
     /**

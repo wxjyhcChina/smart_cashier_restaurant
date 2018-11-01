@@ -185,14 +185,18 @@ return [
             ],
 
             'customer' => [
+                'id' => '编号',
                 'user_name' => '用户名',
                 'id_license' => '身份证号码',
                 'birthday' => '生日',
                 'department' => '部门',
+                'telephone' => '电话',
                 'consume_category' => '消费类别',
                 'card' => 'IC卡',
                 'balance' => '余额',
                 'source' => '类型',
+                'money' => '充值金额',
+                'pay_method' => '支付方式',
             ],
 
             'goods' => [

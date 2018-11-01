@@ -30,6 +30,7 @@
                         <tr>
                             <th>{{ trans('labels.backend.customer.table.id') }}</th>
                             <th>{{ trans('labels.backend.customer.table.user_name') }}</th>
+                            <th>{{ trans('labels.backend.customer.table.telephone') }}</th>
                             <th>{{ trans('labels.backend.customer.table.id_license') }}</th>
                             <th>{{ trans('labels.backend.customer.table.birthday') }}</th>
                             <th>{{ trans('labels.backend.customer.table.card') }}</th>
@@ -72,6 +73,7 @@
                 columns: [
                     {data: 'id', name: 'id'},
                     {data: 'user_name', name: 'user_name'},
+                    {data: 'telephone', name: 'telephone'},
                     {data: 'id_license', name: 'id_license'},
                     {data: 'birthday', name: 'birthday'},
                     {data: 'card_number', name: 'cards.number'},

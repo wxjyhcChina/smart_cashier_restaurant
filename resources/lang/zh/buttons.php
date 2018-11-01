@@ -47,6 +47,8 @@ return [
         'continue' => '继续',
         'info' => '详情',
         'import' => '导入',
+        'recharge' => '充值',
+        'back' => '返回',
 
         'crud' => [
             'create' => '创建',

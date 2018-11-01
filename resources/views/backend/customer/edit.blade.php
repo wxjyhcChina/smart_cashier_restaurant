@@ -47,6 +47,14 @@
             </div><!--form control-->
 
             <div class="form-group">
+                {{ Form::label('telephone', trans('validation.attributes.backend.customer.telephone').":", ['class' => 'col-lg-2 control-label']) }}
+
+                <div class="col-lg-10">
+                    {{ Form::text('telephone', $customer->telephone, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.customer.telephone')]) }}
+                </div><!--col-lg-10-->
+            </div><!--form control-->
+
+            <div class="form-group">
                 {{ Form::label('consume_category_id', trans('validation.attributes.backend.customer.consume_category').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
