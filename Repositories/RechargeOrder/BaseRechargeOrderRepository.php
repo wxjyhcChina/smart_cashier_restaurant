@@ -31,8 +31,7 @@ class BaseRechargeOrderRepository extends BaseRepository
     public function getByRestaurantQuery($restaurant_id)
     {
         return $this->query()
-            ->where('restaurant_id', $restaurant_id)
-            ->with('goods');
+            ->where('recharge_orders.restaurant_id', $restaurant_id);
     }
 
     /**
@@ -140,7 +139,7 @@ class BaseRechargeOrderRepository extends BaseRepository
         $rechargeOrder->restaurant_id = $input['restaurant_id'];
         $rechargeOrder->restaurant_user_id = $input['restaurant_user_id'];
         $rechargeOrder->money = $input['money'];
-        $rechargeOrder->pay_method = $input['money'];
+        $rechargeOrder->pay_method = isset($input['pay_method']) ? $input['pay_method'] : '';
         $rechargeOrder->status = RechargeOrderStatus::WAIT_PAY;
 
         return $rechargeOrder;

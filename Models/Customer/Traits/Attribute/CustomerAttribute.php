@@ -16,6 +16,30 @@ trait CustomerAttribute
         return '<a href="' . route('admin.customer.edit', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.general.crud.edit') . '"></i></a> ';
     }
 
+    /**
+     * @return string
+     */
+    public function getConsumeOrderButtonAttribute()
+    {
+        return '<a href="' . route('admin.customer.consumeOrders', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-bars" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.consume_order') . '"></i></a> ';
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getAccountRecordButtonAttribute()
+    {
+        return '<a href="' . route('admin.customer.accountRecords', $this) . '" class="btn btn-xs btn-success"><i class="fa fa-exchange" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.account_record') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRechargeButtonAttribute()
+    {
+        return '<a href="' . route('admin.customer.recharge', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-cny" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.recharge') . '"></i></a> ';
+    }
 
     /**
      * @return string
@@ -50,6 +74,9 @@ trait CustomerAttribute
     {
         return
             $this->edit_button.
+            $this->consume_order_button .
+            $this->account_record_button .
+            $this->recharge_button .
             $this->status_button;
     }
 
@@ -60,6 +87,9 @@ trait CustomerAttribute
     {
         return
             $this->edit_button.
+            $this->consume_order_button .
+            $this->account_record_button .
+            $this->recharge_button .
             $this->status_button;
     }
 }

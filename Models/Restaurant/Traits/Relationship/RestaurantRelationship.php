@@ -2,7 +2,7 @@
 
 namespace App\Modules\Models\Restaurant\Traits\Relationship;
 
-use App\Modules\Models\Agent\RestaurantUser;
+use App\Modules\Models\Restaurant\RestaurantUser;
 
 /**
  * Class RestaurantRelationship
