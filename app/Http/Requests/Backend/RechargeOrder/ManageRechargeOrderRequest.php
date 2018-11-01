@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Backend\ConsumeOrder;
+namespace App\Http\Requests\Backend\RechargeOrder;
 
 use App\Http\Requests\Request;
 

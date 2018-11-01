@@ -122,9 +122,6 @@
     {{ Html::script("js/backend/plugin/datatables/dataTables_locale.js") }}
     {{ Html::script("js/backend/plugin/datatables/page_select_with_ellipses.js") }}
 
-    {{ Html::style('css/backend/ionicons/css/ionicons.min.css') }}
-    {{ Html::script("js/backend/echarts.common.min.js") }}
-
     {{ Html::script("js/backend/plugin/moment/moment.js") }}
     {{ Html::script("js/backend/plugin/moment/locale/zh-cn.js") }}
     {{ Html::script("js/backend/plugin/daterangepicker/daterangepicker.js") }}

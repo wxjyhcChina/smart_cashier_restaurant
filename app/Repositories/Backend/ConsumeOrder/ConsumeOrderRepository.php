@@ -42,7 +42,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         if ($pay_method != null)
         {
-            $query->where('consume_order.pay_method', $pay_method);
+            $query->where('consume_orders.pay_method', $pay_method);
         }
 
         if ($restaurant_user_id != null)

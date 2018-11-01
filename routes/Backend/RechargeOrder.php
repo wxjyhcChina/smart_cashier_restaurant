@@ -6,6 +6,7 @@ Route::group([
     Route::resource('rechargeOrder', 'RechargeOrderController', ['except' => ['show', 'update', 'destroy']]);
 
     Route::get('rechargeOrder/get', 'RechargeOrderTableController')->name('rechargeOrder.get');
+    Route::get('rechargeOrder/searchOrder', 'RechargeOrderController@searchOrder')->name('rechargeOrder.searchOrder');
 
     Route::group([
         'prefix' => 'rechargeOrder/{rechargeOrder}',

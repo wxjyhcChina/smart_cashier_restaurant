@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Models\Agent;
+namespace App\Modules\Models\Restaurant;
 
 use App\Modules\Models\Restaurant\Traits\Attribute\RestaurantUserAttribute;
 use App\Modules\Models\Restaurant\Traits\Relationship\RestaurantUserRelationship;

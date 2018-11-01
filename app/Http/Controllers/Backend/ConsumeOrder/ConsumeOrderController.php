@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Backend\ConsumeOrder;
 
 use App\Http\Requests\Backend\ConsumeOrder\ManageConsumeOrderRequest;
 use App\Modules\Enums\ConsumeOrderStatus;
-use App\Modules\Models\Agent\RestaurantUser;
+use App\Modules\Models\Restaurant\RestaurantUser;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\PayMethod\PayMethod;
