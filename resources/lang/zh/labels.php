@@ -300,6 +300,7 @@ return [
         'consumeOrder' => [
             'management' => '消费记录管理',
             'active' => '所有消费记录',
+            'info' => '消费记录详情',
             'orderFor' => '的消费记录',
             'searchTime' => '搜索时间',
             'search' => '搜索',
