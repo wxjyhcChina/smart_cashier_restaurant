@@ -59,7 +59,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             });
         }
 
-        return $query->paginate(15);
+        return $query->orderBy('consume_orders.created_at', 'desc')->paginate(15);
     }
 
     /**
