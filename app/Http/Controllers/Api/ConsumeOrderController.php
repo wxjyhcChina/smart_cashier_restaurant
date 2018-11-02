@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\ConsumeOrder\ConsumeOrderQueryRequest;
+use App\Http\Requests\Api\ConsumeOrder\CreateOrderRequest;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Repositories\Api\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
@@ -43,11 +44,11 @@ class ConsumeOrderController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param CreateOrderRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\Api\ApiException
      */
-    public function preCreate(Request $request)
+    public function preCreate(CreateOrderRequest $request)
     {
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
@@ -58,11 +59,11 @@ class ConsumeOrderController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param CreateOrderRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @throws \App\Exceptions\Api\ApiException
      */
-    public function store(Request $request)
+    public function store(CreateOrderRequest $request)
     {
         //
         $input = $request->all();
