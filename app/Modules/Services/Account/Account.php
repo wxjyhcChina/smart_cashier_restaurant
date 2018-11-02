@@ -72,7 +72,7 @@ class Account
     public function rechargeAccount($order_id, $account, $money, $pay_method)
     {
         Log::info('[payAccount]order id is:'.$order_id.', account id is '.$account->id);
-        $account->balance = $account->balance + $money;
+        $account->balance = bcadd($account->balance, $money);
         $account->save();
 
         $this->addRecord($account->customer_id, $account->id, AccountRecordType::RECHARGE, $money, $order_id, $pay_method);
@@ -86,7 +86,7 @@ class Account
     public function payAccount($order_id, $account, $money)
     {
         Log::info('[payAccount]order id is:'.$order_id.', account id is '.$account->id);
-        $account->balance = $account->balance - $money;
+        $account->balance = bcsub($account->balance, $money);
         $account->save();
 
         $this->addRecord($account->customer_id, $account->id, AccountRecordType::CONSUME, $money, $order_id, PayMethodType::CARD);
