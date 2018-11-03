@@ -194,7 +194,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $response['goods_count'] = count($goodsArray);
         $response['dinning_time_id'] = $dinningTime->id;
         $response['price'] = doubleval($price);
-        $response['force_discount'] = doubleval($forceDiscount);
+        $response['force_discount'] = $forceDiscount != null ? doubleval($forceDiscount) : $forceDiscount;
         $response['discount_price'] = doubleval($discountPrice);
         $response['goods'] = $goodsArray;
 
