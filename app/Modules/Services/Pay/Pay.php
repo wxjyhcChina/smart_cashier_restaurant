@@ -185,7 +185,6 @@ class Pay
             }
 
             $queryResponse = $this->wechatQuery($wechatPay);
-            $queryResponse = $queryResponse['payInfo'];
 
             if(!empty($queryResponse)){
                 if($this->wechatStopQuery($queryResponse)){

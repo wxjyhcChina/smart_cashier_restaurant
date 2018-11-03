@@ -193,9 +193,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $response = [];
         $response['goods_count'] = count($goodsArray);
         $response['dinning_time_id'] = $dinningTime->id;
-        $response['price'] = $price;
-        $response['force_discount'] = $forceDiscount;
-        $response['discount_price'] = $discountPrice;
+        $response['price'] = doubleval($price);
+        $response['force_discount'] = doubleval($forceDiscount);
+        $response['discount_price'] = doubleval($discountPrice);
         $response['goods'] = $goodsArray;
 
         return $response;
@@ -394,7 +394,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $order->card_id = $card->id;
             $order->department_id = $customer->department_id;
             $order->consume_category_id = $customer->consume_category_id;
-            $order->discount_price = $discount_price;
+            $order->discount_price = doubleval($discount_price);
             $order->discount = $discount;
             $order->pay_method = PayMethodType::CARD;
             $order->status = ConsumeOrderStatus::COMPLETE;
