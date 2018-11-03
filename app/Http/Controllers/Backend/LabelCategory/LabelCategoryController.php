@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backend\LabelCategory;
 
+use App\Common\Qiniu;
 use App\Http\Requests\Backend\LabelCategory\ManageLabelCategoryRequest;
 use App\Http\Requests\Backend\LabelCategory\StoreLabelCategoryRequest;
 use App\Modules\Models\Label\LabelCategory;

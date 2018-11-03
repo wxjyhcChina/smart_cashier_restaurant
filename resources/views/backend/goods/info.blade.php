@@ -14,7 +14,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($goods, ['route' => ['admin.shop.edit', $goods], 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'get']) }}
+    {{ Form::model($goods, ['route' => ['admin.goods.edit', $goods], 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'get']) }}
 
     <div class="box box-success">
         <div class="box-header with-border">

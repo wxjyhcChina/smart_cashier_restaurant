@@ -64,7 +64,7 @@
                 {{ Form::label('discount', trans('validation.attributes.backend.consumeRule.discount').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::number('discount', null, ['class' => 'form-control', 'min'=>'0.1', 'max'=>'9.9', 'required', 'placeholder' => trans('validation.attributes.backend.consumeRule.discount')]) }}
+                    {{ Form::number('discount', null, ['class' => 'form-control', 'min'=>0.1, 'max'=>9.9, "step" => 0.1,  'required', 'placeholder' => trans('validation.attributes.backend.consumeRule.discount')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
