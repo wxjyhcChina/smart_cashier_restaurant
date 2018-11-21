@@ -128,7 +128,7 @@ class BaseCustomerRepository extends BaseRepository
             $query = $query->whereBetween('created_at', [$input['start_time'].' 00:00:00', $input['end_time']." 23:59:59"]);
         }
 
-        $records = $query->paginate(15);
+        $records = $query->orderBy('created_at', 'desc')->paginate(15);
 
         return $records;
     }

@@ -14,9 +14,9 @@ class ConsumeOrder extends Model
 
     protected $fillable = ['customer_id', 'card_id', 'restaurant_id', 'restaurant_user_id', 'price', 'discount', 'pay_method', 'external_pay_no', 'status'];
 
-    public function getPayMethodAttribute($value)
+    public function getShowPayMethodAttribute()
     {
-        switch ($value)
+        switch ($this->pay_method)
         {
             case PayMethodType::CARD:
                 $ret = trans('api.wallet.pay_method.card');
