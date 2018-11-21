@@ -22,49 +22,6 @@ use Illuminate\Support\Facades\Log;
  */
 class LabelCategoryRepository extends BaseLabelCategoryRepository
 {
-
-    /**
-     * @param $input
-     * @return LabelCategory
-     * @throws ApiException
-     */
-    public function create($input)
-    {
-        $labelCategory = $this->createLabelCategoryStub($input);
-
-        if ($labelCategory->save())
-        {
-            return $labelCategory;
-        }
-
-        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.labelCategory.create_error'));
-    }
-
-    /**
-     * @param LabelCategory $labelCategory
-     * @param $input
-     * @throws ApiException
-     */
-    public function update(LabelCategory $labelCategory, $input)
-    {
-        Log::info("restaurant update param:".json_encode($input));
-
-        try
-        {
-            DB::beginTransaction();
-            $labelCategory->update($input);
-
-            DB::commit();
-            return;
-        }
-        catch (\Exception $exception)
-        {
-            DB::rollBack();
-        }
-
-        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.labelCategory.update_error'));
-    }
-
     /**
      * @param $labelCategory
      * @param $input
@@ -81,27 +38,11 @@ class LabelCategoryRepository extends BaseLabelCategoryRepository
 
                 for($i =0 ; $i < count($ids); $i++)
                 {
-                    $card = Label::find($ids[$i]);
-                    $card->label_category_id = $labelCategory->id;
-                    $card->save();
+                    $label = Label::find($ids[$i]);
+                    $label->label_category_id = $labelCategory->id;
+                    $label->save();
                 }
             }
         });
     }
-
-
-    /**
-     * @param $input
-     * @return LabelCategory
-     */
-    private function createLabelCategoryStub($input)
-    {
-        $labelCategory = new LabelCategory();
-        $labelCategory->image = isset($input['image']) ? $input['image'] : '';
-        $labelCategory->name = $input['name'];
-        $labelCategory->restaurant_id = $input['restaurant_id'];
-
-        return $labelCategory;
-    }
-
 }
