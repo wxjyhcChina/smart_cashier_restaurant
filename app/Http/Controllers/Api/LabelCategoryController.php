@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Common\Qiniu;
+use App\Http\Requests\Api\LabelCategory\AssignLabelRequest;
+use App\Http\Requests\Api\LabelCategory\StoreLabelCategoryRequest;
 use App\Modules\Models\Label\LabelCategory;
 use App\Repositories\Api\Label\LabelCategoryRepository;
 use Illuminate\Http\Request;
@@ -49,6 +52,16 @@ class LabelCategoryController extends Controller
     }
 
     /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function imageUploadToken()
+    {
+        $response = Qiniu::getUpToken(config('constants.qiniu.image_bucket'), 'png', array());
+
+        return $this->responseSuccess(['token'=>$response]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -59,14 +72,19 @@ class LabelCategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreLabelCategoryRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
      */
-    public function store(Request $request)
+    public function store(StoreLabelCategoryRequest $request)
     {
         //
+        $input = $request->all();
+        $input['restaurant_id'] = Auth::User()->restaurant_id;
+
+        $labelCategory = $this->labelCategoryRepo->create($input);
+
+        return $this->responseSuccessWithObject($labelCategory);
     }
 
     /**
@@ -92,15 +110,30 @@ class LabelCategoryController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param LabelCategory $labelCategory
+     * @param StoreLabelCategoryRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
      */
-    public function update(Request $request, $id)
+    public function update(LabelCategory $labelCategory, StoreLabelCategoryRequest $request)
     {
         //
+        $labelCategory = $this->labelCategoryRepo->update($labelCategory, $request->all());
+
+        return $this->responseSuccessWithObject($labelCategory);
+    }
+
+    /**
+     * @param LabelCategory $labelCategory
+     * @param AssignLabelRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Throwable
+     */
+    public function storeLabels(LabelCategory $labelCategory, AssignLabelRequest $request)
+    {
+        $this->labelCategoryRepo->assignLabel($labelCategory, $request->get('labels'));
+
+        return $this->responseSuccess();
     }
 
     /**
