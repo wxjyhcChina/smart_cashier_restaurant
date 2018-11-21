@@ -66,9 +66,9 @@ class AccountRecord extends Model
         return $ret;
     }
 
-    public function getPayMethodAttribute($value)
+    public function getShowPayMethodAttribute()
     {
-        switch ($value)
+        switch ($this->pay_method)
         {
             case PayMethodType::CARD:
                 $ret = trans('api.wallet.pay_method.card');
