@@ -13,7 +13,7 @@ trait LabelRelationship
     /**
      * @return mixed
      */
-    public function labelCategory()
+    public function label_category()
     {
         return $this->belongsTo(LabelCategory::class);
     }
