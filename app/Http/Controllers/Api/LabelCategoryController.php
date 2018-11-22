@@ -32,12 +32,12 @@ class LabelCategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $user = Auth::User();
 
-        $labelCategories = $this->labelCategoryRepo->getByRestaurant($user->restaurant_id);
+        $labelCategories = $this->labelCategoryRepo->getByRestaurant($user->restaurant_id, $request->all());
 
         return $this->responseSuccess($labelCategories);
     }

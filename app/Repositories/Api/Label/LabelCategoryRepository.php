@@ -20,11 +20,20 @@ class LabelCategoryRepository extends BaseLabelCategoryRepository
 {
     /**
      * @param $restaurant_id
+     * @param $input
+     * @param $size
      * @return mixed
      */
-    public function getByRestaurant($restaurant_id)
+    public function getByRestaurant($restaurant_id, $input, $size=15)
     {
-        return $this->getByRestaurantQuery($restaurant_id)->get();
+        $query = $this->getByRestaurantQuery($restaurant_id);
+
+        if (isset($input['key']))
+        {
+            $query->where('name', 'like', '%'.$input['key'].'%');
+        }
+
+        return $query->paginate($size);
     }
 
     /**
