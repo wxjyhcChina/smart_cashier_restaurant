@@ -252,9 +252,8 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $goodsIds = [];
             foreach ($response['goods'] as $goods)
             {
-                $goodsIds[$goods->id] = ['label_id' => $goods->label_id];
+                $consumeOrder->goods()->attach([$goods->id => ['label_id' => $goods->label_id]]);
             }
-            $consumeOrder->goods()->attach($goodsIds);
 
             DB::commit();
 
