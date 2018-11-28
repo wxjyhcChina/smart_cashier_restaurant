@@ -2,6 +2,7 @@
 
 namespace App\Access\Model\User\Traits\Relationship;
 
+use App\Modules\Models\Restaurant\Restaurant;
 use App\Modules\Models\System\Session;
 use App\Access\Model\User\SocialLogin;
 
@@ -26,6 +27,14 @@ trait UserRelationship
     public function providers()
     {
         return $this->hasMany(SocialLogin::class);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class);
     }
 
     /**

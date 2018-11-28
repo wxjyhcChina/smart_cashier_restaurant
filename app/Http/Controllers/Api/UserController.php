@@ -50,7 +50,7 @@ class UserController extends Controller
      */
     public function current(Request $request)
     {
-        $user = Auth('api')->user();
+        $user = Auth('api')->user()->load('restaurant');
 
         return response()->json($user);
     }
