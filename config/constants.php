@@ -18,6 +18,8 @@ return [
         'secret' => env('QINIU_SECRET'),
         'image_bucket' => env('QINIU_IMAGE_BUCKET'),
         'image_bucket_url' => env('QINIU_IMAGE_BUCKET_URL'),
+        'download_bucket' => env('QINIU_DOWNLOAD_BUCKET'),
+        'download_bucket_url' => env('QINIU_DOWNLOAD_BUCKET_URL'),
     ],
 
     'jpush' => [
