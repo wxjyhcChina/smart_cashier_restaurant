@@ -129,7 +129,7 @@ class BaseGoodsRepository extends BaseRepository
             throw new ApiException(ErrorCode::LABEL_NOT_EXIST, trans('api.error.label_not_exist'));
         }
 
-        $labelCategory = $label->labelCategory;
+        $labelCategory = $label->label_category;
         if ($labelCategory == null)
         {
             throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
