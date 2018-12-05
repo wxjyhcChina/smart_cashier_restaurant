@@ -46,9 +46,16 @@ class LabelCategoryRepository extends BaseLabelCategoryRepository
         DB::transaction(function() use ($labels, $labelCategory) {
             Label::where('label_category_id', $labelCategory->id)->update(['label_category_id' => null]);
 
-            foreach ($labels as $label)
+            foreach ($labels as $rfid)
             {
-                $label = Label::where('rfid', $label)->first();
+                $label = Label::where('rfid', $rfid)->first();
+
+                if ($label == null)
+                {
+                    $label = new Label();
+                    $label->rfid = $rfid;
+                }
+
                 $label->label_category_id = $labelCategory->id;
                 $label->save();
             }
