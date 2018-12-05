@@ -267,7 +267,7 @@ trait UserAttribute
         return
             $this->clear_session_button.
             $this->login_as_button.
-            $this->show_button.
+//            $this->show_button.
             $this->edit_button.
             $this->change_password_button.
             $this->status_button.
