@@ -100,6 +100,7 @@ class UserRepository extends BaseRepository
         $dataTableQuery = $this->query()
             ->with('roles')
             ->where('restaurant_id', $user->restaurant_id)
+            ->where('status', $status)
             ->select([
                 config('access.users_table').'.id',
                 config('access.users_table').'.username',
@@ -177,7 +178,7 @@ class UserRepository extends BaseRepository
         $user->first_name = $data['first_name'];
         $user->last_name = $data['last_name'];
         $user->username = $data['username'];
-        $user->status = isset($data['status']) ? 1 : 0;
+        $user->status = isset($data['status']) ? $data['status'] : 0;
 
         DB::transaction(function () use ($user, $data, $roles) {
             if ($user->save()) {

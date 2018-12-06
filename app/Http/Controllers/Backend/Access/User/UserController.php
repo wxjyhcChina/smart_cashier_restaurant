@@ -143,27 +143,41 @@ class UserController extends Controller
     }
 
     /**
-     * @param User              $user
+     * @param User $user
      * @param UpdateUserRequest $request
-     *
      * @return mixed
+     * @throws \App\Exceptions\GeneralException
      */
     public function update(User $user, UpdateUserRequest $request)
     {
 
+        $data = $request->only(
+            'first_name',
+            'last_name',
+            'username',
+            'confirmed'
+        );
 
+        $data['username'] = $data['username'].'@'.$this->getRestaurantCode();
+        $data['status'] = $user->status;
+        $firstUser = User::where('restaurant_id', $user->restaurant_id)->orderBy('id', 'asc')->first();
 
-        $this->users->update($user,
-            [
-                'data' => $request->only(
-                    'first_name',
-                    'last_name',
-                    'username',
-                    'status',
-                    'confirmed'
-                ),
-                'roles' => $request->only('assignees_roles'),
-            ]);
+        if ($user->id == $firstUser->id)
+        {
+            $this->users->update($user,
+                [
+                    'data' => $data,
+                ]);
+        }
+        else
+        {
+            $this->users->update($user,
+                [
+                    'data' => $data,
+                    'roles' => $request->only('assignees_roles'),
+                ]);
+        }
+
 
         return redirect()->route('admin.access.user.index')->withFlashSuccess(trans('alerts.backend.users.updated'));
     }
