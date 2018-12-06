@@ -25,8 +25,11 @@
                 <div class="form-group">
                     {{ Form::label('username', trans('validation.attributes.backend.access.users.username'), ['class' => 'col-lg-2 control-label']) }}
 
-                    <div class="col-lg-10">
-                        {{ Form::text('username', null, ['class' => 'form-control', 'maxlength' => '191', 'required' => 'required', 'placeholder' => trans('validation.attributes.backend.access.users.username')]) }}
+                    <div class="col-lg-4">
+                        {{ Form::text('username', $username, ['class' => 'form-control', 'maxlength' => '191', 'required' => 'required', 'placeholder' => trans('validation.attributes.backend.access.users.username')]) }}
+                    </div><!--col-lg-10-->
+                    <div class="col-lg-6">
+                        <p style="padding-top: 7px">@ {{$restaurantCode}}</p>
                     </div><!--col-lg-10-->
                 </div><!--form control-->
 
@@ -47,14 +50,7 @@
                     </div><!--col-lg-10-->
                 </div><!--form control-->
 
-                @if ($user->id != 1)
-                    <div class="form-group">
-                        {{ Form::label('status', trans('validation.attributes.backend.access.users.active'), ['class' => 'col-lg-2 control-label']) }}
-
-                        <div class="col-lg-1">
-                            {{ Form::checkbox('status', '1', $user->status == 1) }}
-                        </div><!--col-lg-1-->
-                    </div><!--form control-->
+                @if (!$firstUser)
 
                     <div class="form-group">
                         {{ Form::label('associated_roles', trans('validation.attributes.backend.access.users.associated_roles'), ['class' => 'col-lg-2 control-label']) }}
@@ -63,13 +59,13 @@
                             @if (count($roles) > 0)
                                 @foreach($roles as $role)
                                     <input type="checkbox" value="{{$role->id}}" name="assignees_roles[{{ $role->id }}]" {{ is_array(old('assignees_roles')) ? (in_array($role->id, old('assignees_roles')) ? 'checked' : '') : (in_array($role->id, $userRoles) ? 'checked' : '') }} id="role-{{$role->id}}" /> <label for="role-{{$role->id}}">{{ $role->name }}</label>
-                                        <a href="#" data-role="role_{{$role->id}}" class="show-permissions small">
-                                            (
-                                                <span class="show-text">{{ trans('labels.general.show') }}</span>
-                                                <span class="hide-text hidden">{{ trans('labels.general.hide') }}</span>
-                                                {{ trans('labels.backend.access.users.permissions') }}
-                                            )
-                                        </a>
+                                    <a href="#" data-role="role_{{$role->id}}" class="show-permissions small">
+                                        (
+                                        <span class="show-text">{{ trans('labels.general.show') }}</span>
+                                        <span class="hide-text hidden">{{ trans('labels.general.hide') }}</span>
+                                        {{ trans('labels.backend.access.users.permissions') }}
+                                        )
+                                    </a>
                                     <br/>
                                     <div class="permission-list hidden" data-role="role_{{$role->id}}">
                                         @if ($role->all)

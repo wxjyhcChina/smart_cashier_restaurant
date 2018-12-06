@@ -9,6 +9,7 @@ use App\Access\Repository\User\UserRepository;
 use App\Http\Requests\Backend\Access\User\StoreUserRequest;
 use App\Http\Requests\Backend\Access\User\ManageUserRequest;
 use App\Http\Requests\Backend\Access\User\UpdateUserRequest;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class UserController.
@@ -45,6 +46,14 @@ class UserController extends Controller
         return view('backend.access.index');
     }
 
+    private function getRestaurantCode()
+    {
+        $username = Auth::user()->username;
+        $restaurantCode = substr($username, strrpos($username, '@')+1);
+
+        return $restaurantCode;
+    }
+
     /**
      * @param ManageUserRequest $request
      *
@@ -52,8 +61,11 @@ class UserController extends Controller
      */
     public function create(ManageUserRequest $request)
     {
+        $restaurantCode = $this->getRestaurantCode();
+
         return view('backend.access.create')
-            ->withRoles($this->roles->getAll());
+            ->withRoles($this->roles->getAll())
+            ->withRestaurantCode($restaurantCode);
     }
 
     /**
@@ -63,17 +75,28 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        $user = Auth::user();
+        $restaurantCode = $this->getRestaurantCode();
+
+        $data = $request->only(
+            'first_name',
+            'last_name',
+            'username',
+            'password',
+            'status'
+        );
+
+        $data['status'] = 1;
+        $data['restaurant_id'] = $user->restaurant_id;
+        $data['username'] = $data['username'].'@'.$restaurantCode;
+
         $this->users->create(
             [
-                'data' => $request->only(
-                    'first_name',
-                    'last_name',
-                    'username',
-                    'password',
-                    'status'
-                ),
+                'data' => $data,
                 'roles' => $request->only('assignees_roles'),
             ]);
+
+
 
         return redirect()->route('admin.access.user.index')->withFlashSuccess(trans('alerts.backend.users.created'));
     }
@@ -98,31 +121,63 @@ class UserController extends Controller
      */
     public function edit(User $user, ManageUserRequest $request)
     {
+        $username = $user->username;
+        $pos = strpos($username, '@');
+        $realUsername = substr($username, 0, $pos);
+        $restaurantCode = substr($username, $pos+1);
+        $firstUser = User::where('restaurant_id', $user->restaurant_id)->orderBy('id', 'asc')->first();
+
+        $isFirst = false;
+        if ($user->id == $firstUser->id)
+        {
+            $isFirst = true;
+        }
+
         return view('backend.access.edit')
             ->withUser($user)
             ->withUserRoles($user->roles->pluck('id')->all())
-            ->withRoles($this->roles->getAll());
+            ->withRoles($this->roles->getAll())
+            ->withUsername($realUsername)
+            ->withRestaurantCode($restaurantCode)
+            ->withFirstUser($isFirst);
     }
 
     /**
-     * @param User              $user
+     * @param User $user
      * @param UpdateUserRequest $request
-     *
      * @return mixed
+     * @throws \App\Exceptions\GeneralException
      */
     public function update(User $user, UpdateUserRequest $request)
     {
-        $this->users->update($user,
-            [
-                'data' => $request->only(
-                    'first_name',
-                    'last_name',
-                    'username',
-                    'status',
-                    'confirmed'
-                ),
-                'roles' => $request->only('assignees_roles'),
-            ]);
+
+        $data = $request->only(
+            'first_name',
+            'last_name',
+            'username',
+            'confirmed'
+        );
+
+        $data['username'] = $data['username'].'@'.$this->getRestaurantCode();
+        $data['status'] = $user->status;
+        $firstUser = User::where('restaurant_id', $user->restaurant_id)->orderBy('id', 'asc')->first();
+
+        if ($user->id == $firstUser->id)
+        {
+            $this->users->update($user,
+                [
+                    'data' => $data,
+                ]);
+        }
+        else
+        {
+            $this->users->update($user,
+                [
+                    'data' => $data,
+                    'roles' => $request->only('assignees_roles'),
+                ]);
+        }
+
 
         return redirect()->route('admin.access.user.index')->withFlashSuccess(trans('alerts.backend.users.updated'));
     }
