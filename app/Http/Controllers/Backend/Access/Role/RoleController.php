@@ -9,6 +9,7 @@ use App\Http\Requests\Backend\Access\Role\StoreRoleRequest;
 use App\Http\Requests\Backend\Access\Role\ManageRoleRequest;
 use App\Http\Requests\Backend\Access\Role\UpdateRoleRequest;
 use App\Access\Repository\Permission\PermissionRepository;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class RoleController.
@@ -64,7 +65,10 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        $this->roles->create($request->only('name', 'associated-permissions', 'permissions', 'sort'));
+        $data = $request->only('name', 'associated-permissions', 'permissions', 'sort');
+        $data['restaurant_id'] = Auth::user()->restaurant_id;
+
+        $this->roles->create($data);
 
         return redirect()->route('admin.access.role.index')->withFlashSuccess(trans('alerts.backend.roles.created'));
     }
