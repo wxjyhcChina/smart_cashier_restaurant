@@ -90,6 +90,7 @@ class RoleRepository extends BaseRepository
         DB::transaction(function () use ($input, $all) {
             $role = self::MODEL;
             $role = new $role();
+            $role->restaurant_id = $input['restaurant_id'];
             $role->name = $input['name'];
             $role->sort = isset($input['sort']) && strlen($input['sort']) > 0 && is_numeric($input['sort']) ? (int) $input['sort'] : 0;
 
