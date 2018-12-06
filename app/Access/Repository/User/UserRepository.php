@@ -431,6 +431,7 @@ class UserRepository extends BaseRepository
     {
         $user = self::MODEL;
         $user = new $user;
+        $user->restaurant_id = isset($input['restaurant_id']) ? $input['restaurant_id'] : null;
         $user->first_name = $input['first_name'];
         $user->last_name = $input['last_name'];
         $user->username = $input['username'];

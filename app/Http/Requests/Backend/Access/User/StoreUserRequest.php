@@ -30,7 +30,7 @@ class StoreUserRequest extends Request
         return [
             'first_name'     => 'required|max:191',
             'last_name'  => 'required|max:191',
-            'username'    => ['required', 'max:191', Rule::unique('users')],
+            'username'    => ['required', 'max:191', Rule::unique(config('access.users_table'))],
             'password' => 'required|min:6|confirmed',
         ];
     }

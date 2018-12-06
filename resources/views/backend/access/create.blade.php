@@ -25,8 +25,11 @@
                 <div class="form-group">
                     {{ Form::label('username', trans('validation.attributes.backend.access.users.username'), ['class' => 'col-lg-2 control-label']) }}
 
-                    <div class="col-lg-10">
-                        {{ Form::email('username', null, ['class' => 'form-control', 'maxlength' => '191', 'required' => 'required', 'placeholder' => trans('validation.attributes.backend.access.users.username')]) }}
+                    <div class="col-lg-4">
+                        {{ Form::text('username', null, ['class' => 'form-control', 'maxlength' => '191', 'required' => 'required', 'placeholder' => trans('validation.attributes.backend.access.users.username')]) }}
+                    </div><!--col-lg-10-->
+                    <div class="col-lg-6">
+                        <p style="padding-top: 7px">@ {{$restaurantCode}}</p>
                     </div><!--col-lg-10-->
                 </div><!--form control-->
 
@@ -61,14 +64,6 @@
                     <div class="col-lg-10">
                         {{ Form::password('password_confirmation', ['class' => 'form-control', 'required' => 'required', 'placeholder' => trans('validation.attributes.backend.access.users.password_confirmation')]) }}
                     </div><!--col-lg-10-->
-                </div><!--form control-->
-
-                <div class="form-group">
-                    {{ Form::label('status', trans('validation.attributes.backend.access.users.active'), ['class' => 'col-lg-2 control-label']) }}
-
-                    <div class="col-lg-1">
-                        {{ Form::checkbox('status', '1', true) }}
-                    </div><!--col-lg-1-->
                 </div><!--form control-->
 
                 <div class="form-group">
