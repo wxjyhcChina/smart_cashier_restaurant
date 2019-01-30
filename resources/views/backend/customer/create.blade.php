@@ -165,7 +165,7 @@
                 columns: [
                     {
                         data: 'id', name: 'id', render: function (data, type, row, meta) {
-                            return '<input type="radio" name="id" id="' + row['id'] + '"' + ' value="' + row['number'] + '"' + (row['id'] == $('#card').val() ? 'checked="checked"' : '') + '>';
+                            return '<input type="radio" name="id" id="' + row['internal_number'] + '"' + ' value="' + row['number'] + '"' + (row['id'] == $('#card').val() ? 'checked="checked"' : '') + '>';
                         }
                     },
                     {data: 'number', name: 'number'},
