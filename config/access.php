@@ -77,7 +77,7 @@ return [
          * That is all other sessions for that user will be deleted when they log in
          * (They can only be logged into one place at a time, all others will be logged out)
          */
-        'single_login' => true,
+        'single_login' => false,
     ],
 
     /*
