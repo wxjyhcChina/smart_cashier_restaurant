@@ -3,9 +3,12 @@
 namespace App\Modules\Repositories\Card;
 
 use App\Exceptions\Api\ApiException;
+use App\Exceptions\GeneralException;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Card\Card;
 use App\Modules\Repositories\BaseRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BaseCardRepository.
@@ -39,5 +42,31 @@ class BaseCardRepository extends BaseRepository
         }
 
         return $card;
+    }
+
+
+    /**
+     * @param Card $card
+     * @param $input
+     * @throws GeneralException
+     */
+    public function update(Card $card, $input)
+    {
+        Log::info("restaurant update param:".json_encode($input));
+
+        try
+        {
+            DB::beginTransaction();
+            $card->update($input);
+
+            DB::commit();
+            return;
+        }
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+        }
+
+        throw new GeneralException(trans('exceptions.backend.card.update_error'));
     }
 }
