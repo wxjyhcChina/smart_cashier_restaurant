@@ -193,6 +193,7 @@ return [
                 'telephone' => '电话',
                 'consume_category' => '消费类别',
                 'card' => 'IC卡',
+                'new_card' => '新IC卡',
                 'balance' => '余额',
                 'source' => '类型',
                 'money' => '充值金额',

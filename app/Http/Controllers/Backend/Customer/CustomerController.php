@@ -267,6 +267,72 @@ class CustomerController extends Controller
 
     /**
      * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function bindCard(Customer $customer, ManageCustomerRequest $request)
+    {
+        return view('backend.customer.bind')->withCustomer($customer);
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function unbindCard(Customer $customer, ManageCustomerRequest $request)
+    {
+        return view('backend.customer.unbind')->withCustomer($customer);
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function lostCard(Customer $customer, ManageCustomerRequest $request)
+    {
+        return view('backend.customer.lost')->withCustomer($customer);
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function doBindCard(Customer $customer, ManageCustomerRequest $request)
+    {
+        $this->customerRepo->bindCard($customer, $request->all());
+
+        return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.binded'));
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function doUnbindCard(Customer $customer, ManageCustomerRequest $request)
+    {
+        $this->customerRepo->unbindCard($customer);
+
+        return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.unbinded'));
+    }
+
+    /**
+     * @param Customer $customer
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     */
+    public function doLostCard(Customer $customer, ManageCustomerRequest $request)
+    {
+        $this->customerRepo->lostCard($customer, $request->all());
+
+        return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.lost'));
+    }
+
+    /**
+     * @param Customer $customer
      * @param StoreCustomerRequest $request
      * @return string
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException

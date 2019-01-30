@@ -8,7 +8,11 @@
 
 namespace App\Repositories\Backend\Customer;
 
+use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\AccountRecordType;
+use App\Modules\Enums\CardStatus;
+use App\Modules\Enums\ErrorCode;
+use App\Modules\Models\Card\Card;
 use App\Modules\Models\Customer\Customer;
 use App\Modules\Repositories\Customer\BaseCustomerRepository;
 use App\Modules\Services\Account\Facades\Account;
@@ -57,13 +61,11 @@ class CustomerRepository extends BaseCustomerRepository
      */
     public function changeBalance($customer, $source, $balance)
     {
-        if ($source == AccountRecordType::SYSTEM_MINUS)
-        {
+        if ($source == AccountRecordType::SYSTEM_MINUS) {
             $balance = -$balance;
         }
 
-        if ($balance != 0)
-        {
+        if ($balance != 0) {
             $account = $customer->account;
             $account->balance = $account->balance + $balance;
             $account->save();
@@ -81,18 +83,15 @@ class CustomerRepository extends BaseCustomerRepository
      */
     public function changeAllBalance($source, $balance, $restaurant_id)
     {
-        if ($source == AccountRecordType::SYSTEM_MINUS)
-        {
+        if ($source == AccountRecordType::SYSTEM_MINUS) {
             $balance = -$balance;
         }
 
-        if ($balance != 0)
-        {
+        if ($balance != 0) {
             $customers = Customer::where('restaurant_id', $restaurant_id)->get();
 
             DB::transaction(function () use ($customers, $balance, $source) {
-                foreach ($customers as $customer)
-                {
+                foreach ($customers as $customer) {
                     $account = $customer->account;
                     $account->balance = $account->balance + $balance;
                     $account->save();
@@ -101,5 +100,64 @@ class CustomerRepository extends BaseCustomerRepository
                 }
             });
         }
+    }
+
+    public function bindCard($customer, $input)
+    {
+        $card = Card::where('internal_number', $input['card_id'])->first();
+        if ($card == null)
+        {
+            throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
+        }
+        else if ($card->status != CardStatus::UNACTIVATED)
+        {
+            throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
+        }
+
+        $card->customer_id = $customer->id;
+        $card->status = CardStatus::ACTIVATED;
+        $card->save();
+    }
+
+    public function unbindCard($customer)
+    {
+        $card = $customer->card;
+
+        if ($card == null)
+        {
+            throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
+        }
+
+        $card->status = CardStatus::UNACTIVATED;
+        $card->customer_id = null;
+        $card->save();
+    }
+
+    public function lostCard($customer, $input)
+    {
+        $originalCard = $customer->card;
+
+        if ($originalCard == null)
+        {
+            throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
+        }
+
+        $originalCard->status = CardStatus::LOST;
+        $originalCard->customer_id = null;
+        $originalCard->save();
+
+        $card = Card::where('internal_number', $input['card_id'])->first();
+        if ($card == null)
+        {
+            throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
+        }
+        else if ($card->status != CardStatus::UNACTIVATED)
+        {
+            throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
+        }
+
+        $card->customer_id = $customer->id;
+        $card->status = CardStatus::ACTIVATED;
+        $card->save();
     }
 }

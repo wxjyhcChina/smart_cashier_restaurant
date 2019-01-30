@@ -33,6 +33,12 @@ return [
         'restaurant'=> [
             'assignCard' => '分发IC卡',
         ],
+
+        'customer' => [
+            'bind' => '绑定卡',
+            'unbind' => '解绑卡',
+            'lost' => '挂失卡',
+        ]
     ],
 
     'emails' => [

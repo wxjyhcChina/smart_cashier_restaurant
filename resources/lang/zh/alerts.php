@@ -63,6 +63,9 @@ return [
             'created' => '卡用户添加成功.',
             'updated' => '卡用户更新成功.',
             'updated_balance' => '余额更新成功',
+            'binded' => '卡绑定成功',
+            'unbinded' => '卡解绑成功',
+            'lost' => '卡挂失成功',
         ],
 
         'goods' => [

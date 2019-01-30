@@ -20,6 +20,12 @@ Route::group([
         Route::get('accountRecords', 'CustomerController@accountRecords')->name('customer.accountRecords');
         Route::get('accountRecords/get', 'CustomerTableController@getAccountRecords')->name('customer.getAccountRecords');
         Route::get('consumeOrders', 'CustomerController@consumeOrders')->name('customer.consumeOrders');
+        Route::get('bindCard', 'CustomerController@bindCard')->name('customer.bindCard');
+        Route::patch('doBindCard', 'CustomerController@doBindCard')->name('customer.doBindCard');
+        Route::get('unbindCard', 'CustomerController@unbindCard')->name('customer.unbindCard');
+        Route::patch('doUnbindCard', 'CustomerController@doUnbindCard')->name('customer.doUnbindCard');
+        Route::get('lostCard', 'CustomerController@lostCard')->name('customer.lostCard');
+        Route::patch('doLostCard', 'CustomerController@doLostCard')->name('customer.doLostCard');
         Route::get('consumeOrders/get', 'CustomerTableController@getConsumeOrders')->name('customer.getConsumeOrders');
         Route::get('changeBalance', 'CustomerController@changeBalance')->name('customer.changeBalance');
         Route::post('changeBalanceStore', 'CustomerController@changeBalanceStore')->name('customer.changeBalanceStore');

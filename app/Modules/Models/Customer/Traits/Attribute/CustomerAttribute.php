@@ -24,6 +24,35 @@ trait CustomerAttribute
         return '<a href="' . route('admin.customer.consumeOrders', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-bars" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.consume_order') . '"></i></a> ';
     }
 
+    public function getBindCardButtonAttribute()
+    {
+        if ($this->card == null)
+        {
+            return '<a href="' . route('admin.customer.bindCard', $this) . '" class="btn btn-xs btn-success"><i class="fa fa-lock" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.bind_card') . '"></i></a> ';
+        }
+
+        return null;
+    }
+
+    public function getUnbindCardButtonAttribute()
+    {
+        if ($this->card != null)
+        {
+            return '<a href="' . route('admin.customer.unbindCard', $this) . '" class="btn btn-xs btn-danger"><i class="fa fa-unlock" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.unbind_card') . '"></i></a> ';
+        }
+
+        return null;
+    }
+
+    public function getLostCardButtonAttribute()
+    {
+        if ($this->card != null)
+        {
+            return '<a href="' . route('admin.customer.lostCard', $this) . '" class="btn btn-xs btn-danger"><i class="fa fa-trash" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.lost_card') . '"></i></a> ';
+        }
+
+        return null;
+    }
 
     /**
      * @return string
@@ -89,6 +118,9 @@ trait CustomerAttribute
             $this->edit_button.
             $this->consume_order_button .
             $this->account_record_button .
+            $this->bind_card_button .
+            $this->unbind_card_button .
+            $this->lost_card_button .
             $this->recharge_button .
             $this->status_button;
     }

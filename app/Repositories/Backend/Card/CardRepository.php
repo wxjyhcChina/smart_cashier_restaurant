@@ -9,6 +9,7 @@
 namespace App\Repositories\Backend\Card;
 
 use App\Exceptions\GeneralException;
+use App\Modules\Enums\CardStatus;
 use App\Modules\Models\Card\Card;
 use App\Modules\Repositories\Card\BaseCardRepository;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +29,8 @@ class CardRepository extends BaseCardRepository
     {
         return $this->query()
             ->where('restaurant_id', $restaurant_id)
-            ->whereNull('customer_id');
+            ->whereNull('customer_id')
+            ->where('status', CardStatus::UNACTIVATED);
     }
     
 }
