@@ -84,6 +84,7 @@ class CardController extends Controller
     public function edit(Card $card, ManageCardRequest $request)
     {
         //
+        return view('backend.card.edit')->withCard($card);
     }
 
     /**
@@ -97,6 +98,9 @@ class CardController extends Controller
     public function update(Card $card, StoreCardRequest $request)
     {
         //
+        $this->cardRepo->update($card, $request->all());
+
+        return redirect()->route('admin.card.index')->withFlashSuccess(trans('alerts.backend.card.updated'));
     }
 
 

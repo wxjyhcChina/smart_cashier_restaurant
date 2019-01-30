@@ -117,6 +117,7 @@ return [
         'card' => [
             'management' => 'IC卡管理',
             'active' => '所有IC卡',
+            'edit' => '编辑IC卡',
 
             'table' => [
                 'id' => '编号',

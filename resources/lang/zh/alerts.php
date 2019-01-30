@@ -41,6 +41,12 @@ return [
             'imported' => '部门导入成功.',
         ],
 
+        'card' => [
+            'created' => 'IC卡添加成功.',
+            'updated' => 'IC卡更新成功.',
+            'imported' => 'IC卡导入成功.',
+        ],
+
         'shop' => [
             'created' => '子商户添加成功.',
             'updated' => '子商户更新成功.',

@@ -11,6 +11,6 @@ Route::group([
         'prefix' => 'card/{card}',
         'middleware' => 'can:view,card'
     ], function() {
-
+        Route::get('edit', 'CardController@edit')->name('card.edit');
     });
 });
