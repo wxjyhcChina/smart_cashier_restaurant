@@ -64,6 +64,42 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
+     * @param $restaurant_user_id
+     * @param $input
+     * @return mixed
+     */
+    public function statistics($restaurant_user_id, $input)
+    {
+        $query = $this->query()
+            ->select('pay_method', DB::raw('SUM(discount_price) as money'))
+            ->where('consume_orders.restaurant_user_id', $restaurant_user_id)
+            ->where('status', ConsumeOrderStatus::COMPLETE);
+
+        if (isset($input['start_time']) && isset($input['end_time']))
+        {
+            $query = $query->whereBetween('created_at', [$input['start_time'].' 00:00:00', $input['end_time']." 23:59:59"]);
+        }
+
+        if (isset($input['dinning_time_id'])){
+            $query = $query->where('dinning_time_id', $input['dinning_time_id']);
+        }
+
+        $result = $query->groupBy('pay_method')->get();
+
+        if (count($result) == 0)
+        {
+            $result = [
+                ['pay_method' => PayMethodType::ALIPAY, 'money' => 0],
+                ['pay_method' => PayMethodType::CARD, 'money' => 0],
+                ['pay_method' => PayMethodType::CASH, 'money' => 0],
+                ['pay_method' => PayMethodType::WECHAT_PAY, 'money' => 0],
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
      * @param $restaurant_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      * @throws ApiException

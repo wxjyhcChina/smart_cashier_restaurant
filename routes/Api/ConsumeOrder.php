@@ -9,6 +9,7 @@ Route::group([
     ], function() {
         Route::get('/', 'ConsumeOrderController@index')->name('index');
         Route::get('/latest', 'ConsumeOrderController@latestOrder')->name('latestOrder');
+        Route::get('/statistics', 'ConsumeOrderController@statistics')->name('statistics');
         Route::get('/{consumeOrder}', 'ConsumeOrderController@get')->name('get');
         Route::post('/', 'ConsumeOrderController@store')->name('store');
         Route::post('/preCreate', 'ConsumeOrderController@preCreate')->name('preCreate');

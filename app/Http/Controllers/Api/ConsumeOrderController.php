@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\ConsumeOrder\ConsumeOrderQueryRequest;
 use App\Http\Requests\Api\ConsumeOrder\CreateOrderRequest;
+use App\Http\Requests\Api\ConsumeOrder\StatisticsQueryRequest;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Repositories\Api\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
@@ -41,6 +42,22 @@ class ConsumeOrderController extends Controller
         $orders = $this->consumeOrderRepo->getByRestaurant($user->restaurant_id, $input);
 
         return $this->responseSuccessWithObject($orders);
+    }
+
+    /**
+     * @param StatisticsQueryRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function statistics(StatisticsQueryRequest $request)
+    {
+        $user = Auth::User();
+
+        $input = $request->all();
+        $result = $this->consumeOrderRepo->statistics($user->id, $input);
+
+        $user['statistics'] = $result;
+
+        return $this->responseSuccessWithObject($user);
     }
 
     /**
