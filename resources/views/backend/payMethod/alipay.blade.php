@@ -26,7 +26,7 @@
                 {{ Form::label('app_id', trans('validation.attributes.backend.payMethod.alipay.app_id').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('app_id', $payMethod->alipay_detail != null ? $payMethod->alipay_detail->app_id : null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.payMethod.alipay.app_id')]) }}
+                    {{ Form::text('app_id', $payMethod->alipay_detail != null ? $payMethod->alipay_detail->app_id : null, ['class' => 'form-control', 'required',  'placeholder' => trans('validation.attributes.backend.payMethod.alipay.app_id')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -34,7 +34,7 @@
                 {{ Form::label('pid', trans('validation.attributes.backend.payMethod.alipay.pid').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('pid', $payMethod->alipay_detail != null ? $payMethod->alipay_detail->pid : null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.payMethod.alipay.pid')]) }}
+                    {{ Form::text('pid', $payMethod->alipay_detail != null ? $payMethod->alipay_detail->pid : null, ['class' => 'form-control', 'required',  'placeholder' => trans('validation.attributes.backend.payMethod.alipay.pid')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -42,7 +42,7 @@
                 {{ Form::label('pub_key', trans('validation.attributes.backend.payMethod.alipay.alipay_public_key').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::textarea('pub_key', $payMethod->alipay_detail != null ? \Illuminate\Support\Facades\Storage::disk('cert')->get($payMethod->restaurant_id.'/'.$payMethod->alipay_detail->pub_key_path) : null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.payMethod.alipay.alipay_public_key')]) }}
+                    {{ Form::textarea('pub_key', $payMethod->alipay_detail != null ? \Illuminate\Support\Facades\Storage::disk('cert')->get($payMethod->restaurant_id.'/'.$payMethod->alipay_detail->pub_key_path) : null, ['class' => 'form-control', 'required',  'placeholder' => trans('validation.attributes.backend.payMethod.alipay.alipay_public_key')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -50,7 +50,7 @@
                 {{ Form::label('mch_private_key', trans('validation.attributes.backend.payMethod.alipay.mch_private_key').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::textarea('mch_private_key', $payMethod->alipay_detail != null ? \Illuminate\Support\Facades\Storage::disk('cert')->get($payMethod->restaurant_id.'/'.$payMethod->alipay_detail->mch_private_key_path) : null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.payMethod.alipay.mch_private_key')]) }}
+                    {{ Form::textarea('mch_private_key', $payMethod->alipay_detail != null ? \Illuminate\Support\Facades\Storage::disk('cert')->get($payMethod->restaurant_id.'/'.$payMethod->alipay_detail->mch_private_key_path) : null, ['class' => 'form-control', 'required',  'placeholder' => trans('validation.attributes.backend.payMethod.alipay.mch_private_key')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
