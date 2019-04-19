@@ -472,11 +472,14 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
     /**
      * @param ConsumeOrder $order
+     * @return ConsumeOrder
      */
     public function close(ConsumeOrder $order)
     {
         $order->status = ConsumeOrderStatus::CLOSED;
         $order->save();
+
+        return $order;
     }
 
     /**
