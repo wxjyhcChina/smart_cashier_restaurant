@@ -318,6 +318,17 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     private function payWithCash(ConsumeOrder $order)
     {
         $order->pay_method = PayMethodType::CASH;
+        $order->online_pay = false;
+        $order->status = ConsumeOrderStatus::COMPLETE;
+        $order->save();
+
+        return $order;
+    }
+
+    private function payWithDisabledThird(ConsumeOrder $order, $payMethod)
+    {
+        $order->pay_method = $payMethod;
+        $order->online_pay = false;
         $order->status = ConsumeOrderStatus::COMPLETE;
         $order->save();
 
@@ -400,6 +411,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $order->discount_price = doubleval($discount_price);
             $order->discount = $discount;
             $order->pay_method = PayMethodType::CARD;
+            $order->online_pay = false;
             $order->status = ConsumeOrderStatus::COMPLETE;
             $order->save();
 
@@ -445,7 +457,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         if ($response->getTradeStatus() == "SUCCESS")
         {
-            $this->paySuccess($order, Pay::isWechatPay($barcode) ? PayMethodType::WECHAT_PAY : PayMethodType::ALIPAY, $response->getTradeNo());
+            $this->onlinePaySuccess($order, Pay::isWechatPay($barcode) ? PayMethodType::WECHAT_PAY : PayMethodType::ALIPAY, $response->getTradeNo());
             return $order;
         }
         else if ($response->getTradeStatus() == "CLOSED")
@@ -465,10 +477,11 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      * @param $pay_method
      * @param $trade_no
      */
-    public function paySuccess(ConsumeOrder $order, $pay_method, $trade_no=null)
+    public function onlinePaySuccess(ConsumeOrder $order, $pay_method, $trade_no=null)
     {
         $order->status = ConsumeOrderStatus::COMPLETE;
         $order->pay_method = $pay_method;
+        $order->online_pay = true;
         $order->external_pay_no = $trade_no;
         $order->save();
     }
@@ -532,10 +545,21 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
                 $order = $this->payWithCard($order, $input['card_id']);
             }
+            else
+            {
+                if ($method->enabled == false)
+                {
+                    $order = $this->payWithDisabledThird($order, $payMethod);
+                }
+                else
+                {
+                    $order = $this->payWithBarcode($order, $input['barcode']);
+                }
+            }
         }
         else
         {
-            $order = $this->payWithBarcode($order, $input['barcode']);
+            throw new ApiException(ErrorCode::PAY_METHOD_NOT_PROVIDED, trans('api.error.pay_method_not_provided'));
         }
 
         return $order->load('goods', 'customer', 'card');

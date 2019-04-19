@@ -52,6 +52,7 @@ return [
         'order_goods_not_exist' => '订单中不存在商品',
         'order_status_incorrect' => '订单状态不正确',
 
+        'pay_method_not_provided' => '请提供支付方式',
         'pay_method_not_supported' => '当前收银台不支持该支付方式',
     ],
 
