@@ -59,6 +59,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             });
         }
 
+        $query->where('status', '<>', ConsumeOrderStatus::WAIT_PAY)->where('status', '<>', ConsumeOrderStatus::PAY_IN_PROGRESS);
         return $query->orderBy('consume_orders.created_at', 'desc')->paginate(15);
     }
 
