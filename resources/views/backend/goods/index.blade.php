@@ -71,7 +71,14 @@
                     {data: 'name', name: 'name'},
                     {data: 'price', name: 'price'},
                     {data: 'shop_name', name: 'shops.name'},
-                    {data: 'dinning_time_name', name: 'dinning_time.name'},
+                    {data: 'dinning_time', name: 'dinning_time', render:function (data, type, row, meta){
+                        var arr = [];
+                        data.forEach(function (e) {
+                            arr.push(e.name);
+                        });
+
+                        return arr.join(', ');
+                    }},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],
