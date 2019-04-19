@@ -26,7 +26,7 @@ class StoreGoodsRequest extends Request
         return [
             'price' => 'required|numeric',
             'name' => 'required',
-            'dinning_time_id' => 'required',
+            'dinning_time' => 'required',
             'shop_id' => 'required'
         ];
     }

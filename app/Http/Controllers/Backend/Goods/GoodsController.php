@@ -8,6 +8,7 @@ use App\Http\Requests\Backend\Goods\StoreGoodsRequest;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Shop\Shop;
+use App\Repositories\Backend\DinningTime\DinningTimeRepository;
 use App\Repositories\Backend\Goods\GoodsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,12 +26,19 @@ class GoodsController extends Controller
     private $goodsRepo;
 
     /**
+     * @var DinningTimeRepository
+     */
+    private $dinningTimeRepo;
+
+    /**
      * GoodsController constructor.
      * @param $goodsRepo
+     * @param $dinningTimeRepo
      */
-    public function __construct(GoodsRepository $goodsRepo)
+    public function __construct(GoodsRepository $goodsRepo, DinningTimeRepository $dinningTimeRepo)
     {
         $this->goodsRepo = $goodsRepo;
+        $this->dinningTimeRepo = $dinningTimeRepo;
     }
 
     /**
@@ -71,8 +79,8 @@ class GoodsController extends Controller
         $shops = Shop::all();
         $shops = $this->getSelectArray($shops);
 
-        $dinningTime = DinningTime::all();
-        $dinningTime = $this->getSelectArray($dinningTime);
+        $user = Auth::User();
+        $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
 
         return view('backend.goods.create')
             ->withShops($shops)
@@ -133,8 +141,8 @@ class GoodsController extends Controller
         $shops = Shop::all();
         $shops = $this->getSelectArray($shops);
 
-        $dinningTime = DinningTime::all();
-        $dinningTime = $this->getSelectArray($dinningTime);
+        $user = Auth::User();
+        $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
 
         return view('backend.goods.edit')
             ->withGoods($goods)

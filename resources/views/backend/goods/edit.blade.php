@@ -67,12 +67,14 @@
             </div><!--form control-->
 
             <div class="form-group">
-                {{ Form::label('dinning_time_id', trans('validation.attributes.backend.goods.dinning_time_id').":", ['class' => 'col-lg-2 control-label']) }}
+                {{ Form::label('dinning_time', trans('validation.attributes.backend.consumeRule.dinning_time').":", ['class' => 'col-lg-2 control-label']) }}
 
-                <div class="col-lg-10">
-                    {{ Form::select('dinning_time_id', $dinningTime, $goods->dinning_time_id, ['class' => 'form-control', 'required']) }}
-                </div><!--col-lg-10-->
-            </div><!--form control-->
+                <div class="col-lg-10" style="padding-top: 7px">
+                    @foreach($dinningTime as $object)
+                        {{ Form::checkbox('dinning_time[]', $object->id, in_array($object->id, $goods->dinning_time->pluck('id')->toArray())) }} {{$object->name}}&nbsp&nbsp
+                    @endforeach
+                </div>
+            </div>
 
         </div><!-- /.box-body -->
     </div><!--box-->
