@@ -105,6 +105,13 @@ class ConsumeOrderController extends Controller
         return $this->responseSuccess($consumeOrder);
     }
 
+
+    public function close(ConsumeOrder $consumeOrder, Request $request)
+    {
+        $consumeOrder = $this->consumeOrderRepo->close($consumeOrder);
+
+        return $this->responseSuccess($consumeOrder);
+    }
     /**
      * Display the specified resource.
      *

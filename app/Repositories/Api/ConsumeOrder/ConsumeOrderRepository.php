@@ -295,6 +295,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $order = ConsumeOrder::where('restaurant_id', $restaurant_id)
             ->where('dinning_time_id', $dinning_time_id)
             ->whereBetween('updated_at', [$excludeTime, $now])
+            ->where('status','<>', ConsumeOrderStatus::CLOSED)
             ->orderBy('id', 'desc')
             ->first();
 
@@ -466,6 +467,15 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $order->status = ConsumeOrderStatus::COMPLETE;
         $order->pay_method = $pay_method;
         $order->external_pay_no = $trade_no;
+        $order->save();
+    }
+
+    /**
+     * @param ConsumeOrder $order
+     */
+    public function close(ConsumeOrder $order)
+    {
+        $order->status = ConsumeOrderStatus::CLOSED;
         $order->save();
     }
 
