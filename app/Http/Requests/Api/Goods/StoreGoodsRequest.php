@@ -29,7 +29,7 @@ class StoreGoodsRequest extends ApiBaseRequest
         {
             $rules = array_merge($rules, [
                 'name' => 'required',
-                'dinning_time_id' => 'required',
+                'dinning_time' => 'required',
                 'shop_id' => 'required'
             ]);
         }

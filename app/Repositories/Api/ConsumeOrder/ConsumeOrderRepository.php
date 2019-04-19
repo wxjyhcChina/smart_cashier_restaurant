@@ -110,7 +110,10 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
         }
 
-        $goods = $labelCategory->goods()->where('dinning_time_id', $dinningTimeId)->first();
+        $goods = $labelCategory->goods()
+            ->whereHas('dinning_time', function ($query) use ($dinningTimeId) {
+                $query->where('dinning_time_id', $dinningTimeId);
+            })->first();
         if ($goods == null)
         {
             throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BIND_GOOD, trans('api.error.label_category_not_bind_good'));

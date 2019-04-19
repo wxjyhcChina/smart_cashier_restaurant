@@ -105,7 +105,11 @@ class ConsumeOrderController extends Controller
         return $this->responseSuccess($consumeOrder);
     }
 
-
+    /**
+     * @param ConsumeOrder $consumeOrder
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function close(ConsumeOrder $consumeOrder, Request $request)
     {
         $consumeOrder = $this->consumeOrderRepo->close($consumeOrder);
