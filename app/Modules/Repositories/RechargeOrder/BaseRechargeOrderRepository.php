@@ -7,6 +7,7 @@ use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Enums\PayMethodType;
 use App\Modules\Enums\RechargeOrderStatus;
+use App\Modules\Models\PayMethod\PayMethod;
 use App\Modules\Models\RechargeOrder\RechargeOrder;
 use App\Modules\Repositories\BaseRepository;
 use App\Modules\Services\Account\Facades\Account;
@@ -52,9 +53,16 @@ class BaseRechargeOrderRepository extends BaseRepository
         {
             if (isset($input['pay_method']) && $input['pay_method'] == PayMethodType::CASH)
             {
-                $this->paySuccess($rechargeOrder, PayMethodType::CASH);
-
-
+                $method = PayMethod::where('method', $input['pay_method'] )->first();
+                if ($input['pay_method'] == PayMethodType::CASH ||
+                    (
+                        ($input['pay_method'] == PayMethodType::WECHAT_PAY || $input['pay_method'] == PayMethodType::ALIPAY) &&
+                        $method->enabled == false
+                    )
+                )
+                {
+                    $this->paySuccess($rechargeOrder, $input['pay_method']);
+                }
             }
 
             return $rechargeOrder;
