@@ -51,7 +51,7 @@ class BaseRechargeOrderRepository extends BaseRepository
         $rechargeOrder = $this->createRechargeOrderStub($input);
         if ($rechargeOrder->save())
         {
-            if (isset($input['pay_method']) && $input['pay_method'] == PayMethodType::CASH)
+            if (isset($input['pay_method']))
             {
                 $method = PayMethod::where('method', $input['pay_method'] )->first();
                 if ($input['pay_method'] == PayMethodType::CASH ||
