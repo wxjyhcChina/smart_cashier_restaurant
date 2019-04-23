@@ -197,6 +197,8 @@ return [
                 'department' => '部门',
                 'consume_category' => '消费类别',
                 'balance' => '余额',
+                'subsidy_balance' => '补贴余额',
+                'total_balance' => '总余额',
                 'card' => '绑定卡号',
                 'created_at' => '创建时间',
             ],
