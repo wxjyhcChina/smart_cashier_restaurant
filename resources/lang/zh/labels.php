@@ -184,7 +184,7 @@ return [
             'bind_card' => '绑定卡',
             'unbind_card' => '解绑卡',
             'lost_card' => '挂失卡',
-            'system_add' => '系统增加',
+            'system_add' => '补贴',
             'system_minus' => '系统扣除',
             'recharge' => '充值',
 

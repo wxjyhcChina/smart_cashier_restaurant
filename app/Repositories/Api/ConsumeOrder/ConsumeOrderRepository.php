@@ -576,7 +576,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $method = PayMethod::where('method', $payMethod)->first();
             if ($method == null
                 || (($payMethod == PayMethodType::CASH || $payMethod == PayMethodType::CARD)
-                    && $payMethod->enabled == false)
+                    && $method->enabled == false)
             )
             {
                 throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));

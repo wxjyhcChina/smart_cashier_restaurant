@@ -53,6 +53,8 @@ class BaseRechargeOrderRepository extends BaseRepository
             if (isset($input['pay_method']) && $input['pay_method'] == PayMethodType::CASH)
             {
                 $this->paySuccess($rechargeOrder, PayMethodType::CASH);
+
+
             }
 
             return $rechargeOrder;
