@@ -67,7 +67,7 @@ class CustomerRepository extends BaseCustomerRepository
 
         if ($balance != 0) {
             $account = $customer->account;
-            $account->balance = $account->balance + $balance;
+            $account->subsidy_balance = $account->subsidy_balance + $balance;
             $account->save();
 
             Account::addRecord($customer->id, $account->id, $source, abs($balance), null, null);

@@ -5,7 +5,7 @@
 @section('page-header')
     <h1>
         {{ trans('labels.backend.customer.management') }}
-        <small>{{ trans('labels.backend.customer.change_balance') }}</small>
+        <small>{{ trans('labels.backend.customer.change_balance_for', ['user' => $customer->user_name]) }}</small>
     </h1>
 @endsection
 
@@ -14,7 +14,7 @@
 
     <div class="box box-success">
             <div class="box-header with-border">
-                <h3 class="box-title">{{ trans('labels.backend.customer.change_balance_for', ['user' => $customer->username]) }}</h3>
+                <h3 class="box-title">{{ trans('labels.backend.customer.change_balance_for', ['user' => $customer->user_name]) }}</h3>
 
                 <div class="box-tools pull-right">
                     @include('backend.customer.includes.partials.score-header-buttons')

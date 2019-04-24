@@ -186,21 +186,43 @@ class CustomerController extends Controller
     {
         return view('backend.customer.consumeOrder')->withCustomer($customer);
     }
+    
+    /**
+     * @param Customer $customer
+     * @param $status
+     * @param ManageCustomerRequest $request
+     * @return mixed
+     * @throws ApiException
+     */
+    public function mark(Customer $customer, $status, ManageCustomerRequest $request)
+    {
+        $this->customerRepo->update($customer, ['enabled' => $status]);
+
+        return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.updated'));
+    }
+
+    /**
+     * @param ManageCustomerRequest $request
+     */
+    public function clearSubsidyBalance(ManageCustomerRequest $request)
+    {
+        
+    }
 
     /**
      * @param ManageCustomerRequest $request
      * @return mixed
      */
-    public function changeAllBalance(ManageCustomerRequest $request)
+    public function changeMultipleBalance(ManageCustomerRequest $request)
     {
-        return view('backend.customer.change-all-balance');
+        return view('backend.customer.change-multiple-balance');
     }
 
     /**
      * @param UpdateCustomerBalanceRequest $request
      * @return mixed
      */
-    public function changeAllBalanceStore(UpdateCustomerBalanceRequest $request)
+    public function changeMultipleBalanceStore(UpdateCustomerBalanceRequest $request)
     {
         $user = Auth::User();
         $this->customerRepo->changeAllBalance($request->get('source'), $request->get('balance'), $user->restaurant_id);

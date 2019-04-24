@@ -178,14 +178,14 @@ return [
             'selectCard' => '选择IC卡',
             'change_balance' => '修改余额',
             'change_balance_for' => '为:user修改余额',
-            'change_all_balance' => '批量修改用户余额',
+            'change_multiple_balance' => '批量补贴用户余额',
             'account_record' => '消费记录',
             'consume_order' => '订单记录',
             'bind_card' => '绑定卡',
             'unbind_card' => '解绑卡',
             'lost_card' => '挂失卡',
-            'system_add' => '补贴',
-            'system_minus' => '系统扣除',
+            'system_add' => '补贴余额',
+            'system_minus' => '扣除余额',
             'recharge' => '充值',
 
             'table' => [

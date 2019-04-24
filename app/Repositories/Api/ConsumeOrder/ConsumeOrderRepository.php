@@ -94,19 +94,28 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $query = $query->where('dinning_time_id', $input['dinning_time_id']);
         }
 
-        $result = $query->groupBy('pay_method')->get();
+        $payMethods = $query->groupBy('pay_method')->get();
 
-        if (count($result) == 0)
+        $ret = [
+            ['pay_method' => PayMethodType::ALIPAY, 'money' => 0],
+            ['pay_method' => PayMethodType::CARD, 'money' => 0],
+            ['pay_method' => PayMethodType::CASH, 'money' => 0],
+            ['pay_method' => PayMethodType::WECHAT_PAY, 'money' => 0],
+        ];
+
+        foreach ($payMethods as $payMethod)
         {
-            $result = [
-                ['pay_method' => PayMethodType::ALIPAY, 'money' => 0],
-                ['pay_method' => PayMethodType::CARD, 'money' => 0],
-                ['pay_method' => PayMethodType::CASH, 'money' => 0],
-                ['pay_method' => PayMethodType::WECHAT_PAY, 'money' => 0],
-            ];
+           for ($i = 0; $i < count($ret); $i++)
+           {
+               if ($ret[$i]['pay_method'] == $payMethod['pay_method'])
+               {
+                   $ret[$i]['money'] = $payMethod['money'];
+                   break;
+               }
+           }
         }
 
-        return $result;
+        return $ret;
     }
 
     /**

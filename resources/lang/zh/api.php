@@ -63,8 +63,8 @@ return [
 
     'wallet' => [
         'type' => [
-            'system_add' => '系统增加',
-            'system_minus' => '系统减少',
+            'system_add' => '补贴金额',
+            'system_minus' => '扣除金额',
             'recharge' => '充值',
             'refund' => '充值退款',
             'consume' => '消费',

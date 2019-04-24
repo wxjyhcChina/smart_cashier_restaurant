@@ -80,7 +80,8 @@ return [
             'all' => '所有卡用户',
             'create' => '创建卡用户',
             'changeBalance' => '修改余额',
-            'changeAllBalance' => '修改所有用户余额',
+            'changeMultipleBalance' => '补贴多用户金额',
+            'clearSubsidyBalance' => '清空补贴金额',
         ],
 
         'goods' => [
