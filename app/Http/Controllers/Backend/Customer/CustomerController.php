@@ -225,7 +225,18 @@ class CustomerController extends Controller
     public function changeMultipleBalanceStore(UpdateCustomerBalanceRequest $request)
     {
         $user = Auth::User();
-        $this->customerRepo->changeAllBalance($request->get('source'), $request->get('balance'), $user->restaurant_id);
+        $ids = [];
+        $type = $request->get('type');
+        if ($type == 'department')
+        {
+            $ids = $request->get('department_id');
+        }
+        else if ($type == 'customer')
+        {
+            $ids = $request->get('customer_id');
+        }
+
+        $this->customerRepo->changeMultipleBalance($request->get('source'), $request->get('balance'), $request->get('type'), $ids, $user->restaurant_id);
 
         return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.updated_balance'));
     }

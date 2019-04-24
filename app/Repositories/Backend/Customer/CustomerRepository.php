@@ -81,19 +81,31 @@ class CustomerRepository extends BaseCustomerRepository
      * @param $restaurant_id
      * @throws \Throwable
      */
-    public function changeAllBalance($source, $balance, $restaurant_id)
+    public function changeMultipleBalance($source, $balance, $type, $ids, $restaurant_id)
     {
         if ($source == AccountRecordType::SYSTEM_MINUS) {
             $balance = -$balance;
         }
 
         if ($balance != 0) {
-            $customers = Customer::where('restaurant_id', $restaurant_id)->get();
+
+            $customersQuery = Customer::where('restaurant_id', $restaurant_id);
+
+            if ($type == 'department')
+            {
+                $customersQuery = $customersQuery->whereIn('department_id', $ids);
+            }
+            else if ($type == 'customer')
+            {
+                $customersQuery = $customersQuery->whereIn('id', $ids);
+            }
+
+            $customers = $customersQuery->get();
 
             DB::transaction(function () use ($customers, $balance, $source) {
                 foreach ($customers as $customer) {
                     $account = $customer->account;
-                    $account->balance = $account->balance + $balance;
+                    $account->subsidy_balance = $account->subsidy_balance + $balance;
                     $account->save();
 
                     Account::addRecord($customer->id, $account->id, $source, abs($balance), null, null);
