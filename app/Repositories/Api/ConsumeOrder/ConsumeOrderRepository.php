@@ -69,7 +69,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $query = $query->where('pay_method', $input['pay_method']);
         }
 
-        $query->where('status', '<>', ConsumeOrderStatus::WAIT_PAY)->where('status', '<>', ConsumeOrderStatus::PAY_IN_PROGRESS);
+        $query->where('status', '<>', ConsumeOrderStatus::WAIT_PAY)
+            ->where('status', '<>', ConsumeOrderStatus::PAY_IN_PROGRESS)
+            ->where('status', '<>', ConsumeOrderStatus::CLOSED);
         return $query->orderBy('consume_orders.created_at', 'desc')->paginate(15);
     }
 
