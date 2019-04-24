@@ -9,7 +9,8 @@ Route::group([
     Route::get('customer/availableCard', 'CustomerTableController@availableCard')->name('customer.availableCard');
     Route::get('changeMultipleBalance', 'CustomerController@changeMultipleBalance')->name('customer.changeMultipleBalance');
     Route::post('changeMultipleBalanceStore', 'CustomerController@changeMultipleBalanceStore')->name('customer.changeMultipleBalanceStore');
-    Route::post('clearSubsidyBalance', 'CustomerController@clearSubsidyBalance')->name('customer.clearSubsidyBalance');
+    Route::get('clearSubsidyBalance', 'CustomerController@clearSubsidyBalance')->name('customer.clearSubsidyBalance');
+    Route::post('clearSubsidyBalanceStore', 'CustomerController@clearSubsidyBalanceStore')->name('customer.clearSubsidyBalanceStore');
 
     Route::group([
         'prefix' => 'customer/{customer}',

@@ -201,12 +201,33 @@ class CustomerController extends Controller
         return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.updated'));
     }
 
+    public function clearSubsidyBalance()
+    {
+        return view('backend.customer.clear-subsidy-balance');
+    }
+
     /**
      * @param ManageCustomerRequest $request
+     * @return mixed
+     * @throws \Throwable
      */
-    public function clearSubsidyBalance(ManageCustomerRequest $request)
+    public function clearSubsidyBalanceStore(ManageCustomerRequest $request)
     {
-        
+        $user = Auth::User();
+        $ids = [];
+        $type = $request->get('type');
+        if ($type == 'department')
+        {
+            $ids = $request->get('department_id');
+        }
+        else if ($type == 'customer')
+        {
+            $ids = $request->get('customer_id');
+        }
+
+        $this->customerRepo->clearMultipleBalance( $request->get('type'), $ids, $user->restaurant_id);
+
+        return redirect()->route('admin.customer.index')->withFlashSuccess(trans('alerts.backend.customer.updated_balance'));
     }
 
     /**
@@ -221,6 +242,7 @@ class CustomerController extends Controller
     /**
      * @param UpdateCustomerBalanceRequest $request
      * @return mixed
+     * @throws \Throwable
      */
     public function changeMultipleBalanceStore(UpdateCustomerBalanceRequest $request)
     {

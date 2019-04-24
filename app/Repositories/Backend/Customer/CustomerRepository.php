@@ -74,6 +74,43 @@ class CustomerRepository extends BaseCustomerRepository
         }
     }
 
+    /**
+     * @param $source
+     * @param $type
+     * @param $ids
+     * @param $restaurant_id
+     * @throws \Throwable
+     */
+    public function clearMultipleBalance($type, $ids, $restaurant_id)
+    {
+        $customersQuery = Customer::where('restaurant_id', $restaurant_id);
+
+        if ($type == 'department')
+        {
+            $customersQuery = $customersQuery->whereIn('department_id', $ids);
+        }
+        else if ($type == 'customer')
+        {
+            $customersQuery = $customersQuery->whereIn('id', $ids);
+        }
+
+        $customers = $customersQuery->get();
+
+        DB::transaction(function () use ($customers) {
+            foreach ($customers as $customer) {
+                $account = $customer->account;
+                $subsidy_balance = $account->subsidy_balance;
+
+                if ($subsidy_balance > 0)
+                {
+                    $account->subsidy_balance = 0;
+                    $account->save();
+
+                    Account::addRecord($customer->id, $account->id, AccountRecordType::SYSTEM_MINUS, abs($subsidy_balance), null, null);
+                }
+            }
+        });
+    }
 
     /**
      * @param $source
