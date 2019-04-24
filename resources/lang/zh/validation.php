@@ -195,6 +195,7 @@ return [
                 'card' => 'IC卡',
                 'new_card' => '新IC卡',
                 'balance' => '余额',
+                'subsidy_balance' => '补贴余额',
                 'source' => '类型',
                 'type' => '补贴人群',
                 'money' => '充值金额',

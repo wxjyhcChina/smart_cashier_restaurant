@@ -291,13 +291,16 @@ class CustomerController extends Controller
      */
     private function getEnabledPayMethod($restaurant_id)
     {
-        $payMethods = PayMethod::where('restaurant_id', $restaurant_id)->where('enabled', 1)->get();
+        $payMethods = PayMethod::where('restaurant_id', $restaurant_id)->get();
 
         $array = [];
         foreach ($payMethods as $payMethod) {
             if ($payMethod->method != PayMethodType::CARD)
             {
-                $array[$payMethod->method] = $payMethod->getShowMethodName();
+                $array[$payMethod->method] = [
+                    'name' => $payMethod->getShowMethodName(),
+                    'enabled' => $payMethod->enabled
+                ];
             }
         }
 

@@ -72,10 +72,18 @@
             </div><!--form control-->
 
             <div class="form-group">
-                {{ Form::label('consume_category', trans('validation.attributes.backend.customer.balance').":", ['class' => 'col-lg-2 control-label']) }}
+                {{ Form::label('balance', trans('validation.attributes.backend.customer.balance').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
                     <p style="padding-top: 7px">{{$customer->balance}}</p>
+                </div><!--col-lg-10-->
+            </div><!--form control-->
+
+            <div class="form-group">
+                {{ Form::label('subsidy_balance', trans('validation.attributes.backend.customer.subsidy_balance').":", ['class' => 'col-lg-2 control-label']) }}
+
+                <div class="col-lg-10">
+                    <p style="padding-top: 7px">{{$customer->subsidy_balance}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -92,7 +100,8 @@
 
                 <div class="col-lg-10" style="padding-top: 7px">
                     @foreach($payMethods as $key => $value)
-                        <input type="radio" name="pay_method" value="{{$key}}">&nbsp;{{$value}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div id="{{$key}}_enabled" enabled="{{$value['enabled']}}" hidden></div>
+                        <input type="radio" name="pay_method" value="{{$key}}">&nbsp;{{$value['name']}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     @endforeach
                 </div><!--col-lg-10-->
 
@@ -153,16 +162,26 @@
             }
             else if (pay_method === "ALIPAY" || pay_method === "WECHAT_PAY")
             {
-                isPaying = true;
-                swal({
-                    title: "请扫描支付码",
-                    type: "info",
-                    showCancelButton: true,
-                    showConfirmButton: false,
-                    cancelButtonText: "取消",
-                }, function(inputValue){
+                var name = pay_method + '_enabled';
+                var enabled = $('#' + name).attr('enabled');
 
-                });
+                if (enabled === '0')
+                {
+                    submitOrder();
+                }
+                else
+                {
+                    isPaying = true;
+                    swal({
+                        title: "请扫描支付码",
+                        type: "info",
+                        showCancelButton: true,
+                        showConfirmButton: false,
+                        cancelButtonText: "取消",
+                    }, function(inputValue){
+
+                    });
+                }
             }
             else
             {
