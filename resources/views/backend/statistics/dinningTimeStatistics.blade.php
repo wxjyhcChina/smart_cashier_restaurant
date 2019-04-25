@@ -21,7 +21,7 @@
         </div><!-- /.box-header -->
 
         <div class="box-body">
-            <form class="form-horizontal">
+            {{ Form::open(['route' => 'admin.statistics.dinningTimeStatisticsExport', 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'post']) }}
 
                 <div class="row">
                     {{ Form::label('search_time', trans('labels.backend.consumeOrder.searchTime'), ['class' => 'control-label', 'style'=>'float: left;padding-left: 35px;padding-right: 15px;']) }}
@@ -30,8 +30,14 @@
                         {{ Form::text('search_time', null, ['class' => 'form-control', 'id'=>'search_time', 'placeholder' => trans('labels.backend.consumeOrder.searchTime')]) }}
                     </div><!--col-lg-10-->
 
+                    {{ Form::label('restaurant_user', trans('labels.backend.consumeOrder.restaurant_user'), ['class' => 'control-label', 'style'=>'float: left;padding-left: 35px;padding-right: 15px;']) }}
+
+                    <div class="col-lg-4">
+                        {{ Form::select('restaurant_user_id', $restaurantUser, null, ['class' => 'form-control', 'id'=>'restaurant_user_id']) }}
+                    </div><!--col-lg-10-->
+
                     <button type="button" class="btn btn-primary" id="search_btn">{{trans('labels.backend.statistics.search')}}</button>
-                    <button type="button" class="btn btn-primary" id="export_btn">{{trans('labels.backend.statistics.export')}}</button>
+                    <button class="btn btn-primary" id="export_btn">{{trans('labels.backend.statistics.export')}}</button>
                 </div>
             </form>
 
@@ -48,7 +54,7 @@
                     <thead>
                     <tr>
                         <th>{{ trans('labels.backend.statistics.table.id') }}</th>
-                        <th>{{ trans('labels.backend.statistics.table.consumeCategory') }}</th>
+                        <th>{{ trans('labels.backend.statistics.table.dinningTime') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.cash') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.cash_count') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.card') }}</th>
@@ -124,6 +130,7 @@
                     data: function ( d ) {
                         d.start_time = startDate;
                         d.end_time = endDate;
+                        d.restaurant_user_id = $('#restaurant_user_id').val();
                     },
                     type: 'get',
                     error: function (xhr, err) {
@@ -181,6 +188,7 @@
                     data: {
                         start_time: startDate,
                         end_time: endDate,
+                        restaurant_user_id: $('#restaurant_user_id').val()
                     },
                     dataType: "json",
                     success: function (items) {

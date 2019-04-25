@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\ConsumeOrder;
 
 use App\Http\Requests\Backend\ConsumeOrder\ManageConsumeOrderRequest;
 use App\Modules\Enums\ConsumeOrderStatus;
+use App\Modules\Enums\PayMethodType;
 use App\Modules\Models\Restaurant\RestaurantUser;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\DinningTime\DinningTime;
@@ -64,19 +65,81 @@ class ConsumeOrderController extends Controller
         $start_time = date('Y-m-d 00:00:00');
         $end_time = date('Y-m-d H:i:s');
 
-        $dinningTime = DinningTime::where('restaurant_id', $user->restaurant_id)->get()->pluck('name', 'id')->toArray();
         $restaurantUser = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get()->pluck('username', 'id')->toArray();
 
-        $dinningTime = $this->appendNullOption($dinningTime);
         $restaurantUser = $this->appendNullOption($restaurantUser);
-        $payMethod = $this->appendNullOption($this->getPayMethod($user->restaurant_id));
 
         return view('backend.consumeOrder.index')
             ->withStartTime($start_time)
             ->withEndTime($end_time)
-            ->withDinningTime($dinningTime)
-            ->withPayMethod($payMethod)
             ->withRestaurantUser($restaurantUser);
+    }
+
+    public function getDinningTimeStatistics(Request $request)
+    {
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
+
+        $orders = ConsumeOrder::where('created_at', '>=', $start_time)
+            ->where('created_at', '<=', $end_time)
+            ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->whereNotNull('dinning_time_id')
+            ->get();
+
+        $user = Auth::User();
+        $dinningTimes = DinningTime::where('restaurant_id', $user->restaurant_id)->get();
+
+        $dinningTimeData = [];
+        foreach ($dinningTimes as $dinningTime)
+        {
+            $data = [
+                'id' => $dinningTime->id,
+                'name' => $dinningTime->name,
+                'total' => 0,
+                'total_count' => 0,
+                'alipay' => 0,
+                'alipay_count' => 0,
+                'wechat' => 0,
+                'wechat_count' => 0,
+                'cash' => 0,
+                'cash_count' => 0,
+                'card' => 0,
+                'card_count' => 0
+            ];
+
+            foreach ($orders as $order)
+            {
+                if ($order->dinning_time_id == $dinningTime->id)
+                {
+                    $data['total'] += $order->discount_price;
+                    $data['total_count'] ++;
+
+                    switch ($order->pay_method)
+                    {
+                        case PayMethodType::CASH:
+                            $data['cash'] += $order->discount_price;
+                            $data['cash_count'] ++;
+                            break;
+                        case PayMethodType::CARD:
+                            $data['card'] += $order->discount_price;
+                            $data['card_count'] ++;
+                            break;
+                        case PayMethodType::ALIPAY:
+                            $data['alipay'] += $order->discount_price;
+                            $data['alipay_count'] ++;
+                            break;
+                        case PayMethodType::WECHAT_PAY:
+                            $data['wechat'] += $order->discount_price;
+                            $data['wechat_count'] ++;
+                            break;
+                    }
+                }
+            }
+
+            array_push($dinningTimeData, $data);
+        }
+
+        return $dinningTimeData;
     }
 
     /**
@@ -87,23 +150,11 @@ class ConsumeOrderController extends Controller
     {
         $start_time = $request->get('start_time');
         $end_time = $request->get('end_time');
-        $dinning_time_id = $request->get('dinning_time_id');
-        $pay_method= $request->get('pay_method');
         $restaurant_user_id= $request->get('restaurant_user_id');
 
         $query = ConsumeOrder::where('created_at', '>=', $start_time)
             ->where('created_at', '<=', $end_time)
             ->where('status', ConsumeOrderStatus::COMPLETE);
-
-        if ($dinning_time_id != null)
-        {
-            $query->where('dinning_time_id', $dinning_time_id);
-        }
-
-        if ($pay_method != null)
-        {
-            $query->where('pay_method', $pay_method);
-        }
 
         if ($restaurant_user_id != null)
         {

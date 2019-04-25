@@ -7,6 +7,7 @@ Route::group([
 
     Route::get('rechargeOrder/get', 'RechargeOrderTableController')->name('rechargeOrder.get');
     Route::get('rechargeOrder/searchOrder', 'RechargeOrderController@searchOrder')->name('rechargeOrder.searchOrder');
+    Route::post('rechargeOrder/export', 'RechargeOrderController@export')->name('rechargeOrder.export');
 
     Route::group([
         'prefix' => 'rechargeOrder/{rechargeOrder}',

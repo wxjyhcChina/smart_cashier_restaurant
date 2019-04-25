@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Modules\Models\ConsumeOrder\Traits\Relationship;
+use App\Modules\Models\Department\Department;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\Restaurant\RestaurantUser;
 use App\Modules\Models\Card\Card;
@@ -73,5 +74,14 @@ trait ConsumeOrderRelationship
     public function dinning_time()
     {
         return $this->belongsTo(DinningTime::class);
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 }

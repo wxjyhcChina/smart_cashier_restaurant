@@ -187,6 +187,13 @@
                 </a>
 
                 <ul class="treeview-menu {{ active_class(Active::checkUriPattern('admin/statistics/*'), 'menu-open') }}" style="display: none; {{ active_class(Active::checkUriPattern('admin/statistics/*'), 'display: block;') }}">
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/dinningTimeStatistics')) }}">
+                        <a href="{{ route('admin.statistics.dinningTimeStatistics') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('labels.backend.statistics.dinningTimeStatistics') }}</span>
+                        </a>
+                    </li>
+
                     <li class="{{ active_class(Active::checkUriPattern('admin/statistics/departmentStatistics')) }}">
                         <a href="{{ route('admin.statistics.departmentStatistics') }}">
                             <i class="fa fa-circle-o"></i>
@@ -201,12 +208,6 @@
                         </a>
                     </li>
 
-                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/dinningTimeStatistics')) }}">
-                        <a href="{{ route('admin.statistics.dinningTimeStatistics') }}">
-                            <i class="fa fa-circle-o"></i>
-                            <span>{{ trans('labels.backend.statistics.dinningTimeStatistics') }}</span>
-                        </a>
-                    </li>
 
                     <li class="{{ active_class(Active::checkUriPattern('admin/statistics/shopStatistics')) }}">
                         <a href="{{ route('admin.statistics.shopStatistics') }}">

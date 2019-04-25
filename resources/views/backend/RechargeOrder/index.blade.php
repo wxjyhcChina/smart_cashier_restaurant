@@ -21,7 +21,7 @@
         </div><!-- /.box-header -->
 
         <div class="box-body">
-            <form class="form-horizontal">
+            {{ Form::open(['route' => 'admin.rechargeOrder.export', 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'post']) }}
 
                 <div class="row">
                     {{ Form::label('search_time', trans('labels.backend.consumeOrder.searchTime'), ['class' => 'control-label', 'style'=>'float: left;padding-left: 35px;padding-right: 15px;']) }}
@@ -30,23 +30,14 @@
                         {{ Form::text('search_time', null, ['class' => 'form-control', 'id'=>'search_time', 'placeholder' => trans('labels.backend.consumeOrder.searchTime')]) }}
                     </div><!--col-lg-10-->
 
-                    {{ Form::label('pay_method', trans('labels.backend.consumeOrder.pay_method'), ['class' => 'control-label', 'style'=>'float: left;padding-left: 35px;padding-right: 15px;']) }}
-
-                    <div class="col-lg-4">
-                        {{ Form::select('pay_method', $payMethod, null, ['class' => 'form-control']) }}
-                    </div><!--col-lg-10-->
-
-                </div>
-
-                <div class="row" style="margin-top: 20px">
                     {{ Form::label('restaurant_user', trans('labels.backend.consumeOrder.restaurant_user'), ['class' => 'control-label', 'style'=>'float: left;padding-left: 35px;padding-right: 15px;']) }}
 
                     <div class="col-lg-4">
-                        {{ Form::select('restaurant_user_id', $restaurantUser, null, ['class' => 'form-control']) }}
+                        {{ Form::select('restaurant_user_id', $restaurantUser, null, ['class' => 'form-control', 'id' => 'restaurant_user_id']) }}
                     </div><!--col-lg-10-->
 
                     <button type="button" class="btn btn-primary" id="search_btn">{{trans('labels.backend.consumeOrder.search')}}</button>
-
+                    <button class="btn btn-primary" id="export_btn">{{trans('labels.backend.statistics.export')}}</button>
                 </div>
             </form>
 
@@ -74,6 +65,104 @@
                             <h3 id="money">0</h3>
 
                             <p>充值金额</p>
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-social-yen"></i>
+                        </div>
+                        <div class="small-box-footer">&nbsp;</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3 id="cash_count">0</h3>
+
+                            <p>现金支付订单数</p>
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-social-yen"></i>
+                        </div>
+                        <div class="small-box-footer">&nbsp;</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3 id="cash">0</h3>
+
+                            <p>现金支付金额</p>
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-social-yen"></i>
+                        </div>
+                        <div class="small-box-footer">&nbsp;</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top: 20px">
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3 id="alipay_count">0</h3>
+
+                            <p>支付宝支付订单数</p>
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-social-yen"></i>
+                        </div>
+                        <div class="small-box-footer">&nbsp;</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3 id="alipay">0</h3>
+
+                            <p>支付宝支付金额</p>
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-social-yen"></i>
+                        </div>
+                        <div class="small-box-footer">&nbsp;</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3 id="wechat_count">0</h3>
+
+                            <p>微信支付订单数</p>
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-social-yen"></i>
+                        </div>
+                        <div class="small-box-footer">&nbsp;</div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3 id="wechat">0</h3>
+
+                            <p>微信支付金额</p>
                             <p></p>
                         </div>
                         <div class="icon">
@@ -192,7 +281,6 @@
                     data: {
                         start_time: startDate,
                         end_time: endDate,
-                        pay_method: $('#pay_method').val(),
                         restaurant_user_id: $('#restaurant_user_id').val()
                     },
                     dataType: "json",
@@ -201,6 +289,14 @@
 
                         $('#order_count').html(jsonResult.order_count);
                         $('#money').html(jsonResult.money);
+                        $('#cash_count').html(jsonResult.cash_count);
+                        $('#cash').html(jsonResult.cash);
+
+                        $('#alipay_count').html(jsonResult.alipay_count);
+                        $('#alipay').html(jsonResult.alipay);
+
+                        $('#wechat_count').html(jsonResult.wechat_count);
+                        $('#wechat').html(jsonResult.wechat);
                     },
                     fail: function () {
                     }

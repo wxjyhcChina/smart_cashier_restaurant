@@ -21,7 +21,7 @@
         </div><!-- /.box-header -->
 
         <div class="box-body">
-            <form class="form-horizontal">
+            {{ Form::open(['route' => 'admin.statistics.consumeCategoryStatisticsExport', 'class' => 'form-horizontal', 'role' => 'form', 'method' => 'post']) }}
 
                 <div class="row">
                     {{ Form::label('search_time', trans('labels.backend.consumeOrder.searchTime'), ['class' => 'control-label', 'style'=>'float: left;padding-left: 35px;padding-right: 15px;']) }}
@@ -31,7 +31,7 @@
                     </div><!--col-lg-10-->
 
                     <button type="button" class="btn btn-primary" id="search_btn">{{trans('labels.backend.statistics.search')}}</button>
-                    <button type="button" class="btn btn-primary" id="export_btn">{{trans('labels.backend.statistics.export')}}</button>
+                    <button class="btn btn-primary" id="export_btn">{{trans('labels.backend.statistics.export')}}</button>
                 </div>
             </form>
 
