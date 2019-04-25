@@ -118,12 +118,6 @@ class CardController extends Controller
         try
         {
             $card = $this->cardRepo->getByInternalNumber($internal_number);
-
-            if ($card->status != CardStatus::ACTIVATED)
-            {
-                return json_encode(['error_code'=>ErrorCode::CARD_STATUS_INCORRECT, 'error_message' => '卡片状态有误']);
-            }
-
         }
         catch (ApiException $exception)
         {

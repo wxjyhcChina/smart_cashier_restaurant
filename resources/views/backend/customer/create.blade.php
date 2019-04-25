@@ -141,6 +141,7 @@
     {{ Html::script("js/backend/plugin/datatables/dataTables-extend.js") }}
     {{ Html::script("js/backend/plugin/datatables/dataTables_locale.js") }}
     {{ Html::script("js/backend/plugin/datatables/page_select_with_ellipses.js") }}
+    {{ Html::script("js/backend/jquery.scannerdetection.js") }}
 
     <script>
         $(function() {
@@ -200,6 +201,56 @@
                 else {
                     $("#cardModel").modal('hide');
                 }
+            });
+
+            $(document).scannerDetection({
+                timeBeforeScanTest: 50, // wait for the next character for upto 200ms
+                avgTimeByChar: 100, // it's not a barcode if a character takes longer than 100ms
+                onComplete: function(code, qty){
+                    // $('#pTest').text(barcode);
+                    $.ajax({
+                        type: "GET",
+                        url: '{{ route("admin.card.getByInternalNumber") }}',
+                        data: {
+                            internal_number: code,
+                        },
+                        dataType: "json",
+                        success: function (jsonResult) {
+                            console.log(jsonResult.error_code);
+
+                            if (jsonResult.error_code === undefined)
+                            {
+                                if (jsonResult.status === 'ACTIVATED')
+                                {
+                                    swal({
+                                        title: "卡片状态有误",
+                                        type: "error",
+                                    }, function(){
+
+                                    });
+                                }
+                                else
+                                {
+                                    $('#card').val(jsonResult.number);
+                                    $('#card_id').val(jsonResult.id);
+
+                                    $("#cardModel").modal('hide');
+                                }
+                            }
+                            else
+                            {
+                                swal({
+                                    title: jsonResult.error_message,
+                                    type: "error",
+                                }, function(){
+
+                                });
+                            }
+                        },
+                        fail: function () {
+                        }
+                    });
+                } // main callback function
             });
         });
 

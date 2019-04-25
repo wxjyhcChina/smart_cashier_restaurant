@@ -126,11 +126,22 @@
 
                             if (jsonResult.error_code === undefined)
                             {
-                                console.log(jsonResult);
-                                var url = '{{ route("admin.customer.recharge", ":customer_id") }}';
-                                url = url.replace(":customer_id", jsonResult.customer_id);
+                                if (jsonResult.status === 'UNACTIVATED')
+                                {
+                                    swal({
+                                        title: "卡片状态有误",
+                                        type: "error",
+                                    }, function(){
 
-                                window.location.href=url;
+                                    });
+                                }
+                                else
+                                {
+                                    var url = '{{ route("admin.customer.recharge", ":customer_id") }}';
+                                    url = url.replace(":customer_id", jsonResult.customer_id);
+
+                                    window.location.href=url;
+                                }
                             }
                             else
                             {
