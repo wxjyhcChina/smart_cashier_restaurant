@@ -22,6 +22,7 @@ class BaseConsumeOrderRepository extends BaseRepository
             ->where('consume_orders.restaurant_id', $restaurant_id)
             ->with('goods')
             ->with('customer')
-            ->with('card');
+            ->with('card')
+            ->with('dinning_time');
     }
 }
