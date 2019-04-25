@@ -108,6 +108,10 @@ return [
             'title' => '充值记录'
         ],
 
+        'statistics' => [
+            'title' => '统计查询',
+        ],
+
         'log-viewer' => [
             'main'      => '日志查看器',
             'dashboard' => '指示板',

@@ -177,6 +177,54 @@
             </li>
             @endauth
 
+            @permission('manage-statistics')
+            <li class="{{ active_class(Active::checkUriPattern('admin/statistics/*')) }} treeview">
+                <a href="#">
+                    <i class="fa fa-bar-chart"></i>
+                    <span>{{ trans('menus.backend.statistics.title') }}</span>
+
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+
+                <ul class="treeview-menu {{ active_class(Active::checkUriPattern('admin/statistics/*'), 'menu-open') }}" style="display: none; {{ active_class(Active::checkUriPattern('admin/statistics/*'), 'display: block;') }}">
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/departmentStatistics')) }}">
+                        <a href="{{ route('admin.statistics.departmentStatistics') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('labels.backend.statistics.departmentStatistics') }}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/consumeCategoryStatistics')) }}">
+                        <a href="{{ route('admin.statistics.consumeCategoryStatistics') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('labels.backend.statistics.consumeCategoryStatistics') }}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/dinningTimeStatistics')) }}">
+                        <a href="{{ route('admin.statistics.dinningTimeStatistics') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('labels.backend.statistics.dinningTimeStatistics') }}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/shopStatistics')) }}">
+                        <a href="{{ route('admin.statistics.shopStatistics') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('labels.backend.statistics.shopStatistics') }}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/foodStatistics')) }}">
+                        <a href="{{ route('admin.statistics.foodStatistics') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('labels.backend.statistics.foodStatistics') }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endauth
+
             <li class="{{ active_class(Active::checkUriPattern('admin/log-viewer*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>

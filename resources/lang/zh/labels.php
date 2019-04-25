@@ -326,6 +326,8 @@ return [
                 'price' => '价格',
                 'pay_method' => '支付方式',
                 'dinning_time' => '用餐时间',
+                'consume_category' => '消费类别',
+                'department' => '部门',
                 'created_at' => '消费时间',
                 'restaurant_user_id' => '营业员',
                 'status' => '状态'
@@ -365,6 +367,33 @@ return [
                 'pay_in_progress' => '支付中',
                 'complete' => '已完成',
                 'closed' => '已关闭',
+            ]
+        ],
+
+        'statistics' => [
+            'title' => '统计',
+            'departmentStatistics' => '按部门统计',
+            'consumeCategoryStatistics' => '按消费类别统计',
+            'dinningTimeStatistics' => '按用餐时间统计',
+            'shopStatistics' => '按商户统计',
+            'foodStatistics' => '按菜品统计',
+            'search' => '搜索',
+            'export' => '导出',
+
+            'table' => [
+                'id' => '编号',
+                'department' => '部门',
+                'consumeCategory' => '消费类别',
+                'cash' => '现金金额',
+                'cash_count' => '现金人次',
+                'card' => '卡金额',
+                'card_count' => '卡人次',
+                'alipay' => '支付宝金额',
+                'alipay_count' => '支付宝人次',
+                'wechat' => '微信支付金额',
+                'wechat_count' => '微信人次',
+                'total' => '合计',
+                'total_count' => '合计人次',
             ]
         ]
     ],
