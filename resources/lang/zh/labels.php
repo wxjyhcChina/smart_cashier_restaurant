@@ -376,7 +376,7 @@ return [
             'consumeCategoryStatistics' => '按消费类别统计',
             'dinningTimeStatistics' => '按用餐时间统计',
             'shopStatistics' => '按商户统计',
-            'foodStatistics' => '按菜品统计',
+            'goodsStatistics' => '按菜品统计',
             'search' => '搜索',
             'export' => '导出',
 
@@ -384,6 +384,7 @@ return [
                 'id' => '编号',
                 'department' => '部门',
                 'consumeCategory' => '消费类别',
+                'shop' => '商户',
                 'cash' => '现金金额',
                 'cash_count' => '现金人次',
                 'card' => '卡金额',

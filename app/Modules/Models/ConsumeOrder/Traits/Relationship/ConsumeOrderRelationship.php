@@ -22,7 +22,8 @@ trait ConsumeOrderRelationship
      */
     public function goods()
     {
-        return $this->belongsToMany(Goods::class, 'consume_order_goods', 'consume_order_id', 'goods_id');
+        return $this->belongsToMany(Goods::class, 'consume_order_goods', 'consume_order_id', 'goods_id')
+            ->withPivot('price');
     }
 
     /**

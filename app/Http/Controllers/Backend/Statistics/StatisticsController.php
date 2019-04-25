@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Backend\Statistics;
 
+use App\Common\Utils;
 use App\Modules\Enums\ConsumeOrderStatus;
 use App\Modules\Enums\PayMethodType;
 use App\Modules\Models\ConsumeCategory\ConsumeCategory;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\Department\Department;
 use App\Modules\Models\DinningTime\DinningTime;
+use App\Modules\Models\Goods\Goods;
+use App\Modules\Models\Shop\Shop;
 use App\Repositories\Backend\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -335,36 +338,188 @@ class StatisticsController extends Controller
 
     public function shopStatistics()
     {
+        $start_time = date('Y-m-d 00:00:00');
+        $end_time = date('Y-m-d H:i:s');
 
+        return view('backend.statistics.shopStatistics')
+            ->withStartTime($start_time)
+            ->withEndTime($end_time);
     }
 
-    public function getShopStatistics()
+    public function getShopStatistics(Request $request)
     {
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
 
+        $orders = ConsumeOrder::where('created_at', '>=', $start_time)
+            ->where('created_at', '<=', $end_time)
+            ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->with('goods')
+            ->get();
+
+        $user = Auth::User();
+        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
+
+        $shopData = [];
+        foreach ($shops as $shop)
+        {
+            $shopGoods = Goods::where('shop_id', $shop->id)->get();
+            $data = [
+                'id' => $shop->id,
+                'name' => $shop->name,
+                'total' => 0,
+                'total_count' => 0,
+                'alipay' => 0,
+                'alipay_count' => 0,
+                'wechat' => 0,
+                'wechat_count' => 0,
+                'cash' => 0,
+                'cash_count' => 0,
+                'card' => 0,
+                'card_count' => 0
+            ];
+
+            foreach ($orders as $order)
+            {
+                $goods = $order->goods;
+
+                foreach ($goods as $orderGoods)
+                {
+                    foreach ($shopGoods as $g)
+                    {
+                        if ($orderGoods->id == $g->id)
+                        {
+                            $price = Utils::round_up($orderGoods->pivot->price * $this->geteOrderDiscount($order)/10, 3);
+
+                            $data['total'] += $price;
+
+                            switch ($order->pay_method)
+                            {
+                                case PayMethodType::CASH:
+                                    $data['cash'] += $price;
+                                    break;
+                                case PayMethodType::CARD:
+                                    $data['card'] += $price;
+                                    break;
+                                case PayMethodType::ALIPAY:
+                                    $data['alipay'] += $price;
+                                    break;
+                                case PayMethodType::WECHAT_PAY:
+                                    $data['wechat'] += $price;
+                                    break;
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+            array_push($shopData, $data);
+        }
+
+        return $shopData;
     }
 
-    public function getShopStatisticsOrder()
+    public function goodsStatistics()
     {
+        $start_time = date('Y-m-d 00:00:00');
+        $end_time = date('Y-m-d H:i:s');
 
+        return view('backend.statistics.goodsStatistics')
+            ->withStartTime($start_time)
+            ->withEndTime($end_time);
     }
 
-    public function customerStatistics()
+    public function getGoodsStatistics(Request $request)
     {
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
 
+        $orders = ConsumeOrder::where('created_at', '>=', $start_time)
+            ->where('created_at', '<=', $end_time)
+            ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->with('goods')
+            ->get();
+
+        $user = Auth::User();
+        $allGoods = Goods::where('restaurant_id', $user->restaurant_id)
+            ->where('is_temp', false)
+            ->get();
+
+        $goodsData = [];
+        foreach ($allGoods as $goods)
+        {
+            $data = [
+                'id' => $goods->id,
+                'name' => $goods->name,
+                'total' => 0,
+                'total_count' => 0,
+                'alipay' => 0,
+                'alipay_count' => 0,
+                'wechat' => 0,
+                'wechat_count' => 0,
+                'cash' => 0,
+                'cash_count' => 0,
+                'card' => 0,
+                'card_count' => 0
+            ];
+
+            foreach ($orders as $order)
+            {
+                $allOrderGoods = $order->goods;
+
+                foreach ($allOrderGoods as $orderGoods)
+                {
+                    if ($orderGoods->id == $goods->id)
+                    {
+
+                        $price = Utils::round_up($orderGoods->pivot->price * $this->geteOrderDiscount($order)/10, 3);
+
+                        $data['total'] += $price;
+                        $data['total_count'] ++;
+
+                        switch ($order->pay_method)
+                        {
+                            case PayMethodType::CASH:
+                                $data['cash'] += $price;
+                                $data['cash_count'] ++;
+                                break;
+                            case PayMethodType::CARD:
+                                $data['card'] += $price;
+                                $data['card_count'] ++;
+                                break;
+                            case PayMethodType::ALIPAY:
+                                $data['alipay'] += $price;
+                                $data['alipay_count'] ++;
+                                break;
+                            case PayMethodType::WECHAT_PAY:
+                                $data['wechat'] += $price;
+                                $data['wechat_count'] ++;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            array_push($goodsData, $data);
+        }
+
+        return $goodsData;
     }
 
-    public function getCustomerStatisticsOrder()
+    private function geteOrderDiscount($order)
     {
-        
-    }
-
-    public function foodStatistics()
-    {
-        
-    }
-
-    public function getFoodStatisticsOrder()
-    {
-        
+        if ($order->discount != null)
+        {
+            return $order->discount;
+        }
+        else if ($order->force_discount != null)
+        {
+            return $order->force_discount;
+        }
+        else
+        {
+            return 10;
+        }
     }
 }

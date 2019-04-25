@@ -24,7 +24,7 @@ Route::group([
     Route::get('getShopStatistics', 'StatisticsController@getShopStatistics')->name('statistics.getShopStatistics');
     Route::get('shopStatisticsExport', 'StatisticsController@shopStatisticsExport')->name('statistics.shopStatisticsExport');
 
-    Route::get('foodStatistics', 'StatisticsController@foodStatistics')->name('statistics.foodStatistics');
-    Route::get('getFoodStatistics', 'StatisticsController@getFoodStatistics')->name('statistics.getFoodStatistics');
-    Route::get('foodStatisticsOrder', 'StatisticsController@foodStatisticsOrder')->name('statistics.foodStatisticsOrder');
+    Route::get('goodsStatistics', 'StatisticsController@goodsStatistics')->name('statistics.goodsStatistics');
+    Route::get('getGoodsStatistics', 'StatisticsController@getGoodsStatistics')->name('statistics.getGoodsStatistics');
+    Route::get('goodsStatisticsExport', 'StatisticsController@goodsStatisticsExport')->name('statistics.goodsStatisticsExport');
 });

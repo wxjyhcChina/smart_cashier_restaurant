@@ -215,10 +215,10 @@
                         </a>
                     </li>
 
-                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/foodStatistics')) }}">
-                        <a href="{{ route('admin.statistics.foodStatistics') }}">
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/goodsStatistics')) }}">
+                        <a href="{{ route('admin.statistics.goodsStatistics') }}">
                             <i class="fa fa-circle-o"></i>
-                            <span>{{ trans('labels.backend.statistics.foodStatistics') }}</span>
+                            <span>{{ trans('labels.backend.statistics.goodsStatistics') }}</span>
                         </a>
                     </li>
                 </ul>
