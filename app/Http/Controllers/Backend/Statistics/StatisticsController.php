@@ -436,19 +436,19 @@ class StatisticsController extends Controller
     private function exportOrder($start_time, $end_time, $orders, $detail, $name)
     {
         $restaurant = Restaurant::where('id', Auth::User()->restaurant_id)->first();
-        Excel::create('消费记录记录', function($excel) use ($restaurant, $detail, $orders, $start_time, $end_time, $name) {
-            $excel->sheet('消费记录记录', function ($sheet) use ($restaurant, $detail, $orders, $start_time, $end_time, $name) {
+        Excel::create('消费记录', function($excel) use ($restaurant, $detail, $orders, $start_time, $end_time, $name) {
+            $excel->sheet('消费记录', function ($sheet) use ($restaurant, $detail, $orders, $start_time, $end_time, $name) {
 
                 $sheet->setAutoSize(true);
                 $sheet->mergeCells('A1:L1');
                 $sheet->mergeCells('A2:L2');
 
-                $sheet->cells('A1:H1', function ($cells) {
+                $sheet->cells('A1:L1', function ($cells) {
                     // manipulate the cell
                     $cells->setAlignment('center');
                 });
 
-                $sheet->cells('A2:H2', function ($cells) {
+                $sheet->cells('A2:L2', function ($cells) {
                     // manipulate the cell
                     $cells->setAlignment('center');
                 });
@@ -505,7 +505,7 @@ class StatisticsController extends Controller
 
                 $rowNumber++;
                 $sheet->mergeCells("A$rowNumber:L$rowNumber");
-                $sheet->cells("A$rowNumber:H$rowNumber", function($cells) {
+                $sheet->cells("A$rowNumber:L$rowNumber", function($cells) {
                     // manipulate the cell
                     $cells->setAlignment('right');
                 });
@@ -525,11 +525,8 @@ class StatisticsController extends Controller
             ->withEndTime($end_time);
     }
 
-    public function getShopStatistics(Request $request)
+    public function fetchShop($start_time, $end_time)
     {
-        $start_time = $request->get('start_time');
-        $end_time = $request->get('end_time');
-
         $orders = ConsumeOrder::where('created_at', '>=', $start_time)
             ->where('created_at', '<=', $end_time)
             ->where('status', ConsumeOrderStatus::COMPLETE)
@@ -599,9 +596,74 @@ class StatisticsController extends Controller
         return $shopData;
     }
 
+    public function getShopStatistics(Request $request)
+    {
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
+
+        return $this->fetchShop($start_time, $end_time);
+    }
+
     public function shopStatisticsExport(Request $request)
     {
+        $timeArray = explode(' - ', $request->get('search_time'));
 
+        $start_time = $timeArray[0];
+        $end_time = $timeArray[1];
+
+        $detail = $this->fetchShop($start_time, $end_time);
+        $restaurant = Restaurant::where('id', Auth::User()->restaurant_id)->first();
+        Excel::create('商户统计', function($excel) use ($restaurant, $detail, $start_time, $end_time) {
+            $excel->sheet('商户统计', function ($sheet) use ($restaurant, $detail, $start_time, $end_time) {
+
+                $sheet->setAutoSize(true);
+                $sheet->mergeCells('A1:G1');
+                $sheet->mergeCells('A2:G2');
+
+                $sheet->cells('A1:G1', function ($cells) {
+                    // manipulate the cell
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->cells('A2:G2', function ($cells) {
+                    // manipulate the cell
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->row(1, array($restaurant->name.'商户统计'));
+                $sheet->row(2, array('开始时间'.$start_time.' '.'结束时间'.$end_time));
+
+                $sheet->row(3,
+                    array(
+                        '编号', '商户','现金金额',
+                        '卡金额','支付宝金额',
+                        '微信支付金额','合计'
+                    )
+                );
+
+                $rowNumber = 3;
+                foreach ($detail as $statistics)
+                {
+                    $rowNumber++;
+                    $sheet->appendRow(array(
+                        $statistics['id'], $statistics['name'],
+                        $statistics['cash'],
+                        $statistics['card'],
+                        $statistics['alipay'],
+                        $statistics['wechat'],
+                        $statistics['total'],
+                    ));
+                }
+
+                $rowNumber++;
+                $sheet->mergeCells("A$rowNumber:G$rowNumber");
+                $sheet->cells("A$rowNumber:G$rowNumber", function($cells) {
+                    // manipulate the cell
+                    $cells->setAlignment('right');
+                });
+                $sheet->row($rowNumber, array('制表时间:'.date('Y-m-d H:i:s')));
+            })->export('xls');
+        });
     }
 
     public function goodsStatistics()
@@ -614,11 +676,8 @@ class StatisticsController extends Controller
             ->withEndTime($end_time);
     }
 
-    public function getGoodsStatistics(Request $request)
+    public function fetchGoods($start_time, $end_time)
     {
-        $start_time = $request->get('start_time');
-        $end_time = $request->get('end_time');
-
         $orders = ConsumeOrder::where('created_at', '>=', $start_time)
             ->where('created_at', '<=', $end_time)
             ->where('status', ConsumeOrderStatus::COMPLETE)
@@ -690,10 +749,75 @@ class StatisticsController extends Controller
 
         return $goodsData;
     }
-
-    public function goodsStatisticsExport()
+    
+    public function getGoodsStatistics(Request $request)
     {
-        
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
+
+        return $this->fetchGoods($start_time, $end_time);
+    }
+
+    public function goodsStatisticsExport(Request $request)
+    {
+        $timeArray = explode(' - ', $request->get('search_time'));
+
+        $start_time = $timeArray[0];
+        $end_time = $timeArray[1];
+
+        $detail = $this->fetchGoods($start_time, $end_time);
+        $restaurant = Restaurant::where('id', Auth::User()->restaurant_id)->first();
+        Excel::create('商品统计', function($excel) use ($restaurant, $detail, $start_time, $end_time) {
+            $excel->sheet('商品统计', function ($sheet) use ($restaurant, $detail, $start_time, $end_time) {
+
+                $sheet->setAutoSize(true);
+                $sheet->mergeCells('A1:L1');
+                $sheet->mergeCells('A2:L2');
+
+                $sheet->cells('A1:L1', function ($cells) {
+                    // manipulate the cell
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->cells('A2:L2', function ($cells) {
+                    // manipulate the cell
+                    $cells->setAlignment('center');
+                });
+
+                $sheet->row(1, array($restaurant->name.'商户统计'));
+                $sheet->row(2, array('开始时间'.$start_time.' '.'结束时间'.$end_time));
+
+                $sheet->row(3,
+                    array(
+                        '编号','商品','现金金额','现金人次',
+                        '卡金额','卡人次','支付宝金额','支付宝人次',
+                        '微信支付金额','微信人次','合计','合计人次'
+                    )
+                );
+
+                $rowNumber = 3;
+                foreach ($detail as $statistics)
+                {
+                    $rowNumber++;
+                    $sheet->appendRow(array(
+                        $statistics['id'], $statistics['name'],
+                        $statistics['cash'], $statistics['cash_count'],
+                        $statistics['card'], $statistics['card_count'],
+                        $statistics['alipay'], $statistics['alipay_count'],
+                        $statistics['wechat'], $statistics['wechat_count'],
+                        $statistics['total'], $statistics['total_count'],
+                    ));
+                }
+
+                $rowNumber++;
+                $sheet->mergeCells("A$rowNumber:L$rowNumber");
+                $sheet->cells("A$rowNumber:L$rowNumber", function($cells) {
+                    // manipulate the cell
+                    $cells->setAlignment('right');
+                });
+                $sheet->row($rowNumber, array('制表时间:'.date('Y-m-d H:i:s')));
+            })->export('xls');
+        });
     }
     
     private function geteOrderDiscount($order)

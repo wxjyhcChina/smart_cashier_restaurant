@@ -387,6 +387,7 @@ return [
                 'consumeCategory' => '消费类别',
                 'dinningTime' => '用餐时间',
                 'shop' => '商户',
+                'goods' => '商品',
                 'cash' => '现金金额',
                 'cash_count' => '现金人次',
                 'card' => '卡金额',

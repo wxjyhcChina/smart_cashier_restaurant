@@ -48,7 +48,7 @@
                     <thead>
                     <tr>
                         <th>{{ trans('labels.backend.statistics.table.id') }}</th>
-                        <th>{{ trans('labels.backend.statistics.table.consumeCategory') }}</th>
+                        <th>{{ trans('labels.backend.statistics.table.goods') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.cash') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.cash_count') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.card') }}</th>
