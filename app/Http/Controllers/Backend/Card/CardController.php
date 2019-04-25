@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers\Backend\Card;
 
+use App\Exceptions\Api\ApiException;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Backend\Card\GetCardRequest;
 use App\Http\Requests\Backend\Card\ManageCardRequest;
 use App\Http\Requests\Backend\Card\StoreCardRequest;
+use App\Modules\Enums\CardStatus;
+use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Card\Card;
 use App\Repositories\Backend\Card\CardRepository;
 use Illuminate\Support\Facades\Input;
@@ -103,6 +107,32 @@ class CardController extends Controller
         return redirect()->route('admin.card.index')->withFlashSuccess(trans('alerts.backend.card.updated'));
     }
 
+    /**
+     * @param GetCardRequest $request
+     * @return false|\Illuminate\Http\JsonResponse|string
+     */
+    public function getByInternalNumber(GetCardRequest $request)
+    {
+        $internal_number = $request->get('internal_number');
+
+        try
+        {
+            $card = $this->cardRepo->getByInternalNumber($internal_number);
+
+            if ($card->status != CardStatus::ACTIVATED)
+            {
+                return json_encode(['error_code'=>ErrorCode::CARD_STATUS_INCORRECT, 'error_message' => '卡片状态有误']);
+            }
+
+        }
+        catch (ApiException $exception)
+        {
+            return json_encode(['error_code'=>$exception->getCode(), 'error_message' => $exception->getMessage()]);
+        }
+
+
+        return $this->responseSuccessWithObject($card);
+    }
 
     /**
      * Remove the specified resource from storage.

@@ -7,6 +7,8 @@ Route::group([
 
     Route::get('card/get', 'CardTableController')->name('card.get');
 
+    Route::get('card/getByInternalNumber', 'CardController@getByInternalNumber')->name('card.getByInternalNumber');
+
     Route::group([
         'prefix' => 'card/{card}',
         'middleware' => 'can:view,card'

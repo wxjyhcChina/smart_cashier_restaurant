@@ -24,7 +24,9 @@
         </div><!-- /.box-header -->
 
         <div class="box-body">
-            <div class="table-responsive">
+            <button type="button" class="btn btn-primary" id="read_card_btn">{{trans('labels.backend.customer.read_card')}}</button>
+
+            <div class="table-responsive" style="margin-top: 10px">
                 <table id="department-table" class="table table-condensed table-hover">
                     <thead>
                         <tr>
@@ -54,6 +56,7 @@
     {{ Html::script("js/backend/plugin/datatables/dataTables-extend.js") }}
     {{ Html::script("js/backend/plugin/datatables/dataTables_locale.js") }}
     {{ Html::script("js/backend/plugin/datatables/page_select_with_ellipses.js") }}
+    {{ Html::script("js/backend/jquery.scannerdetection.js") }}
 
     <script>
         $(function() {
@@ -92,6 +95,59 @@
                 order: [[0, "asc"]],
                 searchDelay: 500
             });
+
+            $('#read_card_btn').on('click', function (e) {
+                swal({
+                    title: "请刷卡",
+                    type: "info",
+                    showCancelButton: true,
+                    showConfirmButton: false,
+                    cancelButtonText: "取消",
+                }, function(inputValue){
+
+                });
+            });
+
+            $(document).scannerDetection({
+                timeBeforeScanTest: 50, // wait for the next character for upto 200ms
+                avgTimeByChar: 100, // it's not a barcode if a character takes longer than 100ms
+                onComplete: function(code, qty){
+                    // $('#pTest').text(barcode);
+
+                    $.ajax({
+                        type: "GET",
+                        url: '{{ route("admin.card.getByInternalNumber") }}',
+                        data: {
+                            internal_number: code,
+                        },
+                        dataType: "json",
+                        success: function (jsonResult) {
+                            console.log(jsonResult.error_code);
+
+                            if (jsonResult.error_code === undefined)
+                            {
+                                console.log(jsonResult);
+                                var url = '{{ route("admin.customer.recharge", ":customer_id") }}';
+                                url = url.replace(":customer_id", jsonResult.customer_id);
+
+                                window.location.href=url;
+                            }
+                            else
+                            {
+                                swal({
+                                    title: jsonResult.error_message,
+                                    type: "error",
+                                }, function(){
+
+                                });
+                            }
+                        },
+                        fail: function () {
+                        }
+                    });
+                } // main callback function
+            });
+
         });
     </script>
 @stop

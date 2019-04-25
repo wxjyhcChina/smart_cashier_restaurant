@@ -188,6 +188,7 @@ return [
             'system_add' => '补贴余额',
             'system_minus' => '扣除余额',
             'recharge' => '充值',
+            'read_card' => '读卡',
 
             'table' => [
                 'id' => '编号',
