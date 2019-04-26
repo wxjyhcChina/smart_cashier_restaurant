@@ -106,12 +106,12 @@ class RechargeOrderController extends Controller
 //            $query->where('pay_method', $pay_method);
 //        }
         $result['order_count']= (clone $query)->count();
-        $result['money'] = (clone $query)->sum('money');
-        $result['cash'] = (clone $query)->where('pay_method', PayMethodType::CASH)->sum('money');
+        $result['money'] = bcadd((clone $query)->sum('money'), 0,2);
+        $result['cash'] = bcadd((clone $query)->where('pay_method', PayMethodType::CASH)->sum('money'), 0,2);
         $result['cash_count'] = (clone $query)->where('pay_method', PayMethodType::CASH)->count();
-        $result['alipay'] = (clone $query)->where('pay_method', PayMethodType::ALIPAY)->sum('money');
+        $result['alipay'] = bcadd((clone $query)->where('pay_method', PayMethodType::ALIPAY)->sum('money'), 0,2);
         $result['alipay_count'] = (clone $query)->where('pay_method', PayMethodType::ALIPAY)->count();
-        $result['wechat'] = (clone $query)->where('pay_method', PayMethodType::WECHAT_PAY)->sum('money');
+        $result['wechat'] = bcadd((clone $query)->where('pay_method', PayMethodType::WECHAT_PAY)->sum('money'), 0,2);
         $result['wechat_count'] = (clone $query)->where('pay_method', PayMethodType::WECHAT_PAY)->count();
 
         return $result;

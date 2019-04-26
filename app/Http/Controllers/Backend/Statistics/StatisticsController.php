@@ -90,25 +90,25 @@ class StatisticsController extends Controller
             {
                 if ($order->department_id == $department->id)
                 {
-                    $data['total'] += $order->discount_price;
+                    $data['total'] = bcadd($data['total'], $order->discount_price, 2);
                     $data['total_count'] ++;
 
                     switch ($order->pay_method)
                     {
                         case PayMethodType::CASH:
-                            $data['cash'] += $order->discount_price;
+                            $data['cash'] = bcadd($data['cash'], $order->discount_price, 2);
                             $data['cash_count'] ++;
                             break;
                         case PayMethodType::CARD:
-                            $data['card'] += $order->discount_price;
+                            $data['card'] = bcadd($data['card'], $order->discount_price, 2);
                             $data['card_count'] ++;
                             break;
                         case PayMethodType::ALIPAY:
-                            $data['alipay'] += $order->discount_price;
+                            $data['alipay'] = bcadd($data['alipay'], $order->discount_price, 2);
                             $data['alipay_count'] ++;
                             break;
                         case PayMethodType::WECHAT_PAY:
-                            $data['wechat'] += $order->discount_price;
+                            $data['wechat'] = bcadd($data['wechat'], $order->discount_price, 2);
                             $data['wechat_count'] ++;
                             break;
                     }
@@ -220,25 +220,25 @@ class StatisticsController extends Controller
             {
                 if ($order->consume_category_id == $consumeCategory->id)
                 {
-                    $data['total'] += $order->discount_price;
+                    $data['total'] = bcadd($data['total'], $order->discount_price, 2);
                     $data['total_count'] ++;
 
                     switch ($order->pay_method)
                     {
                         case PayMethodType::CASH:
-                            $data['cash'] += $order->discount_price;
+                            $data['cash'] = bcadd($data['cash'], $order->discount_price, 2);
                             $data['cash_count'] ++;
                             break;
                         case PayMethodType::CARD:
-                            $data['card'] += $order->discount_price;
+                            $data['card'] = bcadd($data['card'], $order->discount_price, 2);
                             $data['card_count'] ++;
                             break;
                         case PayMethodType::ALIPAY:
-                            $data['alipay'] += $order->discount_price;
+                            $data['alipay'] = bcadd($data['alipay'], $order->discount_price, 2);
                             $data['alipay_count'] ++;
                             break;
                         case PayMethodType::WECHAT_PAY:
-                            $data['wechat'] += $order->discount_price;
+                            $data['wechat'] = bcadd($data['wechat'], $order->discount_price, 2);
                             $data['wechat_count'] ++;
                             break;
                     }
@@ -365,25 +365,25 @@ class StatisticsController extends Controller
             {
                 if ($order->dinning_time_id == $dinningTime->id)
                 {
-                    $data['total'] += $order->discount_price;
+                    $data['total'] = bcadd($data['total'], $order->discount_price, 2);
                     $data['total_count'] ++;
 
                     switch ($order->pay_method)
                     {
                         case PayMethodType::CASH:
-                            $data['cash'] += $order->discount_price;
+                            $data['cash'] = bcadd($data['cash'], $order->discount_price, 2);
                             $data['cash_count'] ++;
                             break;
                         case PayMethodType::CARD:
-                            $data['card'] += $order->discount_price;
+                            $data['card'] = bcadd($data['card'], $order->discount_price, 2);
                             $data['card_count'] ++;
                             break;
                         case PayMethodType::ALIPAY:
-                            $data['alipay'] += $order->discount_price;
+                            $data['alipay'] = bcadd($data['alipay'], $order->discount_price, 2);
                             $data['alipay_count'] ++;
                             break;
                         case PayMethodType::WECHAT_PAY:
-                            $data['wechat'] += $order->discount_price;
+                            $data['wechat'] = bcadd($data['wechat'], $order->discount_price, 2);
                             $data['wechat_count'] ++;
                             break;
                     }
@@ -576,26 +576,25 @@ class StatisticsController extends Controller
                     {
                         if ($orderGoods->id == $g->id)
                         {
-                            $price = Utils::round_up($orderGoods->pivot->price * $this->geteOrderDiscount($order)/10, 3);
+                            $price = bcdiv(bcmul($orderGoods->pivot->price, $this->geteOrderDiscount($order), 2), 10, 2);
 
-                            $data['total'] += $price;
+                            $data['total'] = bcadd($data['total'], $price, 2);
 
                             switch ($order->pay_method)
                             {
                                 case PayMethodType::CASH:
-                                    $data['cash'] += $price;
+                                    $data['cash'] = bcadd($data['cash'], $price, 2);
                                     break;
                                 case PayMethodType::CARD:
-                                    $data['card'] += $price;
+                                    $data['card'] = bcadd($data['card'], $price, 2);
                                     break;
                                 case PayMethodType::ALIPAY:
-                                    $data['alipay'] += $price;
+                                    $data['alipay'] = bcadd($data['alipay'], $price, 2);
                                     break;
                                 case PayMethodType::WECHAT_PAY:
-                                    $data['wechat'] += $price;
+                                    $data['wechat'] = bcadd($data['wechat'], $price, 2);
                                     break;
                             }
-                            break;
                         }
                     }
                 }
@@ -727,28 +726,27 @@ class StatisticsController extends Controller
                 {
                     if ($orderGoods->id == $goods->id)
                     {
+                        $price = bcdiv(bcmul($orderGoods->pivot->price, $this->geteOrderDiscount($order), 2), 10, 2);
 
-                        $price = Utils::round_up($orderGoods->pivot->price * $this->geteOrderDiscount($order)/10, 3);
-
-                        $data['total'] += $price;
+                        $data['total'] = bcadd($data['total'], $price, 2);
                         $data['total_count'] ++;
 
                         switch ($order->pay_method)
                         {
                             case PayMethodType::CASH:
-                                $data['cash'] += $price;
+                                $data['cash'] = bcadd($data['cash'], $price, 2);
                                 $data['cash_count'] ++;
                                 break;
                             case PayMethodType::CARD:
-                                $data['card'] += $price;
+                                $data['card'] = bcadd($data['card'], $price, 2);
                                 $data['card_count'] ++;
                                 break;
                             case PayMethodType::ALIPAY:
-                                $data['alipay'] += $price;
+                                $data['alipay'] = bcadd($data['alipay'], $price, 2);
                                 $data['alipay_count'] ++;
                                 break;
                             case PayMethodType::WECHAT_PAY:
-                                $data['wechat'] += $price;
+                                $data['wechat'] = bcadd($data['wechat'], $price, 2);
                                 $data['wechat_count'] ++;
                                 break;
                         }
