@@ -87,7 +87,7 @@
                     {data: 'account_balance', name: 'accounts.balance'},
                     {data: 'account_subsidy_balance', name: 'accounts.subsidy_balance'},
                     {data: 'total_balance', name: 'total_balance', render:function (data, type, row, meta){
-                            return parseFloat(row['account_balance'] + row['account_subsidy_balance']).toFixed(2);
+                        return (parseFloat(row['account_balance']) + parseFloat(row['account_subsidy_balance'])).toFixed(2);
                     }, orderable: false, 'searchable':false},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
