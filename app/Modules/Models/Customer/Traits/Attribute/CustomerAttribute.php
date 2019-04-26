@@ -67,7 +67,12 @@ trait CustomerAttribute
      */
     public function getRechargeButtonAttribute()
     {
-        return '<a href="' . route('admin.customer.recharge', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-cny" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.recharge') . '"></i></a> ';
+        if ($this->card != null)
+        {
+            return '<a href="' . route('admin.customer.recharge', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-cny" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.customer.recharge') . '"></i></a> ';
+        }
+
+        return null;
     }
 
     /**
