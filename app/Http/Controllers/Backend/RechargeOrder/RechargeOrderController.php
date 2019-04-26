@@ -84,8 +84,10 @@ class RechargeOrderController extends Controller
 
     private function getQuery($start_time, $end_time, $restaurant_user_id)
     {
+        $user = Auth::User();
         $query = RechargeOrder::where('created_at', '>=', $start_time)
             ->where('created_at', '<=', $end_time)
+            ->where('restaurant_id', $user->restaurant_id)
             ->where('status', RechargeOrderStatus::COMPLETE);
 
         if ($restaurant_user_id != null)

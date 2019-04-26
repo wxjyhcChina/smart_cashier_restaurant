@@ -50,11 +50,15 @@ class StatisticsController extends Controller
 
     private function fetchDepartmentOrders($start_time, $end_time)
     {
-        $orders = ConsumeOrder::where('created_at', '>=', $start_time)
-            ->where('created_at', '<=', $end_time)
-            ->where('status', ConsumeOrderStatus::COMPLETE)
-            ->whereNotNull('department_id')
-            ->get();
+        $user = Auth::User();
+        $orders = $this->consumeOrderRepo->getByRestaurantWithRelationQuery($user->restaurant_id,
+            $start_time,
+            $end_time,
+            null,
+            null,
+            null,
+            [ConsumeOrderStatus::COMPLETE],
+            true)->get();
 
         return $orders;
     }
@@ -175,11 +179,16 @@ class StatisticsController extends Controller
 
     private function fetchConsumeCategoryOrders($start_time, $end_time)
     {
-        $orders = ConsumeOrder::where('created_at', '>=', $start_time)
-            ->where('created_at', '<=', $end_time)
-            ->where('status', ConsumeOrderStatus::COMPLETE)
-            ->whereNotNull('consume_category_id')
-            ->get();
+        $user = Auth::User();
+        $orders = $this->consumeOrderRepo->getByRestaurantWithRelationQuery($user->restaurant_id,
+            $start_time,
+            $end_time,
+            null,
+            null,
+            null,
+            [ConsumeOrderStatus::COMPLETE],
+            false,
+            true)->get();
 
         return $orders;
     }
@@ -266,8 +275,8 @@ class StatisticsController extends Controller
                 null,
                 null,
                 null,
-                false,
                 [ConsumeOrderStatus::COMPLETE],
+                false,
                 true))
             ->addColumn('show_status', function ($consumeOrder) {
                 return $consumeOrder->getShowStatusAttribute();
@@ -315,17 +324,18 @@ class StatisticsController extends Controller
 
     public function fetchDinningTimeOrder($start_time, $end_time, $restaurant_user_id)
     {
-        $orderQuery = ConsumeOrder::where('created_at', '>=', $start_time)
-            ->where('created_at', '<=', $end_time)
-            ->where('status', ConsumeOrderStatus::COMPLETE)
-            ->whereNotNull('dinning_time_id');
+        $user = Auth::User();
 
-        if ($restaurant_user_id != null)
-        {
-            $orderQuery = $orderQuery->where('restaurant_user_id', $restaurant_user_id);
-        }
+        $orders = $this->consumeOrderRepo->getByRestaurantWithRelationQuery($user->restaurant_id,
+            $start_time,
+            $end_time,
+            null,
+            null,
+            $restaurant_user_id,
+            [ConsumeOrderStatus::COMPLETE]
+        )->get();
 
-        return $orderQuery->get();
+        return $orders;
     }
 
     public function fetchDinningTime($orders)
@@ -527,13 +537,14 @@ class StatisticsController extends Controller
 
     public function fetchShop($start_time, $end_time)
     {
+        $user = Auth::User();
         $orders = ConsumeOrder::where('created_at', '>=', $start_time)
             ->where('created_at', '<=', $end_time)
             ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->where('restaurant_id', $user->restaurant_id)
             ->with('goods')
             ->get();
 
-        $user = Auth::User();
         $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
 
         $shopData = [];
@@ -678,13 +689,14 @@ class StatisticsController extends Controller
 
     public function fetchGoods($start_time, $end_time)
     {
+        $user = Auth::User();
         $orders = ConsumeOrder::where('created_at', '>=', $start_time)
             ->where('created_at', '<=', $end_time)
             ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->where('restaurant_id', $user->restaurant_id)
             ->with('goods')
             ->get();
 
-        $user = Auth::User();
         $allGoods = Goods::where('restaurant_id', $user->restaurant_id)
             ->where('is_temp', false)
             ->get();
