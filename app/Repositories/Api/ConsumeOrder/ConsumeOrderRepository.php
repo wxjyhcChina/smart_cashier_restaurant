@@ -410,7 +410,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
                 $query->where('dinning_time.id', $order->dinning_time_id);
             })->whereHas('consume_categories', function ($query) use ($customer){
                 $query->where('consume_categories.id', $customer->consume_category_id);
-            })->whereRaw('weekday & '.$weekday.' > 0')->first();
+            })->whereRaw('weekday & '.$weekday.' > 0')->where('enabled', 1)->first();
 
             if ($rule != null)
             {
