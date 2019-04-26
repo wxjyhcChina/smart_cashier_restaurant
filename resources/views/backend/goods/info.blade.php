@@ -62,7 +62,7 @@
                 {{ Form::label('dinning_time_id', trans('validation.attributes.backend.goods.dinning_time_id').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    <p style="padding-top: 7px">{{$goods->dinning_time->name}}</p>
+                    <p style="padding-top: 7px">{{join($goods->dinning_time->pluck('name')->toArray(), ',')}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
