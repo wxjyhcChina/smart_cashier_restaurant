@@ -55,7 +55,8 @@ class Account
      */
     public function compareBalance($account, $price)
     {
-        if (bccomp($account->balance, $price, 2) == -1)
+        $balance = $account->balance + $account->subsidy_balance;
+        if (bccomp($balance, $price, 2) == -1)
         {
             throw  new ApiException(ErrorCode::BALANCE_NOT_ENOUGH, trans('api.error.balance_not_enough'));
         }
@@ -86,11 +87,21 @@ class Account
     public function payAccount($order_id, $account, $money)
     {
         Log::info('[payAccount]order id is:'.$order_id.', account id is '.$account->id);
-        $account->balance = bcsub($account->balance, $money, 2);
+
+        if ($account->subsidy_balance >= $money)
+        {
+            $account->subsidy_balance = bcsub($account->balance, $money, 2);
+        }
+        else
+        {
+            $remainingMoney = bcsub($money, $account->subsidy_balance, 2);
+
+            $account->subsidy_balance = 0;
+            $account->balance = bcsub($account->balance, $remainingMoney, 2);
+        }
+
         $account->save();
 
         $this->addRecord($account->customer_id, $account->id, AccountRecordType::CONSUME, $money, $order_id, PayMethodType::CARD);
     }
-
-
 }
