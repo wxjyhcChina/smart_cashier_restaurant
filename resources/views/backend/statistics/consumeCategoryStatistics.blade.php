@@ -137,7 +137,7 @@
                     {data: 'customer_name', name: 'customers.user_name'},
                     {data: 'card_number', name: 'cards.number'},
                     {data: 'discount_price', name: 'discount_price'},
-                    {data: 'consume_category_name', name: 'categories.name'},
+                    {data: 'consume_category_name', name: 'consume_categories.name'},
                     {data: 'pay_method', name: 'pay_method'},
                     {data: 'dinning_time_name', name: 'dinning_time.name'},
                     {data: 'created_at', name: 'created_at'},
