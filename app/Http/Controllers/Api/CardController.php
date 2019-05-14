@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Repositories\Api\Card\CardRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class CardController extends Controller
 {
@@ -31,6 +32,8 @@ class CardController extends Controller
     {
         //
         $conditions = $request->all();
+        $restaurant_id = Auth::User()->restaurant_id;
+        $conditions['restaurant_id'] = $restaurant_id;
 
         $card = $this->cardRepo->findOne($conditions);
 
