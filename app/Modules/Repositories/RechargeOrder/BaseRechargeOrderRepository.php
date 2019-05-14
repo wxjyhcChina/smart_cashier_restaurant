@@ -43,6 +43,11 @@ class BaseRechargeOrderRepository extends BaseRepository
     public function create($input)
     {
         $card = CardService::getCardByInternalNumber($input['card_id']);
+        if ($card->restaurant_id != $input['restaurant_id'])
+        {
+            throw new ApiException(ErrorCode::INVALID_CARD, trans('api.error.invalid_card'));
+        }
+
         $customer = CardService::getCustomerByCard($card);
 
         $input['card_id'] = $card->id;
