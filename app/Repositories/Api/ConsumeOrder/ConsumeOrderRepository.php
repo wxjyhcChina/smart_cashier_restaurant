@@ -581,6 +581,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      */
     public function pay(ConsumeOrder $order, $input)
     {
+        Log::info('pay, input'.json_encode($input));
         if ($order->status != ConsumeOrderStatus::WAIT_PAY)
         {
             throw  new ApiException(ErrorCode::ORDER_STATUS_INCORRECT, trans('api.error.order_status_incorrect'));
@@ -597,6 +598,8 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             {
                 throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
             }
+
+            Log::info('pay, pay method is '.$method->toJson());
 
             if ($payMethod == PayMethodType::CASH)
             {
