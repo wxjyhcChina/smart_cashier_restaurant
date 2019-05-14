@@ -432,6 +432,11 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     {
         $card = CardService::getCardByInternalNumber($cardId);
 
+        if ($order->restaurant_id != $card->restaurant_id)
+        {
+            throw new ApiException(ErrorCode::INVALID_CARD, trans('api.error.invalid_card'));
+        }
+
         $customer = CardService::getCustomerByCard($card);
 
         $discount = $this->getCardDiscount($order, $customer);

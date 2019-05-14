@@ -38,6 +38,7 @@ class ErrorCode
     //card related
     const CARD_NOT_EXIST = "CARD_NOT_EXIST";
     const CARD_STATUS_INCORRECT = "CARD_STATUS_INCORRECT";
+    const INVALID_CARD = "INVALID_CARD";
 
     //customer related
     const BALANCE_NOT_ENOUGH = 'BALANCE_NOT_ENOUGH';
