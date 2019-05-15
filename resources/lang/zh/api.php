@@ -31,7 +31,7 @@ return [
 
         'card_not_exist' => '卡不存在',
         'card_status_incorrect' => '卡状态不正确，请换卡后操作',
-        'invalid_card' => '无效卡，请重刷',
+        'invalid_card' => '非本餐厅卡',
 
         'balance_not_enough' => '账户余额不足',
 
