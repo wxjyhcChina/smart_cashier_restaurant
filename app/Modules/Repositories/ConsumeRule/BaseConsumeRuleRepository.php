@@ -44,11 +44,12 @@ class BaseConsumeRuleRepository extends BaseRepository
      * @param $restaurant_id
      * @param $weekdayArray
      * @param $dinningTimeArray
+     * @param $consumeCategories
      * @param null $rule_id
      * @return bool
      * @throws ApiException
      */
-    private function isRuleConflict($restaurant_id, $weekdayArray, $dinningTimeArray, $rule_id = null)
+    private function isRuleConflict($restaurant_id, $weekdayArray, $dinningTimeArray, $consumeCategories, $rule_id = null)
     {
         $weekday = $this->getWeekday($weekdayArray);
 
@@ -69,11 +70,16 @@ class BaseConsumeRuleRepository extends BaseRepository
                 $query->where('consume_rules.id', '<>', $rule_id);
             }
 
-            $rule = $query->first();
-
-            if ($rule != null)
+            foreach ($consumeCategories as $consumeCategory)
             {
-                return true;
+                $rule = $query->whereHas('consume_categories', function ($query) use ($consumeCategory){
+                    $query->where('consume_categories.id', $consumeCategory);
+                })->first();
+
+                if ($rule != null)
+                {
+                    return true;
+                }
             }
         }
 
@@ -87,7 +93,7 @@ class BaseConsumeRuleRepository extends BaseRepository
      */
     public function create($input)
     {
-        $isConflict = $this->isRuleConflict($input['restaurant_id'], $input['weekday'], $input['dinning_time']);
+        $isConflict = $this->isRuleConflict($input['restaurant_id'], $input['weekday'], $input['dinning_time'], $input['consume_categories']);
         if ($isConflict)
         {
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.consume_rule_conflict'));
@@ -123,7 +129,7 @@ class BaseConsumeRuleRepository extends BaseRepository
      */
     public function update(ConsumeRule $consumeRule, $input)
     {
-        $isConflict = $this->isRuleConflict($input['restaurant_id'], $input['weekday'], $input['dinning_time'], $consumeRule->id);
+        $isConflict = $this->isRuleConflict($input['restaurant_id'], $input['weekday'], $input['dinning_time'], $input['consume_categories'], $consumeRule->id);
         if ($isConflict)
         {
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.consume_rule_conflict'));
