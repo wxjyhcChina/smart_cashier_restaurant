@@ -115,9 +115,10 @@ class CardController extends Controller
     {
         $internal_number = $request->get('internal_number');
 
+        $restaurant_id = Auth::User()->restaurant_id;
         try
         {
-            $card = $this->cardRepo->getByInternalNumber($internal_number);
+            $card = $this->cardRepo->getByInternalNumber($restaurant_id, $internal_number);
         }
         catch (ApiException $exception)
         {
