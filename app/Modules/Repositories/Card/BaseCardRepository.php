@@ -40,7 +40,7 @@ class BaseCardRepository extends BaseRepository
 
         if ($card == null)
         {
-            throw  new ApiException(ErrorCode::CARD_NOT_EXIST, trans('api.error.device_not_exist'));
+            throw  new ApiException(ErrorCode::CARD_NOT_EXIST, trans('api.error.card_not_exist'));
         }
 
         return $card;
