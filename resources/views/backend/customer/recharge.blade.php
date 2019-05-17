@@ -117,6 +117,9 @@
             </div><!--pull-left-->
 
             <div class="pull-right">
+                {{ link_to_route('admin.customer.consumeOrders', trans('labels.backend.customer.consume_order'), [$customer], ['class' => 'btn btn-danger btn-xs']) }}
+                {{ link_to_route('admin.customer.accountRecords', trans('labels.backend.customer.account_record'), [$customer], ['class' => 'btn btn-danger btn-xs']) }}
+
                 <button type="button" id="submit_button" class="btn btn-success btn-xs">{{trans('buttons.general.recharge')}}</button>
             </div><!--pull-right-->
 

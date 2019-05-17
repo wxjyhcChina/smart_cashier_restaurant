@@ -113,6 +113,7 @@
                 avgTimeByChar: 100, // it's not a barcode if a character takes longer than 100ms
                 onComplete: function(code, qty){
                     // $('#pTest').text(barcode);
+                    code = code.toUpperCase();
 
                     $.ajax({
                         type: "GET",
