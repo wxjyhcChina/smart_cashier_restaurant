@@ -234,7 +234,7 @@
                                 else
                                 {
                                     $('#card').val(jsonResult.number);
-                                    $('#card_id').val(jsonResult.id);
+                                    $('#card_id').val(jsonResult.internal_number);
 
                                     $("#cardModel").modal('hide');
                                 }

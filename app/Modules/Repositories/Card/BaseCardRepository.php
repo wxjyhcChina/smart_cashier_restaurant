@@ -4,6 +4,7 @@ namespace App\Modules\Repositories\Card;
 
 use App\Exceptions\Api\ApiException;
 use App\Exceptions\GeneralException;
+use App\Modules\Enums\CardStatus;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Card\Card;
 use App\Modules\Repositories\BaseRepository;
@@ -45,7 +46,6 @@ class BaseCardRepository extends BaseRepository
 
         return $card;
     }
-
 
     /**
      * @param Card $card
