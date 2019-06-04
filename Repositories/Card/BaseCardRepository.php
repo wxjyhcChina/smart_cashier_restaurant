@@ -32,9 +32,11 @@ class BaseCardRepository extends BaseRepository
      * @return mixed
      * @throws ApiException
      */
-    public function getByInternalNumber($internalNumber)
+    public function getByInternalNumber($restaurant_id, $internalNumber)
     {
-        $card = $this->query()->where('internal_number', $internalNumber)->first();
+        $card = $this->query()
+            ->where('restaurant_id', $restaurant_id)
+            ->where('internal_number', $internalNumber)->first();
 
         if ($card == null)
         {

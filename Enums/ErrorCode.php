@@ -38,6 +38,7 @@ class ErrorCode
     //card related
     const CARD_NOT_EXIST = "CARD_NOT_EXIST";
     const CARD_STATUS_INCORRECT = "CARD_STATUS_INCORRECT";
+    const INVALID_CARD = "INVALID_CARD";
 
     //customer related
     const BALANCE_NOT_ENOUGH = 'BALANCE_NOT_ENOUGH';
@@ -60,6 +61,7 @@ class ErrorCode
     const ORDER_STATUS_INCORRECT = 'ORDER_STATUS_INCORRECT';
 
     //pay method related
+    const PAY_METHOD_NOT_PROVIDED = 'PAY_METHOD_NOT_PROVIDED';
     const PAY_METHOD_NOT_SUPPORTED = 'PAY_METHOD_NOT_SUPPORTED';
     const PAY_FAILED = 'PAY_FAILED';
 }

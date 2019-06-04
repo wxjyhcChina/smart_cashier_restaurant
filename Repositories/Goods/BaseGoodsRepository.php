@@ -75,7 +75,10 @@ class BaseGoodsRepository extends BaseRepository
             DB::beginTransaction();
 
             //一个用餐时间一种盘子只能绑定一种商品
-            $existingGoods = $labelCategory->goods()->where('dinning_time_id', $goods->dinning_time_id)->first();
+            $goodsDinningTime = $goods->dinning_time->pluck('id');
+            $existingGoods = $labelCategory->goods()->whereHas('dinning_time', function ($query) use ($goodsDinningTime){
+                $query->whereIn('dinning_time_id', $goodsDinningTime);
+            })->first();
 
             if ($existingGoods != null)
             {
@@ -153,6 +156,11 @@ class BaseGoodsRepository extends BaseRepository
 
         if ($goods->save())
         {
+            if (isset($input['dinning_time']))
+            {
+                $goods->dinning_time()->attach($input['dinning_time']);
+            }
+
             return $goods->load('shop', 'dinning_time');
         }
 
@@ -173,6 +181,11 @@ class BaseGoodsRepository extends BaseRepository
         {
             DB::beginTransaction();
             $goods->update($input);
+
+            if (isset($input['dinning_time'])){
+                $goods->dinning_time()->detach();
+                $goods->dinning_time()->attach($input['dinning_time']);
+            }
 
             DB::commit();
 
@@ -221,7 +234,6 @@ class BaseGoodsRepository extends BaseRepository
         $goods = new Goods();
         $goods->restaurant_id = $input['restaurant_id'];
         $goods->shop_id = $input['shop_id'];
-        $goods->dinning_time_id = isset($input['dinning_time_id']) ? $input['dinning_time_id'] : null;
         $goods->name = $input['name'];
         $goods->price = $input['price'];
         $goods->image = isset($input['image']) ? $input['image'] : '';

@@ -12,7 +12,7 @@ class ConsumeOrder extends Model
 {
     use ConsumeOrderAttribute, ConsumeOrderRelationship;
 
-    protected $fillable = ['customer_id', 'card_id', 'restaurant_id', 'restaurant_user_id', 'price', 'discount', 'pay_method', 'external_pay_no', 'status'];
+    protected $fillable = ['customer_id', 'card_id', 'restaurant_id', 'restaurant_user_id', 'price', 'discount', 'pay_method', 'online_pay', 'external_pay_no', 'status'];
 
     public function getShowPayMethodAttribute()
     {

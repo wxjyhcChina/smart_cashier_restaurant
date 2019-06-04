@@ -2,6 +2,8 @@
 
 namespace App\Modules\Models\Card\Traits\Attribute;
 
+use App\Modules\Enums\CardStatus;
+
 /**
  * Trait CardAttribute
  * @package App\Modules\Models\Card\Traits\Attribute
@@ -15,7 +17,6 @@ trait CardAttribute
     {
         return '<a href="' . route('admin.card.edit', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.general.crud.edit') . '"></i></a> ';
     }
-
 
     /**
      * @return string
@@ -49,8 +50,7 @@ trait CardAttribute
     public function getActionButtonsAttribute()
     {
         return
-            $this->edit_button.
-            $this->status_button;
+            $this->edit_button;
     }
 
     /**
@@ -58,6 +58,11 @@ trait CardAttribute
      */
     public function getRestaurantActionButtonsAttribute()
     {
-        
+        if ($this->status != CardStatus::ACTIVATED)
+        {
+            return $this->edit_button;
+        }
+
+        return null;
     }
 }

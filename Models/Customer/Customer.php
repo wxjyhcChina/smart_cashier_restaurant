@@ -12,7 +12,7 @@ class Customer extends Model
 
     protected $fillable = ['restaurant_id', 'user_name', 'telephone', 'id_license', 'birthday', 'department_id', 'consume_category_id', 'enabled'];
 
-    protected $appends = ['balance'];
+    protected $appends = ['balance', 'subsidy_balance'];
 
     protected $hidden = ['account'];
 
@@ -22,5 +22,13 @@ class Customer extends Model
     public function getBalanceAttribute()
     {
         return $this->account->balance;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSubsidyBalanceAttribute()
+    {
+        return $this->account->subsidy_balance;
     }
 }

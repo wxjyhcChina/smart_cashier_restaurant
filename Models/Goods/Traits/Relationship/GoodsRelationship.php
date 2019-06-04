@@ -24,7 +24,7 @@ trait GoodsRelationship
      */
     public function dinning_time()
     {
-        return $this->belongsTo(DinningTime::class);
+        return $this->belongsToMany(DinningTime::class, 'goods_dinning_time', 'goods_id', 'dinning_time_id');
     }
 
     /**
