@@ -6,6 +6,7 @@ use App\Access\Model\User\User;
 use App\Exceptions\Api\ApiException;
 use App\Http\Middleware\AuthUtil;
 use App\Modules\Enums\ErrorCode;
+use App\Modules\Models\Restaurant\Restaurant;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\GeneralException;
@@ -459,11 +460,17 @@ class UserRepository extends BaseRepository
             throw new ApiException(ErrorCode::CREATE_TOKEN_FAILED, trans('api.error.create_token_failed'), 400);
         }
 
-        $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
-        $token = 'Bearer '.$token;
-
         $user = Auth('api')->User();
         $user_id = $user->id;
+
+        if (Restaurant::find($user->restaurant_id)->enabled == false)
+        {
+            Auth('api')->invalidate();
+            throw new ApiException(ErrorCode::RESTAURANT_BLOCKED, trans('api.error.restaurant_blocked'));
+        }
+
+        $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
+        $token = 'Bearer '.$token;
 
         // all good so return the token
         return compact('token', 'expire', 'user_id');
@@ -483,6 +490,13 @@ class UserRepository extends BaseRepository
             throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), 400);
         } catch (JWTException $e) {
             throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), 400);
+        }
+
+        $user = Auth('api')->User();
+        if (Restaurant::find($user->restaurant_id)->enabled == false)
+        {
+            Auth('api')->invalidate();
+            throw new ApiException(ErrorCode::RESTAURANT_BLOCKED, trans('api.error.restaurant_blocked'));
         }
 
         $expire = Auth('api')->setToken($token)->getPayload()->get('exp');

@@ -23,6 +23,7 @@ return [
         'login_failed' => '用户名或认证码错误',
         'create_token_failed' => '创建token失败',
         'input_incomplete' => '输入信息不完整',
+        'restaurant_blocked' => '餐厅被禁用，请联系管理员',
         'user_have_not_money' => '用户余额不足，无法借用充电宝',
         'user_create_failed' => '用户创建失败',
         'open_id_access_token_failed' => 'openId或accessToken错误',

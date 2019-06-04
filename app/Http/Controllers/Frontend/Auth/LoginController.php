@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend\Auth;
 
 use App\Helpers\Auth\Auth;
+use App\Modules\Models\Restaurant\Restaurant;
 use Illuminate\Http\Request;
 use App\Exceptions\GeneralException;
 use App\Http\Controllers\Controller;
@@ -53,6 +54,12 @@ class LoginController extends Controller
          * Check to see if the users account is confirmed and active
          */
         if (! $user->isActive()) {
+            access()->logout();
+            throw new GeneralException(trans('exceptions.frontend.auth.deactivated'));
+        }
+
+        if (Restaurant::find($user->restaurant_id)->enabled == false)
+        {
             access()->logout();
             throw new GeneralException(trans('exceptions.frontend.auth.deactivated'));
         }

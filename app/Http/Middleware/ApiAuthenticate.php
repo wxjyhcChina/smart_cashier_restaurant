@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use App\Modules\Enums\ErrorCode;
 use App\Exceptions\Api\ApiException;
+use App\Modules\Models\Restaurant\Restaurant;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -41,6 +42,13 @@ class ApiAuthenticate
 
         if (! $payload) {
             throw new ApiException(ErrorCode::USER_NOT_EXIST, trans("api.error.user_not_exist"), 401);
+        }
+
+        $user = Auth('api')->User();
+        if (Restaurant::find($user->restaurant_id)->enabled == false)
+        {
+            Auth('api')->invalidate();
+            throw new ApiException(ErrorCode::RESTAURANT_BLOCKED, trans('api.error.restaurant_blocked'));
         }
 
         config()->set('auth.defaults.guard','api');
