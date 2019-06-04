@@ -71,7 +71,7 @@ trait UserAttribute
             $size = config('gravatar.default.size');
         }
 
-        return gravatar()->get($this->username.'boosal.com', ['size' => $size]);
+        return gravatar()->get('restaurant@boosal.com', ['size' => $size]);
     }
 
     /**
@@ -265,8 +265,8 @@ trait UserAttribute
         }
 
         return
-            $this->clear_session_button.
-            $this->login_as_button.
+//            $this->clear_session_button.
+//            $this->login_as_button.
 //            $this->show_button.
             $this->edit_button.
             $this->change_password_button.

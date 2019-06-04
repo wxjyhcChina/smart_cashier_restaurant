@@ -65,7 +65,7 @@
                     {data: 'id', name: 'id'},
                     {data: 'number', name: 'number'},
                     {data: 'internal_number', name: 'internal_number'},
-                    {data: 'status', name: 'status', defaultContent:''},
+                    {data: 'show_status', name: 'status', defaultContent:''},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],
                 order: [[0, "asc"]],

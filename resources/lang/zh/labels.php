@@ -125,6 +125,12 @@ return [
                 'internal_number' => 'IC卡内部编码',
                 'status' => '状态',
                 'created_at' => '创建时间',
+            ],
+
+            'status' => [
+                'unactivated' => '未使用',
+                'activated' => '使用中',
+                'lost' => '已挂失'
             ]
         ],
 

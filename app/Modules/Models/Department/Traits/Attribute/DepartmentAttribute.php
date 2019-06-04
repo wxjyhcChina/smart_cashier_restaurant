@@ -49,8 +49,7 @@ trait DepartmentAttribute
     public function getActionButtonsAttribute()
     {
         return
-            $this->edit_button.
-            $this->status_button;
+            $this->edit_button;
     }
 
     /**
@@ -59,7 +58,6 @@ trait DepartmentAttribute
     public function getRestaurantActionButtonsAttribute()
     {
         return
-            $this->edit_button.
-            $this->status_button;
+            $this->edit_button;
     }
 }

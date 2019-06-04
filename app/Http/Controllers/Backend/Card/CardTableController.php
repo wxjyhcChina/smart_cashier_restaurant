@@ -35,6 +35,9 @@ class CardTableController extends Controller
             ->addColumn('actions', function ($card) {
                 return $card->restaurant_action_buttons;
             })
+            ->addColumn('show_status', function ($card){
+                return $card->getShowStatusAttribute();
+            })
             ->rawColumns(['actions'])
             ->make(true);
     }
