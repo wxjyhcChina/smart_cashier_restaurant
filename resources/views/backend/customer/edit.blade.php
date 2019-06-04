@@ -90,13 +90,17 @@
 
 @stop
 
-{{ Html::script("js/backend/plugin/moment/min/moment.min.js") }}
-{{ Html::script("js/backend/plugin/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js") }}
-{{ Html::style("js/backend/plugin/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css") }}
+@section('after-scripts')
+    {{ Html::script("js/backend/plugin/moment/min/moment.min.js") }}
+    {{ Html::script("js/backend/plugin/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js") }}
+    {{ Html::style("js/backend/plugin/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css") }}
 
-<script>
-    $(function() {
-        $('#birthday').datetimepicker({format: 'YYYY-MM-DD'});
-    });
+    <script>
+        $(function() {
+            $('#birthday').datetimepicker({format: 'YYYY-MM-DD'});
+        });
 
-</script>
+    </script>
+
+
+@stop
