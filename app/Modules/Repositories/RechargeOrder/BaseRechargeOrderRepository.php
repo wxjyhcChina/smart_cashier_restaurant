@@ -13,6 +13,7 @@ use App\Modules\Repositories\BaseRepository;
 use App\Modules\Services\Account\Facades\Account;
 use App\Modules\Services\Card\Facades\CardService;
 use App\Modules\Services\Pay\Facades\Pay;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class BaseRechargeOrderRepository.
@@ -170,7 +171,12 @@ class BaseRechargeOrderRepository extends BaseRepository
      */
     public function getByRestaurantWithRelationQuery($restaurant_id, $start_time, $end_time, $pay_method = null, $restaurant_user_id = null, $status=[])
     {
-        $query = $this->getByRestaurantQuery($restaurant_id)->select('recharge_orders.*', 'customers.user_name as customer_name', 'cards.number as card_number', 'restaurant_users.username as restaurant_user_name')
+        $query = $this->getByRestaurantQuery($restaurant_id)->select('recharge_orders.*',
+            'customers.user_name as customer_name',
+            'cards.number as card_number',
+            DB::raw('concat(restaurant_users.last_name, restaurant_users.first_name) as restaurant_user_name'),
+            'restaurant_users.last_name as restaurant_last_name',
+            'restaurant_users.first_name as restaurant_first_name')
             ->leftJoin('customers', 'recharge_orders.customer_id', '=', 'customers.id')
             ->leftJoin('cards', 'recharge_orders.card_id', '=', 'cards.id')
             ->leftJoin('restaurant_users', 'recharge_orders.restaurant_user_id', '=', 'restaurant_users.id')

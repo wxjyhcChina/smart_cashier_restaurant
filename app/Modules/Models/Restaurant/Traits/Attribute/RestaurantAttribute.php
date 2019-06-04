@@ -51,6 +51,22 @@ trait RestaurantAttribute
     /**
      * @return string
      */
+    public function getConsumeOrderButtonAttribute()
+    {
+        return '<a href="' . route('admin.restaurant.consumeOrder', $this, false) . '" class="btn btn-xs btn-primary"><i class="fa fa-shopping-cart" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.restaurant.consumeOrder') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
+    public function getRechargeOrderButtonAttribute()
+    {
+        return '<a href="' . route('admin.restaurant.rechargeOrder', $this, false) . '" class="btn btn-xs btn-success"><i class="fa fa-exchange" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.restaurant.rechargeOrder') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
     public function getEnabledButtonAttribute()
     {
         switch ($this->enabled) {
@@ -84,6 +100,8 @@ trait RestaurantAttribute
             $this->edit_button .
             $this->assign_card_button .
             $this->assign_device_button .
+            $this->consume_order_button .
+            $this->recharge_order_button .
             $this->enabled_button ;
     }
 }

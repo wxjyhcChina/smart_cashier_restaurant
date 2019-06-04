@@ -49,8 +49,7 @@ trait DeviceAttribute
     public function getActionButtonsAttribute()
     {
         return
-            $this->edit_button.
-            $this->status_button;
+            $this->edit_button;
     }
 
     /**

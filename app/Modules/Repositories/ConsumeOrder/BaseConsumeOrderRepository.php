@@ -4,6 +4,7 @@ namespace App\Modules\Repositories\ConsumeOrder;
 
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Repositories\BaseRepository;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class BaseConsumeOrderRepository.
@@ -42,7 +43,9 @@ class BaseConsumeOrderRepository extends BaseRepository
             'customers.user_name as customer_name',
             'cards.number as card_number',
             'dinning_time.name as dinning_time_name',
-            'restaurant_users.username as restaurant_user_name',
+            DB::raw('concat(restaurant_users.last_name, restaurant_users.first_name) as restaurant_user_name'),
+            'restaurant_users.last_name as restaurant_last_name',
+            'restaurant_users.first_name as restaurant_first_name',
             'departments.name as department_name',
             'consume_categories.name as consume_category_name'
         )
