@@ -30,7 +30,7 @@
                 {{ Form::label('image', trans('validation.attributes.backend.goods.image'), ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    <img height="100px" width="100px" src="{{empty($goods->image) ? "../../../header.png" : $goods->image}}" alt="Avatar">
+                    <img height="100px" width="100px" src="{{empty($goods->image) ? "../../../img/food.png" : $goods->image}}" alt="Avatar">
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
