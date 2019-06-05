@@ -149,6 +149,9 @@ class StatisticsController extends Controller
             ->addColumn('show_status', function ($consumeOrder) {
                 return $consumeOrder->getShowStatusAttribute();
             })
+            ->addColumn('show_pay_method', function ($consumeOrder) {
+                return $consumeOrder->getShowPayMethodAttribute();
+            })
             ->rawColumns(['show_status'])
             ->make(true);
     }
@@ -281,6 +284,9 @@ class StatisticsController extends Controller
             ->addColumn('show_status', function ($consumeOrder) {
                 return $consumeOrder->getShowStatusAttribute();
             })
+            ->addColumn('show_pay_method', function ($consumeOrder) {
+                return $consumeOrder->getShowPayMethodAttribute();
+            })
             ->rawColumns(['show_status'])
             ->make(true);
     }
@@ -313,7 +319,14 @@ class StatisticsController extends Controller
         $end_time = date('Y-m-d H:i:s');
 
         $user = Auth::User();
-        $restaurantUser = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get()->pluck('username', 'id')->toArray();
+        $restaurantUsers = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get();
+        $restaurantUser = [];
+        foreach ($restaurantUsers as $user)
+        {
+            $restaurantUser[$user->id] = $user->last_name.$user->first_name;
+        }
+
+
         $restaurantUser = $this->appendNullOption($restaurantUser);
 
         return view('backend.statistics.dinningTimeStatistics')
@@ -425,6 +438,9 @@ class StatisticsController extends Controller
             ->addColumn('show_status', function ($consumeOrder) {
                 return $consumeOrder->getShowStatusAttribute();
             })
+            ->addColumn('show_pay_method', function ($consumeOrder) {
+                return $consumeOrder->getShowPayMethodAttribute();
+            })
             ->rawColumns(['show_status'])
             ->make(true);
     }
@@ -492,9 +508,10 @@ class StatisticsController extends Controller
 
                 $rowNumber++;
                 $sheet->mergeCells("B$rowNumber:C$rowNumber");
+                $sheet->mergeCells("G$rowNumber:H$rowNumber");
                 $sheet->row($rowNumber, array(
-                    '编号','订单编号','', '用户编号','卡编号',
-                    '价格','消费类别','支付方式','用餐时间',
+                    '编号','用户名','','卡编号',
+                    '价格','消费类别','支付方式','','用餐时间',
                     '部门','消费时间','营业员'
                 ));
 
@@ -502,14 +519,14 @@ class StatisticsController extends Controller
                 {
                     $rowNumber++;
                     $sheet->mergeCells("B$rowNumber:C$rowNumber");
+                    $sheet->mergeCells("G$rowNumber:H$rowNumber");
                     $sheet->row($rowNumber, array(
-                        $order->id, $order->order_id, '',
-                        $order->customer != null ? $order->customer->user_name : '',
+                        $order->id, $order->customer != null ? $order->customer->user_name : '', '',
                         $order->card != null ? $order->card->number : '',
                         $order->discount_price, $order->consume_category != null ? $order->consume_category->name : '',
-                        $order->getShowPayMethodAttribute(), $order->dinning_time->name,
+                        $order->getShowPayMethodAttribute(), '', $order->dinning_time->name,
                         $order->department != null ? $order->department->name : '', $order->created_at,
-                        $order->restaurant_user->username
+                        $order->restaurant_user->last_name.$order->restaurant_user->first_name
                     ));
                 }
 
