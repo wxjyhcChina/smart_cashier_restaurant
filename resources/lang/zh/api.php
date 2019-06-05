@@ -45,6 +45,7 @@ return [
         'label_category_not_binded' => '餐盘未绑定类别',
         'label_category_already_binded' => '餐盘已经绑定其他商品',
         'label_category_not_bind_good' => '餐盘类别未绑定商品',
+        'label_category_bind_on_other_restaurant' => '餐盘绑定的餐盘类别属于其他餐厅',
 
         'goods_not_exist' => '商品不存在',
         'no_default_shop' => '没有默认的商家，请联系管理员',

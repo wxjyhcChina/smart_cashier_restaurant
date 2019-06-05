@@ -78,14 +78,15 @@ class BaseGoodsRepository extends BaseRepository
             $goodsDinningTime = $goods->dinning_time->pluck('id');
             $existingGoods = $labelCategory->goods()->whereHas('dinning_time', function ($query) use ($goodsDinningTime){
                 $query->whereIn('dinning_time_id', $goodsDinningTime);
-            })->first();
+            })->get();
 
-            if ($existingGoods != null)
+            $shouldAttach = true;
+            foreach ($existingGoods as $temp)
             {
-                if ($existingGoods->id == $goods->id)
+                if ($temp->id == $goods->id)
                 {
-                    DB::commit();
-                    return $labelCategory->load('goods');
+                    $shouldAttach = false;
+                   continue;
                 }
                 else if ($overwrite == false)
                 {
@@ -93,11 +94,14 @@ class BaseGoodsRepository extends BaseRepository
                 }
                 else
                 {
-                    $labelCategory->goods()->detach($existingGoods->id);
+                    $labelCategory->goods()->detach($temp->id);
                 }
             }
 
-            $labelCategory->goods()->attach($goods->id);
+            if ($shouldAttach)
+            {
+                $labelCategory->goods()->attach($goods->id);
+            }
 
             DB::commit();
         }
@@ -136,6 +140,10 @@ class BaseGoodsRepository extends BaseRepository
         if ($labelCategory == null)
         {
             throw new ApiException(ErrorCode::LABEL_CATEGORY_NOT_BINDED, trans('api.error.label_category_not_binded'));
+        }
+        else if ($labelCategory->restaurant_id != $goods->restaurant_id)
+        {
+            throw new ApiException(ErrorCode::LABEL_CATEGORY_BIND_ON_OTHER_RESTAURANT, trans('api.error.label_category_bind_on_other_restaurant'));
         }
 
         $labelCategory = $this->bindLabelCategory($goods, $labelCategory, $overwrite);
