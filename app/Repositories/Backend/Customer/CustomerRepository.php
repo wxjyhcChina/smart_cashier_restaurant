@@ -45,7 +45,12 @@ class CustomerRepository extends BaseCustomerRepository
      */
     public function getCustomerConsumeOrderQuery(Customer $customer)
     {
-        return $customer->consume_orders()->select('consume_orders.*', 'customers.user_name as customer_name', 'cards.number as card_number', 'dinning_time.name as dinning_time_name', 'restaurant_users.username as restaurant_user_name')
+        return $customer->consume_orders()->select(
+            'consume_orders.*', 'customers.user_name as customer_name',
+            'cards.number as card_number', 'dinning_time.name as dinning_time_name',
+            DB::raw('concat(restaurant_users.last_name, restaurant_users.first_name) as restaurant_user_name'),
+            'restaurant_users.last_name as restaurant_last_name',
+            'restaurant_users.first_name as restaurant_first_name')
             ->leftJoin('customers', 'consume_orders.customer_id', '=', 'customers.id')
             ->leftJoin('cards', 'consume_orders.card_id', '=', 'cards.id')
             ->leftJoin('dinning_time', 'consume_orders.dinning_time_id', '=', 'dinning_time.id')

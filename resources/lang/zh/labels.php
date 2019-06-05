@@ -328,7 +328,7 @@ return [
             'table' => [
                 'id' => '编号',
                 'order_id' => '订单编号',
-                'customer_id' => '用户编号',
+                'customer_id' => '用户名',
                 'card_id' => '卡编号',
                 'price' => '价格',
                 'pay_method' => '支付方式',
