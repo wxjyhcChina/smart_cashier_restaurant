@@ -39,6 +39,21 @@ class BaseLabelCategoryRepository extends BaseRepository
         return $labelCategory->labels;
     }
 
+    public function labelCategoryExist($name, $updatedLabelsCategory = null)
+    {
+        $labelCategoryQuery = LabelCategory::where('name', $name);
+
+        if ($updatedLabelsCategory != null)
+        {
+            $labelCategoryQuery->where('id', '<>', $updatedLabelsCategory->id);
+        }
+
+        if ($labelCategoryQuery->first() != null)
+        {
+            throw new ApiException(ErrorCode::LABEL_CATEGORY_ALREADY_EXIST, trans('exceptions.backend.labelCategory.already_exist'));
+        }
+    }
+
     /**
      * @param $input
      * @return LabelCategory
@@ -46,6 +61,7 @@ class BaseLabelCategoryRepository extends BaseRepository
      */
     public function create($input)
     {
+        $this->labelCategoryExist($input['name']);
         $labelCategory = $this->createLabelCategoryStub($input);
 
         if ($labelCategory->save())
@@ -63,6 +79,7 @@ class BaseLabelCategoryRepository extends BaseRepository
      */
     public function update(LabelCategory $labelCategory, $input)
     {
+        $this->labelCategoryExist($input['name'], $labelCategory);
         Log::info("restaurant update param:".json_encode($input));
 
         try

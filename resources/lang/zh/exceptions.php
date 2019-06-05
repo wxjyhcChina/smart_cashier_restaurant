@@ -99,6 +99,7 @@ return [
             'mark_error' => '更新餐盘类别失败，请稍后重试',
             'update_error' => '更新餐盘类别失败，请稍后重试',
             'create_error' => '创建餐盘类别失败，请稍后重试',
+            'already_exist' => '餐盘类别已经存在'
         ],
 
         'consumeRule' => [
