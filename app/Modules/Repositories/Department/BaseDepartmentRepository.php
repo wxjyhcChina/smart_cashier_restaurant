@@ -26,6 +26,25 @@ class BaseDepartmentRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
+    private function departmentExist($code, $name, $updateDepartment = null)
+    {
+        $departmentQuery = Department::query();
+
+        if ($updateDepartment != null)
+        {
+            $departmentQuery = $departmentQuery->where('id', '<>', $updateDepartment->id);
+        }
+
+        $departmentQuery = $departmentQuery->where(function ($query) use ($name, $code){
+            $query->where('code', $code)->orWhere('name', $name);
+        });
+
+        if ($departmentQuery->first() != null)
+        {
+            throw new ApiException(ErrorCode::DEPARTMENT_ALREADY_EXIST, trans('exceptions.backend.department.already_exist'));
+        }
+    }
+
     /**
      * @param $input
      * @return Department
@@ -33,6 +52,7 @@ class BaseDepartmentRepository extends BaseRepository
      */
     public function create($input)
     {
+        $this->departmentExist($input['code'], $input['name']);
         $department = $this->createDepartmentStub($input);
 
         if ($department->save())
@@ -50,6 +70,7 @@ class BaseDepartmentRepository extends BaseRepository
      */
     public function update(Department $department, $input)
     {
+        $this->departmentExist($input['code'], $input['name'], $department);
         Log::info("restaurant update param:".json_encode($input));
 
         try

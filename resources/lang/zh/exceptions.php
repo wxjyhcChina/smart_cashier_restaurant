@@ -58,6 +58,7 @@ return [
             'mark_error' => '更新部门失败，请稍后重试',
             'update_error' => '更新部门失败，请稍后重试',
             'create_error' => '创建部门失败，请稍后重试',
+            'already_exist' => '部门已经存在',
         ],
 
         'shop' => [
