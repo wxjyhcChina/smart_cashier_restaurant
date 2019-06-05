@@ -26,7 +26,7 @@
                     <thead>
                         <tr>
                             <th>{{ trans('labels.backend.consumeOrder.table.id') }}</th>
-                            <th>{{ trans('labels.backend.consumeOrder.table.order_id') }}</th>
+{{--                            <th>{{ trans('labels.backend.consumeOrder.table.order_id') }}</th>--}}
                             <th>{{ trans('labels.backend.consumeOrder.table.customer_id') }}</th>
                             <th>{{ trans('labels.backend.consumeOrder.table.card_id') }}</th>
                             <th>{{ trans('labels.backend.consumeOrder.table.price') }}</th>
@@ -84,7 +84,7 @@
                 },
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'order_id', name: 'order_id'},
+                    // {data: 'order_id', name: 'order_id'},
                     {data: 'customer_name', name: 'customers.user_name'},
                     {data: 'card_number', name: 'cards.number'},
                     {data: 'discount_price', name: 'discount_price'},
@@ -93,7 +93,9 @@
                     {data: 'created_at', name: 'created_at'},
                     {data: 'restaurant_user_name', name: 'restaurant_users.username'},
                     {data: 'show_status', name: 'status'},
-                    {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
+                    {data: 'actions', name: 'actions', orderable: false, 'searchable':false},
+                    {data: 'restaurant_last_name', name: 'restaurant_users.last_name', visible:false},
+                    {data: 'restaurant_first_name', name: 'restaurant_users.first_name', visible:false}
                 ],
                 order: [[0, "asc"]],
                 searchDelay: 500

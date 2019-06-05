@@ -42,7 +42,8 @@ class ConsumeOrderTableController extends Controller
                 $end_time,
                 null,
                 null,
-               null
+               null,
+                [ConsumeOrderStatus::COMPLETE]
                 ))
             ->addColumn('actions', function ($consumeOrder) {
                 return $consumeOrder->restaurant_action_buttons;

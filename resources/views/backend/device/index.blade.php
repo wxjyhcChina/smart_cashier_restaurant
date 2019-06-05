@@ -27,7 +27,7 @@
                             <th>{{ trans('labels.backend.device.table.id') }}</th>
                             <th>{{ trans('labels.backend.device.table.serial_id') }}</th>
                             <th>{{ trans('labels.backend.device.table.created_at') }}</th>
-                            <th>{{ trans('labels.general.actions') }}</th>
+{{--                            <th>{{ trans('labels.general.actions') }}</th>--}}
                         </tr>
                     </thead>
                 </table>
@@ -63,7 +63,7 @@
                     {data: 'id', name: 'id'},
                     {data: 'serial_id', name: 'serial_id'},
                     {data: 'created_at', name: 'created_at'},
-                    {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
+                    // {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],
                 order: [[0, "asc"]],
                 searchDelay: 500
