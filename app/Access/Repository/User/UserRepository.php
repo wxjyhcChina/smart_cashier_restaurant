@@ -101,7 +101,6 @@ class UserRepository extends BaseRepository
         $dataTableQuery = $this->query()
             ->with('roles')
             ->where('restaurant_id', $user->restaurant_id)
-            ->where('status', $status)
             ->select([
                 config('access.users_table').'.id',
                 config('access.users_table').'.username',
@@ -112,6 +111,11 @@ class UserRepository extends BaseRepository
                 config('access.users_table').'.updated_at',
                 config('access.users_table').'.deleted_at',
             ]);
+
+        if ($status != null)
+        {
+            $dataTableQuery = $dataTableQuery->where('status', $status);
+        }
 
         if ($trashed == 'true') {
             return $dataTableQuery->onlyTrashed();

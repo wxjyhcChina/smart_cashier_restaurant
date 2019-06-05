@@ -10,6 +10,8 @@ use App\Http\Requests\Backend\Access\User\StoreUserRequest;
 use App\Http\Requests\Backend\Access\User\ManageUserRequest;
 use App\Http\Requests\Backend\Access\User\UpdateUserRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 /**
  * Class UserController.
@@ -89,6 +91,10 @@ class UserController extends Controller
         $data['status'] = 1;
         $data['restaurant_id'] = $user->restaurant_id;
         $data['username'] = $data['username'].'@'.$restaurantCode;
+
+        Validator::make($data, [
+            'username' => Rule::unique(config('access.users_table'))
+        ])->validate();
 
         $this->users->create(
             [

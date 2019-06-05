@@ -57,7 +57,7 @@
                 ajax: {
                     url: '{{ route("admin.access.user.get") }}',
                     type: 'post',
-                    data: {status: false, trashed: true},
+                    data: {trashed: true},
                     error: function (xhr, err) {
                         if (err === 'parsererror')
                             location.reload();

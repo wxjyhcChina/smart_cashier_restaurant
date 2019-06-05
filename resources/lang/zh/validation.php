@@ -118,6 +118,7 @@ return [
     */
 
     'attributes' => [
+        'username' => '用户名',
 
         'backend' => [
             'access' => [
