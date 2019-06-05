@@ -27,6 +27,14 @@ trait LabelCategoryAttribute
     /**
      * @return string
      */
+    public function getGoodsButtonAttribute()
+    {
+        return '<a href="' . route('admin.labelCategory.goods', $this, false) . '" class="btn btn-xs btn-info"><i class="fa fa-cutlery" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.labelCategory.goods') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
     public function getAssignLabelButtonAttribute()
     {
         return '<a href="' . route('admin.labelCategory.assignLabel', $this, false) . '" class="btn btn-xs btn-success"><i class="fa fa-tag" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.labelCategory.assignLabel') . '"></i></a> ';
@@ -40,6 +48,7 @@ trait LabelCategoryAttribute
         return
             $this->info_button .
             $this->edit_button .
+            $this->goods_button .
             $this->assign_label_button;
     }
 
@@ -51,6 +60,7 @@ trait LabelCategoryAttribute
         return
             $this->info_button .
             $this->edit_button .
+            $this->goods_button .
             $this->assign_label_button;
     }
 }

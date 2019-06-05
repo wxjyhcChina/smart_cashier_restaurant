@@ -157,4 +157,14 @@ class LabelCategoryController extends Controller
 
         return redirect()->route('admin.labelCategory.index')->withFlashSuccess(trans('alerts.backend.labelCategory.labelAssigned'));
     }
+
+    /**
+     * @param LabelCategory $labelCategory
+     * @param ManageLabelCategoryRequest $request
+     * @return mixed
+     */
+    public function goods(LabelCategory $labelCategory, ManageLabelCategoryRequest $request)
+    {
+        return view('backend.labelCategory.goods')->withLabelCategory($labelCategory);
+    }
 }

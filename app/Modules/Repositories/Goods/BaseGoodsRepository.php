@@ -191,6 +191,27 @@ class BaseGoodsRepository extends BaseRepository
             $goods->update($input);
 
             if (isset($input['dinning_time'])){
+
+                $labelCategories = $goods->label_categories;
+                foreach ($labelCategories as $labelCategory)
+                {
+                    $existingGoods = $labelCategory->goods()->whereHas('dinning_time', function ($query) use ($input){
+                        $query->whereIn('dinning_time_id', $input['dinning_time']);
+                    })->get();
+
+                    foreach ($existingGoods as $temp)
+                    {
+                        if ($temp->id == $goods->id)
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            throw new ApiException(ErrorCode::GOODS_DINNING_TIME_BIND_LABEL_CATEGORY_CONFLICT, trans('api.error.goods_dinning_time_bind_label_category_conflict'));
+                        }
+                    }
+                }
+
                 $goods->dinning_time()->detach();
                 $goods->dinning_time()->attach($input['dinning_time']);
             }
@@ -202,7 +223,15 @@ class BaseGoodsRepository extends BaseRepository
         catch (\Exception $exception)
         {
             DB::rollBack();
-            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.goods.update_error'));
+
+            if ($exception instanceof ApiException)
+            {
+                throw $exception;
+            }
+            else
+            {
+                throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.goods.update_error'));
+            }
         }
     }
 

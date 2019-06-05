@@ -38,6 +38,7 @@ return [
 
         'not_in_dinning_time' => '当前时间不在用餐时间',
         'dinning_time_not_exist' => '用餐时间不存在',
+        'goods_dinning_time_bind_label_category_conflict' => '当前商品绑定的餐盘类别中有相同用餐时间的其他商品',
 
         'consume_rule_conflict' => '消费规则时间冲突，请检查后再试',
 

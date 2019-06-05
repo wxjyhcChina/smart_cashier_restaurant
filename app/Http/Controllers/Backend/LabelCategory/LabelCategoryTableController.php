@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\LabelCategory;
 
 use App\Http\Requests\Backend\LabelCategory\ManageLabelCategoryRequest;
 use App\Modules\Models\Label\Label;
+use App\Modules\Models\Label\LabelCategory;
 use App\Repositories\Backend\Label\LabelCategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -61,6 +62,20 @@ class LabelCategoryTableController extends Controller
 
                 return $checked;
             })
+            ->make(true);
+    }
+
+    public function getGoods(LabelCategory $labelCategory, ManageLabelCategoryRequest $request)
+    {
+        return DataTables::of($labelCategory->goods()
+            ->select('goods.*', 'shops.name as shop_name')
+            ->leftJoin('shops', 'shops.id', '=', 'goods.shop_id')
+            ->where('is_temp', 0)
+            ->with('dinning_time'))
+            ->addColumn('actions', function ($goods) {
+                return $goods->restaurant_action_buttons;
+            })
+            ->rawColumns(['actions'])
             ->make(true);
     }
 }

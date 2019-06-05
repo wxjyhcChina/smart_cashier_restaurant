@@ -251,6 +251,7 @@ return [
             'edit' => '编辑餐盘类别',
             'create' => '创建餐盘类别',
             'assignLabel' => '分配餐盘',
+            'goods' => '餐盘类别商品',
 
             'table' => [
                 'id' => '编号',
