@@ -27,7 +27,7 @@
                 {{ Form::label('name', trans('validation.attributes.backend.consumeCategory.name').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.consumeCategory.name')]) }}
+                    {{ Form::text('name', null, ['class' => 'form-control', 'required', 'placeholder' => trans('validation.attributes.backend.consumeCategory.name')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
