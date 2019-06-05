@@ -65,6 +65,7 @@ return [
             'mark_error' => '更新子商户失败，请稍后重试',
             'update_error' => '更新子商户失败，请稍后重试',
             'create_error' => '创建子商户失败，请稍后重试',
+            'already_exist' => '子商户已经存在',
         ],
 
         'dinningTime' => [

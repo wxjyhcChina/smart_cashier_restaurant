@@ -26,7 +26,7 @@
                 {{ Form::label('name', trans('validation.attributes.backend.shop.name').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('name', $shop->name, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.shop.name')]) }}
+                    {{ Form::text('name', $shop->name, ['class' => 'form-control', 'required', 'placeholder' => trans('validation.attributes.backend.shop.name')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 

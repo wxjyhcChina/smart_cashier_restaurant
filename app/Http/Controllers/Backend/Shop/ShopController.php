@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend\Shop;
 
 use App\Exceptions\GeneralException;
 use App\Http\Requests\Backend\Shop\ManageShopRequest;
+use App\Http\Requests\Backend\Shop\StoreShopRequest;
 use App\Modules\Models\Shop\Shop;
 use App\Repositories\Backend\Shop\ShopRepository;
 use Illuminate\Http\Request;
@@ -57,7 +58,7 @@ class ShopController extends Controller
      * @return \Illuminate\Http\Response
      * @throws GeneralException
      */
-    public function store(Request $request)
+    public function store(StoreShopRequest $request)
     {
         //
         $input = $request->all();
@@ -94,11 +95,11 @@ class ShopController extends Controller
 
     /**
      * @param Shop $shop
-     * @param ManageShopRequest $request
+     * @param StoreShopRequest $request
      * @return mixed
      * @throws \App\Exceptions\Api\ApiException
      */
-    public function update(Shop $shop, ManageShopRequest $request)
+    public function update(Shop $shop, StoreShopRequest $request)
     {
         //
         $input = $request->all();
