@@ -93,6 +93,9 @@ class CustomerTableController extends Controller
             ->addColumn('show_name', function ($consumeOrder) {
                 return $consumeOrder->getShowNameAttribute();
             })
+            ->addColumn('show_pay_method', function ($consumeOrder) {
+                return $consumeOrder->getShowPayMethodAttribute();
+            })
             ->rawColumns(['show_name'])
             ->make(true);
     }

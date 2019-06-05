@@ -31,8 +31,8 @@
                             <th>{{ trans('labels.backend.customer.accountRecord.table.id') }}</th>
                             <th>{{ trans('labels.backend.customer.accountRecord.table.money') }}</th>
                             <th>{{ trans('labels.backend.customer.accountRecord.table.pay_method_id') }}</th>
-                            <th>{{ trans('labels.backend.customer.accountRecord.table.consume_order') }}</th>
-                            <th>{{ trans('labels.backend.customer.accountRecord.table.recharge_order') }}</th>
+{{--                            <th>{{ trans('labels.backend.customer.accountRecord.table.consume_order') }}</th>--}}
+{{--                            <th>{{ trans('labels.backend.customer.accountRecord.table.recharge_order') }}</th>--}}
                             <th>{{ trans('labels.backend.customer.accountRecord.table.created_at') }}</th>
                             <th>{{ trans('labels.backend.customer.accountRecord.table.type') }}</th>
                         </tr>
@@ -70,9 +70,9 @@
                 columns: [
                     {data: 'id', name: 'id'},
                     {data: 'money', name: 'money'},
-                    {data: 'pay_method', name: 'pay_method'},
-                    {data: 'consume_order.order_id', name: 'consume_order.order_id',  defaultContent: ''},
-                    {data: 'recharge_order.order_id', name: 'recharge_order.order_id',  defaultContent: ''},
+                    {data: 'show_pay_method', name: 'pay_method'},
+                    // {data: 'consume_order.order_id', name: 'consume_order.order_id',  defaultContent: ''},
+                    // {data: 'recharge_order.order_id', name: 'recharge_order.order_id',  defaultContent: ''},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'show_name', name: 'type'}
                 ],
