@@ -26,6 +26,21 @@ class BaseConsumeCategoryRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
+    public function consumeCategoryExist($name, $updatedConsumeCategory = null)
+    {
+        $consumeCategoryQuery = ConsumeCategory::where('name', $name);
+
+        if ($updatedConsumeCategory != null)
+        {
+            $consumeCategoryQuery->where('id', '<>', $updatedConsumeCategory->id);
+        }
+
+        if ($consumeCategoryQuery->first() != null)
+        {
+            throw new ApiException(ErrorCode::CONSUME_CATEGORY_ALREADY_EXIST, trans('exceptions.backend.consumeCategory.already_exist'));
+        }
+    }
+
     /**
      * @param $input
      * @return ConsumeCategory
@@ -33,6 +48,7 @@ class BaseConsumeCategoryRepository extends BaseRepository
      */
     public function create($input)
     {
+        $this->consumeCategoryExist($input['name']);
         $consumeCategory = $this->createConsumeCategoryStub($input);
 
         if ($consumeCategory->save())
@@ -50,6 +66,7 @@ class BaseConsumeCategoryRepository extends BaseRepository
      */
     public function update(ConsumeCategory $consumeCategory, $input)
     {
+        $this->consumeCategoryExist($input['name'], $consumeCategory);
         Log::info("consume category update param:".json_encode($input));
 
         try

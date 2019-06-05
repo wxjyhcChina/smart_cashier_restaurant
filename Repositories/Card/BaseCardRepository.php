@@ -4,6 +4,7 @@ namespace App\Modules\Repositories\Card;
 
 use App\Exceptions\Api\ApiException;
 use App\Exceptions\GeneralException;
+use App\Modules\Enums\CardStatus;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Card\Card;
 use App\Modules\Repositories\BaseRepository;
@@ -28,6 +29,31 @@ class BaseCardRepository extends BaseRepository
     }
 
     /**
+     * @param $number
+     * @param $internalNumber
+     * @param null $updateCard
+     * @throws ApiException
+     */
+    public function cardExist($number, $internalNumber, $updateCard = null)
+    {
+        $cardQuery = Card::query();
+
+        if ($updateCard != null)
+        {
+            $cardQuery = $cardQuery->where('id', '<>', $updateCard->id);
+        }
+
+        $cardQuery = $cardQuery->where(function ($query) use ($number, $internalNumber){
+            $query->where('number', $number)->orWhere('internal_number', $internalNumber);
+        });
+
+        if ($cardQuery->first() != null)
+        {
+            throw new ApiException(ErrorCode::CARD_ALREADY_EXIST, trans('exceptions.backend.card.already_exist'));
+        }
+    }
+
+    /**
      * @param $internalNumber
      * @return mixed
      * @throws ApiException
@@ -40,20 +66,21 @@ class BaseCardRepository extends BaseRepository
 
         if ($card == null)
         {
-            throw  new ApiException(ErrorCode::CARD_NOT_EXIST, trans('api.error.device_not_exist'));
+            throw  new ApiException(ErrorCode::CARD_NOT_EXIST, trans('api.error.card_not_exist'));
         }
 
         return $card;
     }
 
-
     /**
      * @param Card $card
      * @param $input
+     * @throws ApiException
      * @throws GeneralException
      */
     public function update(Card $card, $input)
     {
+        $this->cardExist($input['number'], $input['internal_number'], $card);
         Log::info("restaurant update param:".json_encode($input));
 
         try

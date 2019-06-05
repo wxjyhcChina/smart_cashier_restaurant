@@ -110,8 +110,7 @@ trait CustomerAttribute
             $this->edit_button.
             $this->consume_order_button .
             $this->account_record_button .
-            $this->recharge_button .
-            $this->status_button;
+            $this->recharge_button;
     }
 
     /**
@@ -126,7 +125,6 @@ trait CustomerAttribute
             $this->bind_card_button .
             $this->unbind_card_button .
             $this->lost_card_button .
-            $this->recharge_button .
-            $this->status_button;
+            $this->recharge_button;
     }
 }

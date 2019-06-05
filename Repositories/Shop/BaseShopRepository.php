@@ -26,6 +26,22 @@ class BaseShopRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
+    public function shopExist($name, $updatedShop = null)
+    {
+        $shopQuery = Shop::where('name', $name);
+
+        if ($updatedShop != null)
+        {
+            $shopQuery->where('id', '<>', $updatedShop->id);
+        }
+
+        if ($shopQuery->first() != null)
+        {
+            throw new ApiException(ErrorCode::SHOP_ALREADY_EXIST, trans('exceptions.backend.shop.already_exist'));
+        }
+    }
+
+
     /**
      * @param $input
      * @return Shop
@@ -33,6 +49,7 @@ class BaseShopRepository extends BaseRepository
      */
     public function create($input)
     {
+        $this->shopExist($input['name']);
         $shop = $this->createShopStub($input);
 
         if ($shop->save())
@@ -50,6 +67,7 @@ class BaseShopRepository extends BaseRepository
      */
     public function update(Shop $shop, $input)
     {
+        $this->shopExist($input['name'], $shop);
         Log::info("restaurant update param:".json_encode($input));
 
         try
