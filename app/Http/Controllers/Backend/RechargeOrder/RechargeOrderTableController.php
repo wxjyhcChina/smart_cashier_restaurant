@@ -48,6 +48,9 @@ class RechargeOrderTableController extends Controller
             ->addColumn('show_status', function ($rechargeOrder) {
                 return $rechargeOrder->getShowStatusAttribute();
             })
+            ->addColumn('show_pay_method', function ($consumeOrder) {
+                return $consumeOrder->getShowPayMethodAttribute();
+            })
             ->rawColumns(['actions', 'show_status'])
             ->make(true);
     }

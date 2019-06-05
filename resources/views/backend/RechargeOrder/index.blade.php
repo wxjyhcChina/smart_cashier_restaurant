@@ -180,7 +180,7 @@
                     <thead>
                         <tr>
                             <th>{{ trans('labels.backend.rechargeOrder.table.id') }}</th>
-                            <th>{{ trans('labels.backend.rechargeOrder.table.order_id') }}</th>
+{{--                            <th>{{ trans('labels.backend.rechargeOrder.table.order_id') }}</th>--}}
                             <th>{{ trans('labels.backend.rechargeOrder.table.customer_id') }}</th>
                             <th>{{ trans('labels.backend.rechargeOrder.table.card_id') }}</th>
                             <th>{{ trans('labels.backend.rechargeOrder.table.pay_method') }}</th>
@@ -235,14 +235,16 @@
                 },
                 columns: [
                     {data: 'id', name: 'id'},
-                    {data: 'order_id', name: 'order_id'},
+                    // {data: 'order_id', name: 'order_id'},
                     {data: 'customer_name', name: 'customers.user_name'},
                     {data: 'card_number', name: 'cards.number'},
-                    {data: 'pay_method', name: 'pay_method'},
+                    {data: 'show_pay_method', name: 'pay_method'},
                     {data: 'money', name: 'money'},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'restaurant_user_name', name: 'restaurant_users.username'},
                     {data: 'show_status', name: 'status'},
+                    {data: 'restaurant_last_name', name: 'restaurant_users.last_name', visible:false},
+                    {data: 'restaurant_first_name', name: 'restaurant_users.first_name', visible:false}
                 ],
                 order: [[0, "asc"]],
                 searchDelay: 500

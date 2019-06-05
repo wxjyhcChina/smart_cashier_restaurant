@@ -98,7 +98,7 @@
                 {{ Form::label('name', trans('validation.attributes.backend.consumeOrder.pay_method').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    <p style="padding-top: 7px">{{$consumeOrder->pay_method}}</p>
+                    <p style="padding-top: 7px">{{$consumeOrder->show_pay_method}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -122,7 +122,7 @@
                 {{ Form::label('name', trans('validation.attributes.backend.consumeOrder.restaurant_user').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    <p style="padding-top: 7px">{{$consumeOrder->restaurant_user != null ? $consumeOrder->restaurant_user->username : ''}}</p>
+                    <p style="padding-top: 7px">{{$consumeOrder->restaurant_user != null ? $consumeOrder->restaurant_user->last_name.$consumeOrder->restaurant_user->first_name : ''}}</p>
                 </div><!--col-lg-10-->
             </div><!--form control-->
 

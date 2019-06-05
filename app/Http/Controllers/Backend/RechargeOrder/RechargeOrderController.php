@@ -52,7 +52,13 @@ class RechargeOrderController extends Controller
         $start_time = date('Y-m-d 00:00:00');
         $end_time = date('Y-m-d H:i:s');
 
-        $restaurantUser = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get()->pluck('username', 'id')->toArray();
+        $restaurantUsers = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get();
+
+        $restaurantUser = [];
+        foreach ($restaurantUsers as $user)
+        {
+            $restaurantUser[$user->id] = $user->last_name.$user->first_name;
+        }
 
         $restaurantUser = $this->appendNullOption($restaurantUser);
 //        $payMethod = $this->appendNullOption($this->getPayMethod($user->restaurant_id));
@@ -138,15 +144,15 @@ class RechargeOrderController extends Controller
             $excel->sheet('充值记录', function($sheet) use ($restaurant, $detail, $orders, $start_time, $end_time){
 
                 $sheet->setAutoSize(true);
-                $sheet->mergeCells('A1:H1');
-                $sheet->mergeCells('A2:H2');
+                $sheet->mergeCells('A1:G1');
+                $sheet->mergeCells('A2:G2');
 
-                $sheet->cells('A1:H1', function($cells) {
+                $sheet->cells('A1:G1', function($cells) {
                     // manipulate the cell
                     $cells->setAlignment('center');
                 });
 
-                $sheet->cells('A2:H2', function($cells) {
+                $sheet->cells('A2:G2', function($cells) {
                     // manipulate the cell
                     $cells->setAlignment('center');
                 });
@@ -156,7 +162,7 @@ class RechargeOrderController extends Controller
                 $sheet->row(2, array('开始时间'.$start_time.' '.'结束时间'.$end_time));
 
                 $sheet->appendRow(array(
-                    '编号', '订单编号', '用户编号', '卡编号', '支付方式', '价格', '充值时间', '营业员'
+                    '编号', '用户名', '卡编号', '支付方式', '价格', '充值时间', '营业员'
                 ));
 
                 $rowNumber = 3;
@@ -164,32 +170,32 @@ class RechargeOrderController extends Controller
                 {
                     $rowNumber++;
                     $sheet->appendRow(array(
-                        $order->id, $order->order_id,
+                        $order->id,
                         $order->customer->user_name, $order->card->number,
                         $order->getShowPayMethodAttribute(), $order->money,
-                        $order->created_at, $order->restaurant_user->username
+                        $order->created_at, $order->restaurant_user->last_name.$order->restaurant_user->first_name
                     ));
                 }
 
                 $rowNumber++;
-                $sheet->mergeCells("A$rowNumber:H$rowNumber");
+                $sheet->mergeCells("A$rowNumber:G$rowNumber");
                 $sheet->row($rowNumber, array('总充值金额: '.$detail['money']));
 
                 $rowNumber++;
-                $sheet->mergeCells("A$rowNumber:H$rowNumber");
+                $sheet->mergeCells("A$rowNumber:G$rowNumber");
                 $sheet->row($rowNumber, array('现金充值金额: '.$detail['cash']));
 
                 $rowNumber++;
-                $sheet->mergeCells("A$rowNumber:H$rowNumber");
+                $sheet->mergeCells("A$rowNumber:G$rowNumber");
                 $sheet->row($rowNumber, array('支付宝充值金额: '.$detail['alipay']));
 
                 $rowNumber++;
-                $sheet->mergeCells("A$rowNumber:H$rowNumber");
+                $sheet->mergeCells("A$rowNumber:G$rowNumber");
                 $sheet->row($rowNumber, array('微信充值金额: '.$detail['wechat']));
 
                 $rowNumber++;
-                $sheet->mergeCells("A$rowNumber:H$rowNumber");
-                $sheet->cells("A$rowNumber:H$rowNumber", function($cells) {
+                $sheet->mergeCells("A$rowNumber:G$rowNumber");
+                $sheet->cells("A$rowNumber:G$rowNumber", function($cells) {
                     // manipulate the cell
                     $cells->setAlignment('right');
                 });

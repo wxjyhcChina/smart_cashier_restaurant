@@ -77,6 +77,9 @@ class CustomerTableController extends Controller
             ->addColumn('show_status', function ($consumeOrder) {
                 return $consumeOrder->getShowStatusAttribute();
             })
+            ->addColumn('show_pay_method', function ($consumeOrder) {
+                return $consumeOrder->getShowPayMethodAttribute();
+            })
             ->rawColumns(['actions', 'show_status'])
             ->make(true);
     }
