@@ -76,10 +76,10 @@ class GoodsController extends Controller
     public function create()
     {
         //
-        $shops = Shop::all();
+        $user = Auth::User();
+        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
         $shops = $this->getSelectArray($shops);
 
-        $user = Auth::User();
         $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
 
         return view('backend.goods.create')
@@ -138,10 +138,10 @@ class GoodsController extends Controller
     public function edit(Goods $goods, ManageGoodsRequest $request)
     {
         //
-        $shops = Shop::all();
+        $user = Auth::User();
+        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
         $shops = $this->getSelectArray($shops);
 
-        $user = Auth::User();
         $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
 
         return view('backend.goods.edit')
