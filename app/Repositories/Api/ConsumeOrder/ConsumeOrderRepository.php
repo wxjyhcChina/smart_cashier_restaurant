@@ -590,7 +590,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         if (isset($input['pay_method']))
         {
             $payMethod = $input['pay_method'];
-            $method = PayMethod::where('method', $payMethod)->first();
+            $method = PayMethod::where('method', $payMethod)
+                ->where('restaurant_id', $order->restaurant_id)
+                ->first();
             if ($method == null
                 || (($payMethod == PayMethodType::CASH || $payMethod == PayMethodType::CARD)
                     && $method->enabled == false)
