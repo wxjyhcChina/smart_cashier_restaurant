@@ -29,7 +29,7 @@
                 {{ Form::label('status', trans('validation.attributes.backend.card.status').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::select('status', [\App\Modules\Enums\CardStatus::UNACTIVATED => 'UNACTIVATED', \App\Modules\Enums\CardStatus::LOST =>'LOST'], $card->status,  ['class' => 'form-control', 'required']) }}
+                    {{ Form::select('status', [\App\Modules\Enums\CardStatus::UNACTIVATED => '未激活', \App\Modules\Enums\CardStatus::LOST =>'挂失'], $card->status,  ['class' => 'form-control', 'required']) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
         </div><!-- /.box-body -->
