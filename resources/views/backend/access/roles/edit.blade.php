@@ -61,7 +61,7 @@
                     {{ Form::label('sort', trans('validation.attributes.backend.access.roles.sort'), ['class' => 'col-lg-2 control-label']) }}
 
                     <div class="col-lg-10">
-                        {{ Form::text('sort', null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.access.roles.sort')]) }}
+                        {{ Form::number('sort', null, ['class' => 'form-control', 'min' => 0, 'placeholder' => trans('validation.attributes.backend.access.roles.sort')]) }}
                     </div><!--col-lg-10-->
                 </div><!--form control-->
             </div><!-- /.box-body -->
