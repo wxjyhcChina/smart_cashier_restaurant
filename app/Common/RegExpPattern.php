@@ -16,4 +16,6 @@ class RegExpPattern
      */
     const REGEX_MOBILE = '/^1[34578]\d{9}$/';
 
+
+    const REGEX_USERNAME = '/^[0-9a-zA-Z]{1,}$/';
 }

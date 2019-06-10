@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Backend\Access\User;
 
+use App\Common\RegExpPattern;
 use App\Http\Requests\Request;
 
 /**
@@ -27,7 +28,7 @@ class UpdateUserRequest extends Request
     public function rules()
     {
         return [
-            'username' => 'required|max:191',
+            'username' => ['required', 'max:191', 'regex:'.RegExpPattern::REGEX_USERNAME],
             'first_name'  => 'required|max:191',
             'last_name'  => 'required|max:191',
         ];

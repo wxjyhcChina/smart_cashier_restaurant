@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Backend\Access\User;
 
+use App\Common\RegExpPattern;
 use App\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 
@@ -30,7 +31,7 @@ class StoreUserRequest extends Request
         return [
             'first_name'     => 'required|max:191',
             'last_name'  => 'required|max:191',
-            'username'    => ['required', 'max:191', Rule::unique(config('access.users_table'))],
+            'username'    => ['required', 'max:191', Rule::unique(config('access.users_table')), 'regex:'.RegExpPattern::REGEX_USERNAME],
             'password' => 'required|min:6|confirmed',
         ];
     }
