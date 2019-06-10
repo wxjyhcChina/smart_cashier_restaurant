@@ -13,6 +13,7 @@ namespace App\Common;
  * @package App\Common
  */
 use App\Common\Enums\PaySource;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class WechatPay
@@ -656,6 +657,8 @@ class WechatPay
         //wechat unified order request
         $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.order_reverse_url'));
         $result = Utils::xmlToArray($resultXmlStr);
+
+        Log::info('trade cancel result : '.json_encode($result));
 
         if (!$this->checkRespSign($result))
         {
