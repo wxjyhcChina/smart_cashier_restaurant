@@ -9,6 +9,7 @@ use App\Modules\Enums\ErrorCode;
 use App\Modules\Enums\PayMethodType;
 use App\Modules\Models\PayMethod\PayMethod;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -123,6 +124,7 @@ class Pay
     private function wechatQuery(WechatPay $wechatPay)
     {
         $response = $wechatPay->tradeQuery();
+        Log::info("wechat query result: ".json_encode($response));
 
         return $response['payInfo'];
     }
@@ -215,6 +217,7 @@ class Pay
 
         // 如果查询结果不为成功，则调用撤销h
         $cancelResponse = $wechatPay->tradeCancel();
+        Log::info('cancel result '.json_encode($cancelResponse));
         if(!empty($cancelResponse)
             && $cancelResponse['payInfo']['return_code'] == "SUCCESS"
             && $cancelResponse['payInfo']['result_code'] == "SUCCESS"
