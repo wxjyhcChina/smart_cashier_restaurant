@@ -427,9 +427,11 @@ class Alipay
         $response = $aop->execute($request);
         if (isset($response->alipay_trade_query_response))
         {
+            Log::info('response is '.json_encode((array)$response->alipay_trade_query_response));
             return (array)$response->alipay_trade_query_response;
         }
 
+        Log::info("response is false");
         return false;
     }
 
