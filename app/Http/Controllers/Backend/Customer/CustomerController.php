@@ -96,8 +96,9 @@ class CustomerController extends Controller
     public function create(ManageCustomerRequest $request)
     {
         //
-        $departments = $this->departmentRepo->getAll();
-        $consumeCategories = $this->consumeCategoryRepo->getAll();
+        $user = Auth::User();
+        $departments = $this->departmentRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
 
         return view('backend.customer.create')
             ->withDepartments($this->getModelArray($departments))
@@ -143,8 +144,10 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer, ManageCustomerRequest $request)
     {
-        $departments = $this->departmentRepo->getAll();
-        $consumeCategories = $this->consumeCategoryRepo->getAll();
+        $user = Auth::User();
+        $departments = $this->departmentRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+
         //
         return view('backend.customer.edit')
             ->withCustomer($customer)
