@@ -338,10 +338,10 @@ class Pay
      * @return bool
      */
     protected function alipayStopQuery($response){
-        if("10000"==$response->code){
-            if("TRADE_FINISHED"==$response->trade_status||
-                "TRADE_SUCCESS"==$response->trade_status||
-                "TRADE_CLOSED"==$response->trade_status){
+        if("10000"==$response['code']){
+            if("TRADE_FINISHED"==$response['trade_status']||
+                "TRADE_SUCCESS"==$response['trade_status']||
+                "TRADE_CLOSED"==$response['trade_status']){
                 return true;
             }
         }
