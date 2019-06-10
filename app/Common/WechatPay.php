@@ -655,7 +655,7 @@ class WechatPay
 
         $param = $this->getTradeCancelInfo();
         //wechat unified order request
-        $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.order_reverse_url'));
+        $resultXmlStr = Http::WechatPostWithSecurity($param, config('constants.wechat.order_reverse_url'),true, $this->getSslCertPath(), $this->getSslKeyPath());
         Log::info('trade cancel result : '.$resultXmlStr);
         $result = Utils::xmlToArray($resultXmlStr);
 
