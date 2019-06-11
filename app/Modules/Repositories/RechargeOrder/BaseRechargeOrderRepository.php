@@ -59,7 +59,7 @@ class BaseRechargeOrderRepository extends BaseRepository
         {
             if (isset($input['pay_method']))
             {
-                $method = PayMethod::where('method', $input['pay_method'] )->first();
+                $method = PayMethod::where('method', $input['pay_method'] )->where('restaurant_id', $input['restaurant_id'])->first();
                 if ($input['pay_method'] == PayMethodType::CASH ||
                     (
                         ($input['pay_method'] == PayMethodType::WECHAT_PAY || $input['pay_method'] == PayMethodType::ALIPAY) &&
