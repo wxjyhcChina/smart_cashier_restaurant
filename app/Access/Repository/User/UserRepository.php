@@ -490,10 +490,8 @@ class UserRepository extends BaseRepository
             $old_token = Auth('api')->getToken();
             $token = Auth('api')->refresh($old_token);
         }
-        catch (TokenExpiredException $e) {
-            throw new ApiException(ErrorCode::TOKEN_EXPIRE, trans("api.error.token_expire"), 400);
-        } catch (JWTException $e) {
-            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), 400);
+        catch (JWTException $e) {
+            throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), 401);
         }
 
         $user = Auth('api')->User();
