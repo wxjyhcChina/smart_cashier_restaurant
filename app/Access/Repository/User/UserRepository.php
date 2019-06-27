@@ -494,15 +494,15 @@ class UserRepository extends BaseRepository
             throw new ApiException(ErrorCode::TOKEN_INVALID, trans("api.error.token_invalid"), 401);
         }
 
+        $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
+        $token = 'Bearer '.$token;
+
         $user = Auth('api')->User();
         if (Restaurant::find($user->restaurant_id)->enabled == false)
         {
             Auth('api')->invalidate();
             throw new ApiException(ErrorCode::RESTAURANT_BLOCKED, trans('api.error.restaurant_blocked'));
         }
-
-        $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
-        $token = 'Bearer '.$token;
 
         // all good so return the token
         return compact('token', 'expire');
