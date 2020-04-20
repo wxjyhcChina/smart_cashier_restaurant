@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c7788856-247a-4bde-85ec-7aa4bfb0cb6a" name="Default" comment="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口">
-      <change beforePath="$PROJECT_DIR$/.idea/smart_cashier_restaurant.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/smart_cashier_restaurant.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/GoodsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/GoodsController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Modules/Repositories/Goods/BaseGoodsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Modules/Repositories/Goods/BaseGoodsRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repositories/Api/ConsumeOrder/ConsumeOrderRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repositories/Api/ConsumeOrder/ConsumeOrderRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Repositories/Api/Goods/GoodsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repositories/Api/Goods/GoodsRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/Api/Goods.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Api/Goods.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Common/Utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common/Utils.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -280,8 +275,16 @@
       <workItem from="1563631698456" duration="59000" />
       <workItem from="1587038503181" duration="593000" />
       <workItem from="1587086222991" duration="5963000" />
-      <workItem from="1587344840574" duration="1132000" />
+      <workItem from="1587344840574" duration="2425000" />
     </task>
+    <task id="LOCAL-00001" summary="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口">
+      <created>1587346235347</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1587346235347</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,18 +295,30 @@
     <option name="LAST_COMMIT_MESSAGE" value="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="317" y="0" key="CommitChangelistDialog2" timestamp="1587346141475">
+    <state x="275" y="21" key="#Notifications" timestamp="1587346972422">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="317" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1587346141475" />
-    <state x="275" y="96" key="Vcs.Push.Dialog.v2" timestamp="1587346211873">
+    <state x="275" y="21" key="#Notifications/0.0.1366.728@0.0.1366.728" timestamp="1587346972422" />
+    <state x="317" y="0" key="CommitChangelistDialog2" timestamp="1587346231575">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="275" y="96" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1587346211873" />
+    <state x="317" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1587346231575" />
+    <state x="275" y="96" key="Vcs.Push.Dialog.v2" timestamp="1587347534964">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="275" y="96" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1587347534964" />
     <state x="0" y="0" key="com.intellij.ide.util.TipDialog" timestamp="1587344842286">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="0" y="0" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1587344842286" />
+    <state x="359" y="0" width="647" height="728" key="find.popup" timestamp="1587347517151">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="359" y="0" width="647" height="728" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1587347517151" />
+    <state x="464" y="204" key="git4idea.ui.GitTagDialog" timestamp="1587346523622">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="464" y="204" key="git4idea.ui.GitTagDialog/0.0.1366.728@0.0.1366.728" timestamp="1587346523622" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
