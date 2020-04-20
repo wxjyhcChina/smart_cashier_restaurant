@@ -83,7 +83,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     public function statistics($restaurant_user_id, $input)
     {
         $query = $this->query()
-            ->select('pay_method', DB::raw('SUM(discount_price) as money'))
+            ->select('pay_method', DB::raw('SUM(discount_price) as money'), DB::raw('count(*) as count'))
             ->where('consume_orders.restaurant_user_id', $restaurant_user_id)
             ->where('status', ConsumeOrderStatus::COMPLETE);
 
@@ -99,10 +99,10 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $payMethods = $query->groupBy('pay_method')->get();
 
         $ret = [
-            ['pay_method' => PayMethodType::ALIPAY, 'money' => 0],
-            ['pay_method' => PayMethodType::CARD, 'money' => 0],
-            ['pay_method' => PayMethodType::CASH, 'money' => 0],
-            ['pay_method' => PayMethodType::WECHAT_PAY, 'money' => 0],
+            ['pay_method' => PayMethodType::ALIPAY, 'money' => 0, 'count' => 0],
+            ['pay_method' => PayMethodType::CARD, 'money' => 0, 'count' => 0],
+            ['pay_method' => PayMethodType::CASH, 'money' => 0, 'count' => 0],
+            ['pay_method' => PayMethodType::WECHAT_PAY, 'money' => 0, 'count' => 0],
         ];
 
         foreach ($payMethods as $payMethod)
@@ -112,6 +112,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
                if ($ret[$i]['pay_method'] == $payMethod['pay_method'])
                {
                    $ret[$i]['money'] = $payMethod['money'];
+                   $ret[$i]['count'] = $payMethod['count'];
                    break;
                }
            }

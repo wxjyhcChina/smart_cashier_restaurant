@@ -278,4 +278,11 @@ class BaseGoodsRepository extends BaseRepository
 
         return $goods;
     }
+
+    public function getTableFoodByRestaurantQuery($restaurant_id)
+    {
+        return $this->query()
+            ->where('restaurant_id', $restaurant_id)
+            ->where('is_temp', 2);
+    }
 }

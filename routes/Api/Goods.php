@@ -7,6 +7,7 @@ Route::group([
     Route::group([
         'middleware' => 'apiAuth'
     ], function() {
+        Route::get('/table', 'GoodsController@tableFoods')->name('tableFoods');
         Route::get('/', 'GoodsController@index')->name('index');
         Route::get('/imageUploadToken', 'GoodsController@imageUploadToken')->name('imageUploadToken');
         Route::get('/{goods}', 'GoodsController@get')->name('get');
