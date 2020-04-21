@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c7788856-247a-4bde-85ec-7aa4bfb0cb6a" name="Default" comment="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口">
+    <list default="true" id="c7788856-247a-4bde-85ec-7aa4bfb0cb6a" name="Default" comment="更新bug&#10;1.适应32位系统">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Common/Utils.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Common/Utils.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Backend/Goods/GoodsController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Backend/Goods/GoodsController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Modules/Repositories/Goods/BaseGoodsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Modules/Repositories/Goods/BaseGoodsRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Repositories/Backend/Goods/GoodsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Repositories/Backend/Goods/GoodsRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/lang/zh/validation.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/lang/zh/validation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/goods/create.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/goods/create.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/backend/goods/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/backend/goods/edit.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -275,7 +281,8 @@
       <workItem from="1563631698456" duration="59000" />
       <workItem from="1587038503181" duration="593000" />
       <workItem from="1587086222991" duration="5963000" />
-      <workItem from="1587344840574" duration="2425000" />
+      <workItem from="1587344840574" duration="6808000" />
+      <workItem from="1587431411897" duration="3408000" />
     </task>
     <task id="LOCAL-00001" summary="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口">
       <created>1587346235347</created>
@@ -284,7 +291,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587346235347</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="更新bug&#10;1.适应32位系统">
+      <created>1587347572684</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1587347572684</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,25 +306,26 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口" />
-    <option name="LAST_COMMIT_MESSAGE" value="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口" />
+    <MESSAGE value="更新bug&#10;1.适应32位系统" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新bug&#10;1.适应32位系统" />
   </component>
   <component name="WindowStateProjectService">
     <state x="275" y="21" key="#Notifications" timestamp="1587346972422">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="275" y="21" key="#Notifications/0.0.1366.728@0.0.1366.728" timestamp="1587346972422" />
-    <state x="317" y="0" key="CommitChangelistDialog2" timestamp="1587346231575">
+    <state x="317" y="0" key="CommitChangelistDialog2" timestamp="1587347569712">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="317" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1587346231575" />
+    <state x="317" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1587347569712" />
     <state x="275" y="96" key="Vcs.Push.Dialog.v2" timestamp="1587347534964">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="275" y="96" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1587347534964" />
-    <state x="0" y="0" key="com.intellij.ide.util.TipDialog" timestamp="1587344842286">
+    <state x="-250" y="7" key="com.intellij.ide.util.TipDialog" timestamp="1587431453362">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="0" y="0" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1587344842286" />
+    <state x="-250" y="7" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1587431453362" />
     <state x="359" y="0" width="647" height="728" key="find.popup" timestamp="1587347517151">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -369,12 +384,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/app/Http/Controllers/Backend/Goods/GoodsController.php</url>
-          <line>161</line>
+          <line>168</line>
           <option name="timeStamp" value="97" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/app/Http/Controllers/Backend/Goods/GoodsController.php</url>
-          <line>199</line>
+          <line>206</line>
           <option name="timeStamp" value="99" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -424,7 +439,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/app/Http/Controllers/Backend/Goods/GoodsController.php</url>
-          <line>129</line>
+          <line>136</line>
           <option name="timeStamp" value="159" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">

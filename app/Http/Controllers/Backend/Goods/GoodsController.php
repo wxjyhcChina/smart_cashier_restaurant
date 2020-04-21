@@ -13,6 +13,7 @@ use App\Repositories\Backend\Goods\GoodsRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class GoodsController
@@ -113,6 +114,12 @@ class GoodsController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+
+        //快销品
+        if (isset($input['is_temp']))
+        {
+            $input['is_temp'] = 2;
+        }
 
         $this->goodsRepo->create($input);
 
