@@ -144,4 +144,14 @@ class GoodsController extends Controller
 
         return $this->responseSuccess();
     }
+
+    public function tableFoods(Request $request)
+    {
+        //
+        $user = Auth::User();
+
+        $goods = $this->goodsRepo->getTableByRestaurant($user->restaurant_id, $request->all());
+
+        return $this->responseSuccess($goods);
+    }
 }

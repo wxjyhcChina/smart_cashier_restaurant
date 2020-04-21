@@ -209,6 +209,7 @@ return [
                 'price' => '价格',
                 'shop_id' => '所属小店',
                 'dinning_time_id' => '用餐时间',
+                'fastSell'=>'快销品',
             ],
 
             'labelCategory' => [

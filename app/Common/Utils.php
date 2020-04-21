@@ -17,7 +17,7 @@ class Utils
     public static function guid()
     {
         $timestamp = time();
-        $ranstr = rand(9999, 9999999999);
+        $ranstr = rand(9999, 999999999);
         return md5($timestamp . $ranstr) . substr(md5($ranstr), 0, 8);
     }
 

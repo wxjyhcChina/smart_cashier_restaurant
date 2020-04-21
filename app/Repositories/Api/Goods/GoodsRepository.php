@@ -46,4 +46,29 @@ class GoodsRepository extends BaseGoodsRepository
 
         return $query->paginate($size);
     }
+
+    public function getTableByRestaurant($restaurant_id, $input, $size=15)
+    {
+        $query = $this->getTableFoodByRestaurantQuery($restaurant_id)
+            ->with('shop')
+            ->with('dinning_time')
+            ->with('label_categories');
+
+        if (isset($input['key']))
+        {
+            $query->where(function ($query) use ($input){
+                $query->where('id', 'like', '%'.$input['key'].'%')
+                    ->orWhere('price', 'like', '%'.$input['key'].'%')
+                    ->orWhere('name', 'like', '%'.$input['key'].'%')
+                    ->orWhereHas('dinning_time', function ($query) use ($input){
+                        $query->where("name", 'like', '%'.$input['key'].'%');
+                    })->orWhereHas('shop', function ($query) use ($input){
+                        $query->where('name', 'like', '%'.$input['key'].'%');
+                    });
+            });
+        }
+
+
+        return $query->paginate($size);
+    }
 }

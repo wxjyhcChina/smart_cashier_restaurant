@@ -184,7 +184,13 @@ class BaseGoodsRepository extends BaseRepository
     public function update(Goods $goods, $input)
     {
         Log::info("goods update param:".json_encode($input));
-
+        //快销品
+        if (isset($input['is_temp']))
+        {
+            $input['is_temp'] = 2;
+        }else{
+            $input['is_temp'] = 0;
+        }
         try
         {
             DB::beginTransaction();
@@ -277,5 +283,12 @@ class BaseGoodsRepository extends BaseRepository
         $goods->is_temp = isset($input['is_temp']) ? $input['is_temp'] : 0;
 
         return $goods;
+    }
+
+    public function getTableFoodByRestaurantQuery($restaurant_id)
+    {
+        return $this->query()
+            ->where('restaurant_id', $restaurant_id)
+            ->where('is_temp', 2);
     }
 }

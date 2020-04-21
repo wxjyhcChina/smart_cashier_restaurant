@@ -25,7 +25,8 @@ class GoodsRepository extends BaseGoodsRepository
             ->select('goods.*', 'shops.name as shop_name')
             ->leftJoin('shops', 'shops.id', '=', 'goods.shop_id')
             ->where('goods.restaurant_id', $restaurant_id)
-            ->where('is_temp', 0)
+            //->where('is_temp', 0)
+            ->whereNotIn('is_temp', [1])//非临时商品
             ->with('dinning_time');
     }
 
