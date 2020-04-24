@@ -185,7 +185,7 @@ class BaseGoodsRepository extends BaseRepository
     {
         Log::info("goods update param:".json_encode($input));
         //快销品
-        if (isset($input['is_temp']))
+        if (isset($input['is_temp']) && $input['is_temp'] == 2)
         {
             $input['is_temp'] = 2;
         }else{
@@ -280,6 +280,7 @@ class BaseGoodsRepository extends BaseRepository
         $goods->name = $input['name'];
         $goods->price = $input['price'];
         $goods->image = isset($input['image']) ? $input['image'] : '';
+        Log::info("goods store param:".json_encode($input));
         $goods->is_temp = isset($input['is_temp']) ? $input['is_temp'] : 0;
 
         return $goods;
