@@ -4,7 +4,9 @@
     <list default="true" id="c7788856-247a-4bde-85ec-7aa4bfb0cb6a" name="Default" comment="更新bug&#10;1.适应32位系统">
       <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Modules/Repositories/Goods/BaseGoodsRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Modules/Repositories/Goods/BaseGoodsRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Access/Repository/User/UserRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Access/Repository/User/UserRepository.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/Api/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/Api/UserController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Modules/Repositories/Shop/BaseShopRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Modules/Repositories/Shop/BaseShopRepository.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -169,7 +171,7 @@
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/backend/labelCategory" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Repositories/Api/Restaurant" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -183,11 +185,11 @@
       <recent name="$PROJECT_DIR$/resources/views/backend/labelCategory/includes" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\phpworkspace\smart_cashier_restaurant\app\Repositories\Api\Restaurant" />
       <recent name="$PROJECT_DIR$/resources/views/backend/labelCategory" />
       <recent name="$PROJECT_DIR$/public/img" />
       <recent name="$PROJECT_DIR$/resources/views/backend/statistics" />
       <recent name="$PROJECT_DIR$/routes/Backend" />
-      <recent name="$PROJECT_DIR$/app/Http/Requests/Backend/Card" />
     </key>
   </component>
   <component name="SvnConfiguration">
@@ -279,7 +281,12 @@
       <workItem from="1587344840574" duration="6808000" />
       <workItem from="1587431411897" duration="16704000" />
       <workItem from="1587603084455" duration="8255000" />
-      <workItem from="1587690548283" duration="2464000" />
+      <workItem from="1587690548283" duration="9639000" />
+      <workItem from="1587862166670" duration="8900000" />
+      <workItem from="1588121507720" duration="9156000" />
+      <workItem from="1588209892286" duration="4887000" />
+      <workItem from="1588224403278" duration="4295000" />
+      <workItem from="1588726595141" duration="3901000" />
     </task>
     <task id="LOCAL-00001" summary="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口">
       <created>1587346235347</created>
@@ -302,7 +309,14 @@
       <option name="project" value="LOCAL" />
       <updated>1587435174607</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="更新bug&#10;1.适应安卓端istemp字段">
+      <created>1587696073890</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1587696073890</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,41 +336,51 @@
     <MESSAGE value="更新api接口&#10;1.查询统计中加入&quot;人数&quot;&#10;2.拆分商品显示接口" />
     <MESSAGE value="更新bug&#10;1.适应32位系统" />
     <MESSAGE value="新增快消品逻辑" />
-    <option name="LAST_COMMIT_MESSAGE" value="新增快消品逻辑" />
+    <MESSAGE value="更新bug&#10;1.适应安卓端istemp字段" />
+    <MESSAGE value="更新bug&#10;1.不同餐厅不同分店不能重名bug&#10;新功能&#10;1.前台充值/打折restaurant版，后续酱更新为shop版" />
+    <option name="LAST_COMMIT_MESSAGE" value="更新bug&#10;1.不同餐厅不同分店不能重名bug&#10;新功能&#10;1.前台充值/打折restaurant版，后续酱更新为shop版" />
   </component>
   <component name="WindowStateProjectService">
     <state x="275" y="21" key="#Notifications" timestamp="1587346972422">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="275" y="21" key="#Notifications/0.0.1366.728@0.0.1366.728" timestamp="1587346972422" />
-    <state x="256" y="0" width="990" height="728" key="CommitChangelistDialog2" timestamp="1587435167440">
+    <state x="256" y="0" width="990" height="728" key="CommitChangelistDialog2" timestamp="1588734267680">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="256" y="0" width="990" height="728" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1587435167440" />
-    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog" timestamp="1587690913440">
+    <state x="256" y="0" width="990" height="728" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1588734267680" />
+    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog" timestamp="1587696089288">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog/0.0.1366.728@0.0.1366.728" timestamp="1587690913440" />
-    <state x="275" y="96" key="Vcs.Push.Dialog.v2" timestamp="1587696018122">
+    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog/0.0.1366.728@0.0.1366.728" timestamp="1587696089288" />
+    <state x="458" y="104" key="FileChooserDialogImpl" timestamp="1588214995821">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="275" y="96" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1587696018122" />
+    <state x="458" y="104" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1588214995821" />
+    <state x="275" y="96" key="Vcs.Push.Dialog.v2" timestamp="1587696090018">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="275" y="96" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1587696090018" />
     <state x="92" y="92" width="1182" height="544" key="com.intellij.dvcs.ui.CompareBranchesDialog" timestamp="1587445520257">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="92" y="92" width="1182" height="544" key="com.intellij.dvcs.ui.CompareBranchesDialog/0.0.1366.728@0.0.1366.728" timestamp="1587445520257" />
-    <state x="363" y="186" key="com.intellij.ide.util.TipDialog" timestamp="1587690569853">
+    <state x="363" y="186" key="com.intellij.ide.util.TipDialog" timestamp="1588726592897">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="363" y="186" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1587690569853" />
-    <state x="359" y="0" width="647" height="728" key="find.popup" timestamp="1587456788028">
+    <state x="363" y="186" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1588726592897" />
+    <state x="359" y="0" width="647" height="728" key="find.popup" timestamp="1587714546161">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="359" y="0" width="647" height="728" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1587456788028" />
+    <state x="359" y="0" width="647" height="728" key="find.popup/0.0.1366.728@0.0.1366.728" timestamp="1587714546161" />
     <state x="464" y="204" key="git4idea.ui.GitTagDialog" timestamp="1587346523622">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="464" y="204" key="git4idea.ui.GitTagDialog/0.0.1366.728@0.0.1366.728" timestamp="1587346523622" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1587707501299">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1587707501299" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -432,7 +456,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/app/Access/Repository/User/UserRepository.php</url>
-          <line>146</line>
+          <line>147</line>
           <option name="timeStamp" value="132" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
@@ -487,8 +511,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/app/Access/Repository/User/UserRepository.php</url>
-          <line>100</line>
+          <line>101</line>
           <option name="timeStamp" value="166" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/app/Repositories/Backend/Goods/GoodsRepository.php</url>
+          <line>10</line>
+          <option name="timeStamp" value="167" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

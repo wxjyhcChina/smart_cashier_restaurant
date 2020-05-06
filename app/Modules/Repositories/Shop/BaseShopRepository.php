@@ -26,9 +26,9 @@ class BaseShopRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
-    public function shopExist($name, $updatedShop = null)
+    public function shopExist($name,$restaurant_id, $updatedShop = null)
     {
-        $shopQuery = Shop::where('name', $name);
+        $shopQuery = Shop::where('name', $name)->where('restaurant_id', $restaurant_id);
 
         if ($updatedShop != null)
         {
@@ -49,7 +49,7 @@ class BaseShopRepository extends BaseRepository
      */
     public function create($input)
     {
-        $this->shopExist($input['name']);
+        $this->shopExist($input['name'],$input['restaurant_id']);
         $shop = $this->createShopStub($input);
 
         if ($shop->save())
@@ -67,7 +67,7 @@ class BaseShopRepository extends BaseRepository
      */
     public function update(Shop $shop, $input)
     {
-        $this->shopExist($input['name'], $shop);
+        $this->shopExist($input['name'],$input['restaurant_id'], $shop);
         Log::info("restaurant update param:".json_encode($input));
 
         try
