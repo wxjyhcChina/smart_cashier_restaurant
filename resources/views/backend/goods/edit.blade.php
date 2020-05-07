@@ -79,7 +79,8 @@
                 {{ Form::label('default', trans('validation.attributes.backend.goods.fastSell').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10" style="margin-top: 8px">
-                    {{ Form::checkbox('is_temp', $goods->is_temp, $goods->is_temp) }}
+                    {{ Form::radio('is_temp', 2) }}是
+                    {{ Form::radio('is_temp', 0) }}否
                 </div><!--col-lg-1-->
             </div>
         </div><!-- /.box-body -->
@@ -112,7 +113,8 @@
 
     <script>
         $(function() {
-
+            let value="{{$goods->is_temp}}";
+            $("input[name='is_temp'][value='"+value+"']").prop("checked", "checked");
         });
 
     </script>

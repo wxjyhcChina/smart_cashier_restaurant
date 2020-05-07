@@ -185,12 +185,12 @@ class BaseGoodsRepository extends BaseRepository
     {
         Log::info("goods update param:".json_encode($input));
         //快销品
-        if (isset($input['is_temp']) && $input['is_temp'] == 2)
+        /**if (isset($input['is_temp']) && $input['is_temp'] == 2)
         {
             $input['is_temp'] = 2;
         }else{
             $input['is_temp'] = 0;
-        }
+        }*/
         try
         {
             DB::beginTransaction();

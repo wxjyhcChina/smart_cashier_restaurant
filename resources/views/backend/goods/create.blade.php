@@ -80,7 +80,8 @@
                 {{ Form::label('default', trans('validation.attributes.backend.goods.fastSell').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10" style="margin-top: 8px">
-                    {{ Form::checkbox('is_temp', 2, false) }}
+                    {{ Form::radio('is_temp', 2, false) }}是
+                    {{ Form::radio('is_temp', 0, true) }}否
                 </div><!--col-lg-1-->
             </div>
         </div><!-- /.box-body -->
