@@ -30,7 +30,7 @@ class BaseGoodsRepository extends BaseRepository
     {
         return $this->query()
             ->where('restaurant_id', $restaurant_id)
-            ->where('is_temp', 0);
+            ->whereNotIn('is_temp', [1]);
     }
 
 
