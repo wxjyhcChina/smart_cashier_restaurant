@@ -184,7 +184,7 @@ class BaseGoodsRepository extends BaseRepository
     public function update(Goods $goods, $input)
     {
         Log::info("goods update param:".json_encode($input));
-        //快销品
+        //快消品
         /**if (isset($input['is_temp']) && $input['is_temp'] == 2)
         {
             $input['is_temp'] = 2;
