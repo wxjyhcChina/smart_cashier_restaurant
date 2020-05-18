@@ -176,7 +176,25 @@
                 getSearchResult();
             });
 
+            function checkDate(startDate,endDate){
+                let start=Date.parse(new Date(startDate));
+                let end=Date.parse(new Date(endDate));
+                //console.log(start);console.log(end);
+                if((end-start)<14*24*60*60*1000){
+                   //console.log(true);
+                    return true;
+                }else{
+                    //console.log(false);
+                    return false;
+                }
+            }
+
             function getSearchResult() {
+                //新增,查询时间不得超过两周(14天)
+                if(!checkDate(startDate,endDate)){
+                    alert("查询时间跨度不得超过两周");
+                    return false;
+                }
                 $.ajax({
                     type: "GET",
                     url: '{{ route("admin.statistics.getConsumeCategoryStatistics") }}',

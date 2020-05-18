@@ -185,6 +185,7 @@ class UserRepository extends BaseRepository
         $user->last_name = $data['last_name'];
         $user->username = $data['username'];
         $user->status = isset($data['status']) ? $data['status'] : 0;
+        $user->shop_id = $data['shop_id'];
 
         DB::transaction(function () use ($user, $data, $roles) {
             if ($user->save()) {
@@ -444,6 +445,7 @@ class UserRepository extends BaseRepository
         $user->username = $input['username'];
         $user->password = bcrypt($input['password']);
         $user->status = isset($input['status']) ? 1 : 0;
+        $user->shop_id = $input['shop_id'];
 
         return $user;
     }

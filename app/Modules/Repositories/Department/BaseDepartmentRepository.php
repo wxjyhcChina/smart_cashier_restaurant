@@ -26,7 +26,12 @@ class BaseDepartmentRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
-    private function departmentExist($code, $name, $updateDepartment = null)
+    public function getByShopQuery($shop_id)
+    {
+        return $this->query()->where('shop_id', $shop_id);
+    }
+
+    private function departmentExist($code, $name, $updateDepartment = null,$shop_id)
     {
         $departmentQuery = Department::query();
 
@@ -35,8 +40,8 @@ class BaseDepartmentRepository extends BaseRepository
             $departmentQuery = $departmentQuery->where('id', '<>', $updateDepartment->id);
         }
 
-        $departmentQuery = $departmentQuery->where(function ($query) use ($name, $code){
-            $query->where('code', $code)->orWhere('name', $name);
+        $departmentQuery = $departmentQuery->where(function ($query) use ($name, $code,$shop_id){
+            $query->where('code', $code)->where('name', $name)->where('shop_id',$shop_id);
         });
 
         if ($departmentQuery->first() != null)
@@ -52,7 +57,7 @@ class BaseDepartmentRepository extends BaseRepository
      */
     public function create($input)
     {
-        $this->departmentExist($input['code'], $input['name']);
+        $this->departmentExist($input['code'], $input['name'],null,$input['shop_id']);
         $department = $this->createDepartmentStub($input);
 
         if ($department->save())
@@ -70,7 +75,7 @@ class BaseDepartmentRepository extends BaseRepository
      */
     public function update(Department $department, $input)
     {
-        $this->departmentExist($input['code'], $input['name'], $department);
+        $this->departmentExist($input['code'], $input['name'], $department,$input['shop_id']);
         Log::info("restaurant update param:".json_encode($input));
 
         try
@@ -116,6 +121,7 @@ class BaseDepartmentRepository extends BaseRepository
         $depatment->restaurant_id = $input['restaurant_id'];
         $depatment->code = $input['code'];
         $depatment->name = $input['name'];
+        $depatment->shop_id = $input['shop_id'];
 
         return $depatment;
     }

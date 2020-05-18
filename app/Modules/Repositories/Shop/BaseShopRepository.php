@@ -8,6 +8,8 @@ use App\Modules\Models\Shop\Shop;
 use App\Modules\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Modules\Enums\PayMethodType;
+use App\Modules\Models\PayMethod\PayMethod;
 
 /**
  * Class BaseShopRepository.
@@ -52,12 +54,21 @@ class BaseShopRepository extends BaseRepository
         $this->shopExist($input['name'],$input['restaurant_id']);
         $shop = $this->createShopStub($input);
 
-        if ($shop->save())
-        {
+        try {
+            DB::beginTransaction();
+            /*if ($shop->save())
+            {
+                return $shop;
+            }*/
+            $shop->save();
+            //创建时同时创建默认支付方式
+            $this->createShopPayMethod($input['restaurant_id'],$shop->id);
+            DB::commit();
             return $shop;
+        }catch(\Exception $e){
+            DB::rollBack();
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.shop.create_error'));
         }
-
-        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.shop.create_error'));
     }
 
     /**
@@ -132,5 +143,33 @@ class BaseShopRepository extends BaseRepository
         }
 
         return $shop;
+    }
+
+    /**
+     * @param $restaurant_id
+     * @param $shop_id
+     */
+    private function createShopPayMethod($restaurant_id,$shop_id)
+    {
+        $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::CASH, 1);
+        $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::CARD, 1);
+        $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::ALIPAY, 0);
+        $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::WECHAT_PAY, 0);
+    }
+
+    /**
+     * @param $restaurant_id
+     * @param $shop_id
+     * @param $method
+     * @param $enabled
+     */
+    private function createPayMethod($restaurant_id,$shop_id, $method, $enabled)
+    {
+        $payMethod = new PayMethod();
+        $payMethod->restaurant_id = $restaurant_id;
+        $payMethod->shop_id = $shop_id;
+        $payMethod->method = $method;
+        $payMethod->enabled = $enabled;
+        $payMethod->save();
     }
 }

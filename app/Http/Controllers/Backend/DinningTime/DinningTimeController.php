@@ -63,6 +63,7 @@ class DinningTimeController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $this->dinningTimeRepo->create($input);
 

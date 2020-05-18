@@ -63,6 +63,7 @@ class ConsumeCategoryController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $this->consumeCategoryRepo->create($input);
 
@@ -104,7 +105,9 @@ class ConsumeCategoryController extends Controller
     public function update(ConsumeCategory $consumeCategory, StoreConsumeCategoryRequest $request)
     {
         //
-        $this->consumeCategoryRepo->update($consumeCategory, $request->all());
+        $input = $request->all();
+        $input['shop_id'] = Auth::User()->shop_id;
+        $this->consumeCategoryRepo->update($consumeCategory, $input);
 
         return redirect()->route('admin.consumeCategory.index')->withFlashSuccess(trans('alerts.backend.consumeCategory.updated'));
     }

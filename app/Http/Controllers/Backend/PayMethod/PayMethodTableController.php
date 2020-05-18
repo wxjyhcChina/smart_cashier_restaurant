@@ -33,7 +33,7 @@ class PayMethodTableController extends Controller
     {
         $user = Auth::User();
 
-        return DataTables::of($this->payMethodRepo->getByRestaurantQuery($user->restaurant_id))
+        return DataTables::of($this->payMethodRepo->getByShopQuery($user->shop_id))
             ->addColumn('actions', function ($payMethod) {
                 return $payMethod->restaurant_action_buttons;
             })

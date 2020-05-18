@@ -115,12 +115,6 @@ class GoodsController extends Controller
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
 
-        //快销品
-        if (isset($input['is_temp']))
-        {
-            $input['is_temp'] = 2;
-        }
-
         $this->goodsRepo->create($input);
 
         return redirect()->route('admin.goods.index')->withFlashSuccess(trans('alerts.backend.goods.created'));

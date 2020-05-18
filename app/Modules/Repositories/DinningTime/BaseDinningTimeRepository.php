@@ -30,6 +30,14 @@ class BaseDinningTimeRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
+    /**
+     * @param $restaurant_id
+     * @return mixed
+     */
+    public function getByShopQuery($shop_id)
+    {
+        return $this->query()->where('shop_id', $shop_id);
+    }
 
     /**
      * @param $restaurant_id
@@ -159,6 +167,7 @@ class BaseDinningTimeRepository extends BaseRepository
     {
         $dinningTime = new DinningTime();
         $dinningTime->restaurant_id = $input['restaurant_id'];
+        $dinningTime->shop_id = $input['shop_id'];
         $dinningTime->name = $input['name'];
         $dinningTime->start_time = $input['start_time'];
         $dinningTime->end_time = $input['end_time'];

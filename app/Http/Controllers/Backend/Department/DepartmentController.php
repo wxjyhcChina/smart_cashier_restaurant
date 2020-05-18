@@ -63,7 +63,7 @@ class DepartmentController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
-
+        $input['shop_id'] = Auth::User()->shop_id;
         $this->departmentRepo->create($input);
 
         return redirect()->route('admin.department.index')->withFlashSuccess(trans('alerts.backend.department.created'));
@@ -105,7 +105,9 @@ class DepartmentController extends Controller
     public function update(Department $department, StoreDepartmentRequest $request)
     {
         //
-        $this->departmentRepo->update($department, $request->all());
+        $input = $request->all();
+        $input['shop_id'] = Auth::User()->shop_id;
+        $this->departmentRepo->update($department, $input);
 
         return redirect()->route('admin.department.index')->withFlashSuccess(trans('alerts.backend.department.updated'));
     }

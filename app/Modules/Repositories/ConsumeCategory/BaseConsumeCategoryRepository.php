@@ -26,9 +26,14 @@ class BaseConsumeCategoryRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
-    public function consumeCategoryExist($name, $updatedConsumeCategory = null)
+    public function getByShopQuery($shop_id)
     {
-        $consumeCategoryQuery = ConsumeCategory::where('name', $name);
+        return $this->query()->where('shop_id', $shop_id);
+    }
+
+    public function consumeCategoryExist($name, $updatedConsumeCategory = null,$shop_id)
+    {
+        $consumeCategoryQuery = ConsumeCategory::where('name', $name)->where('shop_id',$shop_id);
 
         if ($updatedConsumeCategory != null)
         {
@@ -48,7 +53,7 @@ class BaseConsumeCategoryRepository extends BaseRepository
      */
     public function create($input)
     {
-        $this->consumeCategoryExist($input['name']);
+        $this->consumeCategoryExist($input['name'],null,$input['shop_id']);
         $consumeCategory = $this->createConsumeCategoryStub($input);
 
         if ($consumeCategory->save())
@@ -66,7 +71,7 @@ class BaseConsumeCategoryRepository extends BaseRepository
      */
     public function update(ConsumeCategory $consumeCategory, $input)
     {
-        $this->consumeCategoryExist($input['name'], $consumeCategory);
+        $this->consumeCategoryExist($input['name'], $consumeCategory,$input['shop_id']);
         Log::info("consume category update param:".json_encode($input));
 
         try
@@ -95,6 +100,7 @@ class BaseConsumeCategoryRepository extends BaseRepository
         $consumeCategory->restaurant_id = $input['restaurant_id'];
         $consumeCategory->name = $input['name'];
         $consumeCategory->recharge_rate = 1;
+        $consumeCategory->shop_id=$input['shop_id'];
 
         return $consumeCategory;
     }

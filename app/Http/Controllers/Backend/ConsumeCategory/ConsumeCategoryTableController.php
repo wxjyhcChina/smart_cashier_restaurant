@@ -32,7 +32,7 @@ class ConsumeCategoryTableController extends Controller
     {
         $user = Auth::User();
 
-        return DataTables::of($this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id))
+        return DataTables::of($this->consumeCategoryRepo->getByShopQuery($user->shop_id))
             ->addColumn('actions', function ($consumeCategory) {
                 return $consumeCategory->restaurant_action_buttons;
             })
