@@ -28,4 +28,18 @@ class ConsumeRuleRepository extends BaseConsumeRuleRepository
             ->where('restaurant_id', $restaurant_id)
             ->get();
     }
+
+    /**
+     * @param $shop_id
+     * @return mixed
+     */
+    public function getByShop($shop_id)
+    {
+        return $this->query()
+            ->with('dinning_time')
+            ->with('consume_categories')
+            ->where('restaurant_id', $shop_id)
+            ->get();
+    }
+
 }

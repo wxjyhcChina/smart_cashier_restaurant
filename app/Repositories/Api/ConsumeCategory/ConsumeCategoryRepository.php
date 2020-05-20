@@ -24,4 +24,13 @@ class ConsumeCategoryRepository extends BaseConsumeCategoryRepository
     {
         return $this->getByRestaurantQuery($restaurant_id)->get();
     }
+
+    /**
+     * @param $shop_id
+     * @return mixed
+     */
+    public function getByShop($shop_id)
+    {
+        return $this->getByShop($shop_id)->get();
+    }
 }

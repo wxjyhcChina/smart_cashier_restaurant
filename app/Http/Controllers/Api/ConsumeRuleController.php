@@ -10,6 +10,7 @@ use App\Repositories\Api\ConsumeRule\ConsumeRuleRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ConsumeRuleController extends Controller
 {
@@ -36,7 +37,8 @@ class ConsumeRuleController extends Controller
     {
         //
         $user = Auth::User();
-        $consumeRules = $this->consumeRuleRepo->getByRestaurant($user->restaurant_id);
+        //Log::info("user:".$user->shop_id);
+        $consumeRules = $this->consumeRuleRepo->getByShop($user->shop_id);
 
         return $this->responseSuccess($consumeRules);
     }

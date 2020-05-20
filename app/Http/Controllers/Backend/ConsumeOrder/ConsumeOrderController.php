@@ -65,7 +65,8 @@ class ConsumeOrderController extends Controller
         $start_time = date('Y-m-d 00:00:00');
         $end_time = date('Y-m-d H:i:s');
 
-        $restaurantUser = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get()->pluck('username', 'id')->toArray();
+        //$restaurantUser = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get()->pluck('username', 'id')->toArray();
+        $restaurantUser = RestaurantUser::where('shop_id', $user->shop_id)->get()->pluck('username', 'id')->toArray();
 
         $restaurantUser = $this->appendNullOption($restaurantUser);
 

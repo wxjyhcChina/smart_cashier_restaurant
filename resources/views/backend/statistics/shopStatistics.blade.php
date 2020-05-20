@@ -136,8 +136,24 @@
                     success: function (items) {
                         console.log(items);
                         $('#statistics_container').empty();
-
-                        items.forEach(function (e) {
+                        for(let i=0;i<items.length;i++){
+                            let e=items[i];
+                            $('#statistics_container').append('<tr>' +
+                                '<td>' + (i+1) + '</td>' +
+                                '<td>' + e.name + '</td>' +
+                                '<td>' + e.cash + '</td>' +
+                                '<td>' + e.cash_count  + '</td>' +
+                                '<td>' + e.card + '</td>' +
+                                '<td>' + e.card_count  + '</td>' +
+                                '<td>' + e.alipay + '</td>' +
+                                '<td>' + e.alipay_count  + '</td>' +
+                                '<td>' + e.wechat + '</td>' +
+                                '<td>' + e.wechat_count  + '</td>' +
+                                '<td>' + e.total + '</td>' +
+                                '<td>' + e.total_count + '</td>' +
+                                '</tr>')
+                        }
+                        /*items.forEach(function (e) {
                             $('#statistics_container').append('<tr>' +
                                 '<td>' + e.id + '</td>' +
                                 '<td>' + e.name + '</td>' +
@@ -147,7 +163,7 @@
                                 '<td>' + e.wechat + '</td>' +
                                 '<td>' + e.total + '</td>' +
                                 '</tr>')
-                        })
+                        })*/
                     },
                     fail: function () {
                     }
