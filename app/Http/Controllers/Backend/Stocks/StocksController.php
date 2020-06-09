@@ -56,9 +56,10 @@ class StocksController extends Controller
         return view('backend.stocks.index');
     }
 
-    public function show($id)
+    public function show(Stocks $stock, ManageStocksRequest $request)
     {
         //
+        return view('backend.stocks.info')->withStock($stock);
     }
 
     //编辑页面
@@ -112,85 +113,22 @@ class StocksController extends Controller
             ->withEndTime($end_time);
     }
 
-    public function getDailyConsumeStatistics(Request $request)
-    {
-        $start_time = $request->get('start_time');
-        $end_time = $request->get('end_time');
-
-        return $this->fetchStockConsume($start_time, $end_time);
+    public function purchase(ManageStocksRequest $request){
+        return view('backend.stocks.purchase');
     }
 
-    public function fetchStockConsume($start_time, $end_time)
+    //采购信息
+    public function purchaseInfo(Stocks $stock, ManageStocksRequest $request)
     {
-        $user = Auth::User();
-        Log::info("shop_id param:".$user->shop_id);
-        $detail = StocksDetail::where('created_at', '>=', $start_time)
-            ->where('created_at', '<=', $end_time)
-            ->where('shop_id', $user->shop_id)
-            ->get();
-        Log::info("detail param:".json_encode($detail));
-        $stockData = [];
-/**
-        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
-
-        $shopData = [];
-        foreach ($shops as $shop)
-        {
-            $shopGoods = Goods::where('shop_id', $shop->id)->get();
-            $data = [
-                'id' => $shop->id,
-                'name' => $shop->name,
-                'total' => 0,
-                'total_count' => 0,
-                'alipay' => 0,
-                'alipay_count' => 0,
-                'wechat' => 0,
-                'wechat_count' => 0,
-                'cash' => 0,
-                'cash_count' => 0,
-                'card' => 0,
-                'card_count' => 0
-            ];
-
-            foreach ($orders as $order)
-            {
-                $goods = $order->goods;
-
-                foreach ($goods as $orderGoods)
-                {
-                    foreach ($shopGoods as $g)
-                    {
-                        if ($orderGoods->id == $g->id)
-                        {
-                            $price = bcdiv(bcmul($orderGoods->pivot->price, $this->geteOrderDiscount($order), 2), 10, 2);
-
-                            $data['total'] = bcadd($data['total'], $price, 2);
-
-                            switch ($order->pay_method)
-                            {
-                                case PayMethodType::CASH:
-                                    $data['cash'] = bcadd($data['cash'], $price, 2);
-                                    break;
-                                case PayMethodType::CARD:
-                                    $data['card'] = bcadd($data['card'], $price, 2);
-                                    break;
-                                case PayMethodType::ALIPAY:
-                                    $data['alipay'] = bcadd($data['alipay'], $price, 2);
-                                    break;
-                                case PayMethodType::WECHAT_PAY:
-                                    $data['wechat'] = bcadd($data['wechat'], $price, 2);
-                                    break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            array_push($shopData, $data);
-        }
-
-        return $shopData;**/
-        return $stockData;
+        //
+        //$user = Auth::User();
+        Log::info('purchaseInfo stock:'.json_encode($stock));
+        $materials=$this->materialsRepo->getInfoById($stock->material_id)->get();
+        //Log::info('materials:'.json_encode($materials));
+        return view('backend.stocks.info')
+            ->withStock($stock)
+            ->withMaterials($materials);
     }
+
 
 }

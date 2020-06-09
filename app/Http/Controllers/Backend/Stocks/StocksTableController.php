@@ -61,4 +61,16 @@ class StocksTableController extends Controller
             })
             ->make(true);
     }
+
+    public function getPurchase()
+    {
+        $user = Auth::User();
+
+        return DataTables::of($this->stocksRepo->getByShopQuery($user->shop_id))
+            ->addColumn('actions', function ($stock) {
+                return $stock->action_buttons;
+            })
+            ->rawColumns(['actions'])
+            ->make(true);
+    }
 }

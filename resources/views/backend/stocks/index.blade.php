@@ -68,7 +68,7 @@
                 },
                 columns: [
                     {data: 'id',name:"id"},
-                    {data:'name',name:'name'},
+                    {data:'name',name:'materials.name'},
                     {data:'count',name:'count'},
                     {   'targets': 0,
                         'searchable':false,
@@ -77,7 +77,7 @@
                             var str ="<span class='label label-success'>千克</span>";
                             return str;
                         } },
-                    {data:'main_supplier',name:'main_supplier'},
+                    {data:'main_supplier',name:'materials.main_supplier'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],
                 order: [[0, "asc"]],

@@ -237,8 +237,8 @@
                 </a>
 
                 <ul class="treeview-menu {{ active_class(Active::checkUriPattern('admin/stocks/*'), 'menu-open') }}" style="display: none; {{ active_class(Active::checkUriPattern('admin/statistics/*'), 'display: block;') }}">
-                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/dinningTimeStatistics')) }}">
-                        <a href="{{ route('admin.statistics.dinningTimeStatistics') }}">
+                    <li class="{{ active_class(Active::checkUriPattern('admin/stocks/purchase')) }}">
+                        <a href="{{ route('admin.stocks.purchase') }}">
                             <i class="fa fa-circle-o"></i>
                             <span>{{ trans('menus.backend.stock.purchase') }}</span>
                         </a>

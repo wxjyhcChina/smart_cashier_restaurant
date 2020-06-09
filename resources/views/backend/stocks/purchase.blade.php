@@ -9,14 +9,14 @@
 @section('page-header')
     <h1>
         {{ trans('labels.backend.stocks.management') }}
-        <small>{{ trans('labels.backend.stocks.active') }}</small>
+        <small>{{ trans('labels.backend.stocks.purchase') }}</small>
     </h1>
 @endsection
 
 @section('content')
     <div class="box box-success">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ trans('labels.backend.stocks.active') }}</h3>
+            <h3 class="box-title">{{ trans('labels.backend.stocks.purchase') }}</h3>
             <div class="box-tools pull-right">
                 @include('backend.stocks.includes.partials.header-buttons')
             </div><!--box-tools pull-right-->
@@ -59,7 +59,7 @@
                 autoWidth: false,
                 stateSave: true,
                 ajax: {
-                    url: '{{ route("admin.stocks.get") }}',
+                    url: '{{ route("admin.stocks.getPurchase") }}',
                     type: 'get',
                     error: function (xhr, err) {
                         if (err === 'parsererror')
@@ -68,7 +68,7 @@
                 },
                 columns: [
                     {data: 'id',name:"id"},
-                    {data:'name',name:'name'},
+                    {data:'name',name:'materials.name'},
                     {data:'count',name:'count'},
                     {   'targets': 0,
                         'searchable':false,
@@ -77,7 +77,7 @@
                             var str ="<span class='label label-success'>千克</span>";
                             return str;
                         } },
-                    {data:'main_supplier',name:'main_supplier'},
+                    {data:'main_supplier',name:'materials.main_supplier'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],
                 order: [[0, "asc"]],

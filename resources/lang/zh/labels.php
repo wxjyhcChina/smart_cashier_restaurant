@@ -411,6 +411,7 @@ return [
         ],
         'stocks'=>[
             'management'=>'材料库存',
+            'purchase'=>'采购管理',
             'dailyConsume'=>'每日消耗',
             'active'=>'所有材料明细',
             'create'=>'创建材料',

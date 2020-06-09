@@ -22,7 +22,7 @@ trait StocksAttribute
      */
     public function getStatusButtonAttribute()
     {
-
+        return '<a href="' . route('admin.stocks.purchaseInfo', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-bars" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.general.crud.edit') . '"></i></a> ';
     }
 
     /**
@@ -31,7 +31,7 @@ trait StocksAttribute
     public function getActionButtonsAttribute()
     {
         return
-            $this->edit_button;
+            $this->status_button;
     }
 
     /**
@@ -41,5 +41,14 @@ trait StocksAttribute
     {
         return
             $this->edit_button;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusActionButtonsAttribute()
+    {
+        return
+            $this->status_button;
     }
 }
