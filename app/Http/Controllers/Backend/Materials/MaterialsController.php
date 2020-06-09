@@ -1,31 +1,34 @@
 <?php
 
-namespace App\Http\Controllers\Backend\Shop;
+namespace App\Http\Controllers\Backend\Materials;
 
 use App\Exceptions\GeneralException;
+use App\Http\Requests\Backend\Goods\ManageGoodsRequest;
 use App\Http\Requests\Backend\Shop\ManageShopRequest;
 use App\Http\Requests\Backend\Shop\StoreShopRequest;
+use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Shop\Shop;
+use App\Repositories\Backend\Materials\MaterialsRepository;
 use App\Repositories\Backend\Shop\ShopRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class ShopController extends Controller
+class MaterialsController extends Controller
 {
     /**
-     * @var ShopRepository
+     * @var MaterialsRepository
      */
-    private $shopRepo;
+    private $materialsRepo;
 
     /**
-     * ShopController constructor.
-     * @param $shopRepo
+     * MaterialsController constructor.
+     * @param $materialsRepo
      */
-    public function __construct(ShopRepository $shopRepo)
+    public function __construct(MaterialsRepository $materialsRepo)
     {
-        $this->shopRepo = $shopRepo;
+        $this->materialsRepo = $materialsRepo;
     }
 
     /**
@@ -116,19 +119,6 @@ class ShopController extends Controller
         return redirect()->route('admin.shop.index')->withFlashSuccess(trans('alerts.backend.shop.updated'));
     }
 
-    /**
-     * @param Shop $shop
-     * @param $status
-     * @param ManageShopRequest $request
-     * @return mixed
-     * @throws GeneralException
-     */
-    public function mark(Shop $shop, $status, ManageShopRequest $request)
-    {
-        $this->shopRepo->mark($shop, $status);
-
-        return redirect()->back()->withFlashSuccess(trans('alerts.backend.shop.updated'));
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -139,5 +129,10 @@ class ShopController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function assignMaterialsCategory(Goods $goods, ManageGoodsRequest $request)
+    {
+        return view('backend.goods.assignLabelCategory')->withGoods($goods);
     }
 }

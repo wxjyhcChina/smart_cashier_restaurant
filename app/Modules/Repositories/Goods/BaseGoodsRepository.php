@@ -292,4 +292,36 @@ class BaseGoodsRepository extends BaseRepository
             ->where('restaurant_id', $restaurant_id)
             ->where('is_temp', 2);
     }
+
+    protected function bindMaterialCategory($goods, $material, $number)
+    {
+        Log::info("s:bindMaterialCategory");
+        try
+        {
+            DB::beginTransaction();
+            Log::info("number:".$number);
+            Log::info("material_id:".$material->id);
+            Log::info("goods_id:".$goods->id);
+            $data=['material_id'=>$material->id,
+                    'goods_id'=>$goods->id,
+                    'number'=>$number
+            ];
+
+            DB::table('material_goods')->insert($data);
+            DB::commit();
+        }
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+
+            if ($exception instanceof ApiException)
+            {
+                throw $exception;
+            }
+
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.goods.bind_materials_error'));
+        }
+
+        return $material;
+    }
 }

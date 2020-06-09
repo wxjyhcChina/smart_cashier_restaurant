@@ -40,15 +40,15 @@ class BaseDinningTimeRepository extends BaseRepository
     }
 
     /**
-     * @param $restaurant_id
+     * @param $shop_id
      * @param $start_time
      * @param $end_time
      * @param null $time_id
      * @return bool
      */
-    protected function isTimeConflict($restaurant_id, $start_time, $end_time, $time_id = null)
+    protected function isTimeConflict($shop_id, $start_time, $end_time, $time_id = null)
     {
-        $query = DinningTime::where('restaurant_id', $restaurant_id);
+        $query = DinningTime::where('shop_id', $shop_id);
         if ($time_id != null)
         {
             $query = $query->where('id', '<>', $time_id);
@@ -86,7 +86,7 @@ class BaseDinningTimeRepository extends BaseRepository
     {
         $dinningTime = $this->createDinningTimeStub($input);
 
-        if ($this->isTimeConflict($input['restaurant_id'], $input['start_time'], $input['end_time']))
+        if ($this->isTimeConflict($input['shop_id'], $input['start_time'], $input['end_time']))
         {
             throw new ApiException(ErrorCode::DINNING_TIME_CONFLICT, trans('exceptions.backend.dinningTime.time_error'));
         }
@@ -121,7 +121,7 @@ class BaseDinningTimeRepository extends BaseRepository
             $end_time = $input['end_time'];
         }
 
-        if ($this->isTimeConflict($dinningTime->restaurant_id, $start_time, $end_time, $dinningTime->id))
+        if ($this->isTimeConflict($dinningTime->shop_id, $start_time, $end_time, $dinningTime->id))
         {
             throw new ApiException(ErrorCode::DINNING_TIME_CONFLICT, trans('exceptions.backend.dinningTime.time_error'));
         }

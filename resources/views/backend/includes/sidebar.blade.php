@@ -226,6 +226,41 @@
             </li>
             @endauth
 
+            <!--进销存管理模块-->
+            @permission('manage-stock')
+            <li class="{{ active_class(Active::checkUriPattern('admin/stock/*')) }} treeview">
+                <a href="#">
+                    <i class="fa fa-list"></i>
+                    <span>{{ trans('menus.backend.stock.title') }}</span>
+
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+
+                <ul class="treeview-menu {{ active_class(Active::checkUriPattern('admin/stocks/*'), 'menu-open') }}" style="display: none; {{ active_class(Active::checkUriPattern('admin/statistics/*'), 'display: block;') }}">
+                    <li class="{{ active_class(Active::checkUriPattern('admin/statistics/dinningTimeStatistics')) }}">
+                        <a href="{{ route('admin.statistics.dinningTimeStatistics') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('menus.backend.stock.purchase') }}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ active_class(Active::checkUriPattern('admin/stocks/dailyConsume')) }}">
+                        <a href="{{ route('admin.stocks.dailyConsume') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('menus.backend.stock.consume') }}</span>
+                        </a>
+                    </li>
+
+                    <li class="{{ active_class(Active::checkUriPattern('admin/stocks/index')) }}">
+                        <a href="{{ route('admin.stocks.index') }}">
+                            <i class="fa fa-circle-o"></i>
+                            <span>{{ trans('menus.backend.stock.stock') }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endauth
+
             <li class="{{ active_class(Active::checkUriPattern('admin/log-viewer*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>

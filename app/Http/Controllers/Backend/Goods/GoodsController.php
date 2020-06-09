@@ -7,6 +7,7 @@ use App\Http\Requests\Backend\Goods\ManageGoodsRequest;
 use App\Http\Requests\Backend\Goods\StoreGoodsRequest;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\Goods\Goods;
+use App\Modules\Models\Materials\Materials;
 use App\Modules\Models\Shop\Shop;
 use App\Repositories\Backend\DinningTime\DinningTimeRepository;
 use App\Repositories\Backend\Goods\GoodsRepository;
@@ -81,7 +82,8 @@ class GoodsController extends Controller
         $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
         $shops = $this->getSelectArray($shops);
 
-        $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        //$dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $dinningTime = $this->dinningTimeRepo->getByShopQuery($user->shop_id)->get();
 
         return view('backend.goods.create')
             ->withShops($shops)
@@ -140,10 +142,11 @@ class GoodsController extends Controller
     {
         //
         $user = Auth::User();
-        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
+        //$shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
+        $shops = Shop::where('id', $user->shop_id)->get();
         $shops = $this->getSelectArray($shops);
 
-        $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $dinningTime = $this->dinningTimeRepo->getByShopQuery($user->shop_id)->get();
 
         return view('backend.goods.edit')
             ->withGoods($goods)
@@ -201,6 +204,20 @@ class GoodsController extends Controller
         $this->goodsRepo->assignLabelCategories($goods, $input);
 
         return redirect()->route('admin.goods.index')->withFlashSuccess(trans('alerts.backend.goods.labelCategoryAssigned'));
+    }
+
+    public function assignMaterialCategory(Goods $goods, ManageGoodsRequest $request)
+    {
+        return view('backend.goods.assignMaterialCategory')
+            ->withGoods($goods);
+    }
+
+    public function assignMaterialCategoryStore(Goods $goods, ManageGoodsRequest $request)
+    {
+        $input = $request->all();
+        $this->goodsRepo->assignMaterialCategories($goods, $input);
+
+        return redirect()->route('admin.goods.index')->withFlashSuccess(trans('alerts.backend.goods.materialCategoryAssigned'));
     }
 
 }

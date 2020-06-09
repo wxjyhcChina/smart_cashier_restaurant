@@ -260,6 +260,11 @@ return [
                 'status' => '状态',
                 'external_pay_no' => '支付号',
                 'restaurant_user' => '操作用户'
+            ],
+            'stocks'=>[
+                'name'=>'材料名称',
+                'count'=>'库存(千克)',
+                'create'=>'材料名',
             ]
         ],
 

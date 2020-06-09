@@ -234,6 +234,8 @@ return [
             'create' => '创建商品',
             'uploadImage' => '上传图片',
             'assignLabelCategory' => '分配餐盘类别',
+            'assignMaterialCategory' => '分配材料构成',
+            'material'=>'材料列表',
 
             'table' => [
                 'id' => '编号',
@@ -405,6 +407,34 @@ return [
                 'wechat_count' => '微信人次',
                 'total' => '合计',
                 'total_count' => '合计人次',
+            ]
+        ],
+        'stocks'=>[
+            'management'=>'材料库存',
+            'dailyConsume'=>'每日消耗',
+            'active'=>'所有材料明细',
+            'create'=>'创建材料',
+            'edit'=>'材料报损',
+            'searchTime' => '搜索时间',
+            'search' => '搜索',
+            'export' => '导出',
+            'table' => [
+                'id' => '序号',
+                'material_name' => '材料名称',
+                'count' => '数量',
+                'kilogram' => '单位',
+                'main_supplier' => '主要供应商',
+                'status'=>'消耗途径'
+            ]
+        ],
+
+        'materials'=>[
+            'table'=>[
+                'id'=>'序号',
+                'name'=>'材料名',
+                'number'=>'数量',
+                'kilogram' => '单位',
+                'created_at' => '创建时间',
             ]
         ]
     ],

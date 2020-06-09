@@ -3,6 +3,7 @@
 namespace App\Modules\Models\Goods\Traits\Relationship;
 use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\Label\LabelCategory;
+use App\Modules\Models\Materials\Materials;
 use App\Modules\Models\Shop\Shop;
 
 /**
@@ -33,5 +34,10 @@ trait GoodsRelationship
     public function label_categories()
     {
         return $this->belongsToMany(LabelCategory::class, 'label_category_goods', 'goods_id', 'label_category_id');
+    }
+
+    public function materials()
+    {
+        return $this->belongsToMany(Materials::class, 'material_goods', 'goods_id', 'material_id');
     }
 }

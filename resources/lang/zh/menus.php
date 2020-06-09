@@ -112,6 +112,16 @@ return [
             'title' => '统计查询',
         ],
 
+        'stock' => [
+            'title' => '进销存管理',
+            'purchase'=>'采购管理',
+            'consume'=>'每日消耗',
+            'stock'=>'库存管理',
+            'stock-all'=>'所有材料',
+            'create'=>'新增材料',
+            'frmLoss'=>'报损'
+        ],
+
         'log-viewer' => [
             'main'      => '日志查看器',
             'dashboard' => '指示板',

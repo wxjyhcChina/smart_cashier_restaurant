@@ -8,11 +8,14 @@
 
 namespace App\Repositories\Api\ConsumeOrder;
 
+use App\Modules\Models\Stocks\Stocks;
+use Illuminate\Support\Facades\Auth;
 use App\Common\Util\OrderUtil;
 use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\ConsumeOrderStatus;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Enums\PayMethodType;
+use App\Modules\Enums\StockDetailStatus;
 use App\Modules\Models\Card\Card;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\ConsumeRule\ConsumeRule;
@@ -20,6 +23,7 @@ use App\Modules\Models\DinningTime\DinningTime;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Label\Label;
 use App\Modules\Models\PayMethod\PayMethod;
+use App\Modules\Models\Stocks\StocksDetail;
 use App\Modules\Repositories\ConsumeOrder\BaseConsumeOrderRepository;
 use App\Modules\Services\Account\Facades\Account;
 use App\Modules\Services\Card\Facades\CardService;
@@ -633,7 +637,32 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         {
             throw new ApiException(ErrorCode::PAY_METHOD_NOT_PROVIDED, trans('api.error.pay_method_not_provided'));
         }
-
+        //消耗食材部分
+        $data=DB::table('consume_order_goods')->where('consume_order_id','=',$order->id)->get();
+        Log::info("order param:".json_encode($data));
+        foreach ($data as $goods){
+            $material_goods=DB::table('material_goods')->where('goods_id',$goods->goods_id)->get();
+            foreach($material_goods as $material){
+                //修改库存表stock
+                $stock=Stocks::where("material_id",$material->material_id)->first();
+                $stock->count=$stock->count-$material->number;
+                $stock->save();
+                //记录stock_detail表
+                $detail=$this->createConsumeMaterials($material);
+                $detail->save();
+            }
+        }
         return $order->load('goods', 'customer', 'card');
+    }
+
+    private function createConsumeMaterials($material){
+        $user = Auth::User();
+        $detail=new StocksDetail();
+        $detail->material_id=$material->material_id;
+        $detail->number=$material->number;
+        $detail->status=StockDetailStatus::CONSUME;
+        $detail->restaurant_user_id=$user->id;
+        $detail->shop_id=$user->shop_id;
+        return $detail;
     }
 }

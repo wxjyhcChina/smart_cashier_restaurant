@@ -37,7 +37,7 @@ class GoodsTableController extends Controller
     {
         $user = Auth::User();
 
-        return DataTables::of($this->goodsRepo->getByRestaurantWithRelationQuery($user->restaurant_id))
+        return DataTables::of($this->goodsRepo->getByShopWithRelationQuery($user->shop_id))
             ->addColumn('actions', function ($goods) {
                 return $goods->restaurant_action_buttons;
             })

@@ -21,5 +21,8 @@ Route::group([
         Route::get('labelCategories/create', 'GoodsController@assignLabelCategory')->name('goods.assignLabelCategory');
         Route::post('labelCategories/store', 'GoodsController@assignLabelCategoryStore')->name('goods.assignLabelCategoryStore');
 
+        Route::get('materialCategories/create', 'GoodsController@assignMaterialCategory')->name('goods.assignMaterialCategory');
+        Route::post('materialCategories/store', 'GoodsController@assignMaterialCategoryStore')->name('goods.assignMaterialCategoryStore');
+
     });
 });

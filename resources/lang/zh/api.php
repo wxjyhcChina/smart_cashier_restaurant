@@ -80,5 +80,14 @@ return [
             'cash' => '现金支付',
             'card' => '卡支付'
         ]
+    ],
+    'stock'=>[
+        'status'=>[
+            'consume'=>'消费损耗',
+            'frmlossplus'=>'报损增加',
+            'frmlossminus'=>'报损减少',
+            'expend'=>'取出消耗',
+            'purchase'=>'采购'
+        ]
     ]
 ];
