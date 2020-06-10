@@ -13,7 +13,7 @@ trait StocksAttribute
      */
     public function getEditButtonAttribute()
     {
-        return '<a href="' . route('admin.stocks.edit', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.general.crud.edit') . '"></i></a> ';
+        return '<a href="' . route('admin.stocks.edit', $this, false) . '" class="btn btn-xs btn-primary"><i class="fa fa-pencil" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.general.crud.edit') . '"></i></a> ';
     }
 
 
@@ -22,7 +22,7 @@ trait StocksAttribute
      */
     public function getStatusButtonAttribute()
     {
-        return '<a href="' . route('admin.stocks.purchaseInfo', $this) . '" class="btn btn-xs btn-primary"><i class="fa fa-bars" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.general.crud.edit') . '"></i></a> ';
+        return '<a href="' . route('admin.stocks.purchaseInfo', $this, false) . '" class="btn btn-xs btn-primary"><i class="fa fa-bars" data-toggle="tooltip" data-placement="top" title="' . trans('buttons.general.crud.edit') . '"></i></a> ';
     }
 
     /**

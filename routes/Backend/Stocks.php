@@ -1,7 +1,7 @@
 <?php
 Route::group([
     'namespace' => 'Stocks',
-    'middleware' => 'access.routeNeedsPermission:manage-stock',
+    'middleware' => 'access.routeNeedsPermission:manage-stocks',
 ], function() {
     Route::resource('stocks', 'StocksController', ['except' => ['show']]);
 
@@ -13,9 +13,16 @@ Route::group([
 
     Route::group([
         'prefix' => 'stocks/{stocks}',
-        'middleware' => 'can:view,stock'
+        'middleware' => 'can:view,stocks'
     ], function() {
         Route::get('edit', 'StocksController@edit')->name('stocks.edit');
         Route::get('purchaseInfo', 'StocksController@purchaseInfo')->name('stocks.purchaseInfo');
+    });
+
+    Route::group([
+        'prefix' => 'stocks/{id}',
+    ], function($id) {
+        Route::get('purchaseInfo', 'StocksController@purchaseInfo')->name('stocks.purchaseInfo');
+        Route::post('keepPurchase', 'StocksController@keepPurchase')->name('stocks.keepPurchase');
     });
 });

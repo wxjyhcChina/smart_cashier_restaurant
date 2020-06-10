@@ -10,8 +10,8 @@
 @endsection
 
 @section('content')
-    {{ Form::model($stock, ['route' => ['admin.stocks.update', $stock], 'class' => 'form-horizontal', 'id'=>'edit-stock-form','role' => 'form', 'method' => 'PATCH']) }}
-
+    {{ Form::model($stock, ['route' => ['admin.stocks.keepPurchase', $stock], 'class' => 'form-horizontal', 'id'=>'edit-stock-form','role' => 'form', 'method' => 'PATCH']) }}
+    <input type="hidden" name="_token" value="{{csrf_token()}}"/>
     <div class="box box-success">
         <div class="box-header with-border">
             <h3 class="box-title">{{ trans('labels.backend.stocks.edit') }}</h3>
@@ -34,7 +34,7 @@
                 {{ Form::label('default', trans('validation.attributes.backend.stocks.count').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-4" style="margin-top: 8px">
-                    {{ Form::number('count', $stock->count, ['class' => 'form-control', 'min' => 0, 'required', 'placeholder' => trans('validation.attributes.backend.stocks.count')]) }}
+                    {{ Form::number('count', 0, ['class' => 'form-control', 'min' => 0, 'required', 'placeholder' => trans('validation.attributes.backend.stocks.count')]) }}
                 </div><!--col-lg-1-->
             </div><!--form control-->
         </div><!-- /.box-body -->

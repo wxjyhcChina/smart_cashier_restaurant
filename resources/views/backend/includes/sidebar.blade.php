@@ -228,7 +228,7 @@
 
             <!--进销存管理模块-->
             @permission('manage-stock')
-            <li class="{{ active_class(Active::checkUriPattern('admin/stock/*')) }} treeview">
+            <li class="{{ active_class(Active::checkUriPattern('admin/stocks/*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>
                     <span>{{ trans('menus.backend.stock.title') }}</span>
