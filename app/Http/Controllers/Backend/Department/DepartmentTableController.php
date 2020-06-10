@@ -32,7 +32,7 @@ class DepartmentTableController extends Controller
     {
         $user = Auth::User();
 
-        return DataTables::of($this->departmentRepo->getByRestaurantQuery($user->restaurant_id))
+        return DataTables::of($this->departmentRepo->getByShopQuery($user->shop_id))
             ->addColumn('actions', function ($card) {
                 return $card->restaurant_action_buttons;
             })

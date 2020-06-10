@@ -73,6 +73,7 @@ return [
             'updated' => '商品更新成功.',
             'deleted' => '商品删除成功.',
             'labelCategoryAssigned' => '餐盘类别分配成功',
+            'materialCategoryAssigned' => '材料设置成功',
         ],
 
         'labelCategory' => [
@@ -95,6 +96,16 @@ return [
 
         'payMethod' => [
             'updated' => '支付方式更新成功.',
+        ],
+
+        'materials' => [
+            'created' => '材料信息添加成功.',
+            'updated' => '材料信息更新成功.',
+        ],
+
+        'stocks' => [
+            'created' => '报损信息添加成功.',
+            'updated' => '报损信息更新成功.',
         ],
     ],
 

@@ -11,6 +11,7 @@ use App\Repositories\Backend\DinningTime\DinningTimeRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ConsumeRuleController extends Controller
 {
@@ -74,7 +75,7 @@ class ConsumeRuleController extends Controller
                 ['id'=>6, 'name'=>'周六']
             ]
         );
-
+        Log::info("$collection:".$collection);
         return $collection;
     }
 
@@ -87,8 +88,10 @@ class ConsumeRuleController extends Controller
     {
         //
         $user = Auth::User();
-        $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
-        $consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        //$dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $dinningTime = $this->dinningTimeRepo->getByShopQuery($user->shop_id)->get();
+        //$consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $consumeCategories = $this->consumeCategoryRepo->getByShopQuery($user->shop_id)->get();
         $weekdays = $this->getWeekDays();
 
         return view('backend.consumeRule.create')
@@ -108,6 +111,7 @@ class ConsumeRuleController extends Controller
         $user = Auth::User();
         $input = $request->all();
         $input['restaurant_id'] = $user->restaurant_id;
+        $input['shop_id'] = $user->shop_id;
 
         $this->consumeRuleRepo->create($input);
 
@@ -136,8 +140,10 @@ class ConsumeRuleController extends Controller
     {
         //
         $user = Auth::User();
-        $dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
-        $consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        //$dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $dinningTime = $this->dinningTimeRepo->getByShopQuery($user->shop_id)->get();
+        //$consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $consumeCategories = $this->consumeCategoryRepo->getByShopQuery($user->shop_id)->get();
         $weekdays = $this->getWeekDays();
 
         return view('backend.consumeRule.edit')
@@ -158,7 +164,7 @@ class ConsumeRuleController extends Controller
         $user = Auth::User();
         $input = $request->all();
         $input['restaurant_id'] = $user->restaurant_id;
-
+        $input['shop_id'] = $user->shop_id;
         //
         $this->consumeRuleRepo->update($consumeRule, $input);
 

@@ -93,6 +93,7 @@ return [
             'update_error' => '更新商品失败，请稍后重试',
             'create_error' => '创建商品失败，请稍后重试',
             'bind_error' => '绑定餐盘失败，请稍后重试',
+            'bind_materials_error' => '绑定材料失败，请稍后重试',
         ],
 
         'labelCategory' => [
@@ -112,6 +113,19 @@ return [
             'mark_error' => '更新支付方式失败，请稍后重试',
             'update_error' => '更新支付方式失败，请稍后重试',
             'mark_pay_detail_error' => '请先补齐支付信息后启用。',
+        ],
+
+        'materials' => [
+            'mark_error' => '更新材料信息失败，请稍后重试',
+            'update_error' => '更新材料信息失败，请稍后重试',
+            'create_error' => '创建材料信息失败，请稍后重试',
+            'already_exist' => '材料信息已经存在',
+        ],
+
+        'stocks' => [
+            'mark_error' => '更新库存信息失败，请稍后重试',
+            'update_error' => '更新库存信息失败，请稍后重试',
+            'create_error' => '创建库存信息失败，请稍后重试',
         ],
     ],
 

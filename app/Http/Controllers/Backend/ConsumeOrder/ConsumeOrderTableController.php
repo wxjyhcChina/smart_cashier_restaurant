@@ -37,7 +37,7 @@ class ConsumeOrderTableController extends Controller
         $start_time = '2018-01-01 00:00:00';
         $end_time = date('Y-m-d H:i:s');
         return DataTables::of(
-            $this->consumeOrderRepo->getByRestaurantWithRelationQuery($user->restaurant_id,
+            $this->consumeOrderRepo->getByShopWithRelationQuery($user->shop_id,
                 $start_time,
                 $end_time,
                 null,

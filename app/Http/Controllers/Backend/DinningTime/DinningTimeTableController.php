@@ -32,7 +32,7 @@ class DinningTimeTableController extends Controller
     {
         $user = Auth::User();
 
-        return DataTables::of($this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id))
+        return DataTables::of($this->dinningTimeRepo->getByShopQuery($user->shop_id))
             ->addColumn('actions', function ($dinningTime) {
                 return $dinningTime->restaurant_action_buttons;
             })

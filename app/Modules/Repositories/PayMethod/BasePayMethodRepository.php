@@ -23,4 +23,9 @@ class BasePayMethodRepository extends BaseRepository
     {
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
+
+    public function getByShopQuery($shop_id)
+    {
+        return $this->query()->where('shop_id', $shop_id);
+    }
 }

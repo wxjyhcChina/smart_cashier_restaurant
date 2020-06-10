@@ -30,7 +30,7 @@ class BaseGoodsRepository extends BaseRepository
     {
         return $this->query()
             ->where('restaurant_id', $restaurant_id)
-            ->where('is_temp', 0);
+            ->whereNotIn('is_temp', [1]);
     }
 
 
@@ -184,13 +184,13 @@ class BaseGoodsRepository extends BaseRepository
     public function update(Goods $goods, $input)
     {
         Log::info("goods update param:".json_encode($input));
-        //快销品
-        if (isset($input['is_temp']))
+        //快消品
+        /**if (isset($input['is_temp']) && $input['is_temp'] == 2)
         {
             $input['is_temp'] = 2;
         }else{
             $input['is_temp'] = 0;
-        }
+        }*/
         try
         {
             DB::beginTransaction();
@@ -280,6 +280,7 @@ class BaseGoodsRepository extends BaseRepository
         $goods->name = $input['name'];
         $goods->price = $input['price'];
         $goods->image = isset($input['image']) ? $input['image'] : '';
+        Log::info("goods store param:".json_encode($input));
         $goods->is_temp = isset($input['is_temp']) ? $input['is_temp'] : 0;
 
         return $goods;
@@ -290,5 +291,37 @@ class BaseGoodsRepository extends BaseRepository
         return $this->query()
             ->where('restaurant_id', $restaurant_id)
             ->where('is_temp', 2);
+    }
+
+    protected function bindMaterialCategory($goods, $material, $number)
+    {
+        Log::info("s:bindMaterialCategory");
+        try
+        {
+            DB::beginTransaction();
+            Log::info("number:".$number);
+            Log::info("material_id:".$material->id);
+            Log::info("goods_id:".$goods->id);
+            $data=['material_id'=>$material->id,
+                    'goods_id'=>$goods->id,
+                    'number'=>$number
+            ];
+
+            DB::table('material_goods')->insert($data);
+            DB::commit();
+        }
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+
+            if ($exception instanceof ApiException)
+            {
+                throw $exception;
+            }
+
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.goods.bind_materials_error'));
+        }
+
+        return $material;
     }
 }

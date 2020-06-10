@@ -35,8 +35,8 @@ class RechargeOrderTableController extends Controller
         $restaurant_user_id= $request->get('restaurant_user_id');
 
         return DataTables::of(
-            $this->rechargeOrderRepo->getByRestaurantWithRelationQuery(
-                $user->restaurant_id,
+            $this->rechargeOrderRepo->getByShopWithRelationQuery(
+                $user->shop_id,
                 $start_time,
                 $end_time,
                 null,

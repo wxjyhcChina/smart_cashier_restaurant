@@ -30,17 +30,25 @@ class BaseDinningTimeRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
-
     /**
      * @param $restaurant_id
+     * @return mixed
+     */
+    public function getByShopQuery($shop_id)
+    {
+        return $this->query()->where('shop_id', $shop_id);
+    }
+
+    /**
+     * @param $shop_id
      * @param $start_time
      * @param $end_time
      * @param null $time_id
      * @return bool
      */
-    protected function isTimeConflict($restaurant_id, $start_time, $end_time, $time_id = null)
+    protected function isTimeConflict($shop_id, $start_time, $end_time, $time_id = null)
     {
-        $query = DinningTime::where('restaurant_id', $restaurant_id);
+        $query = DinningTime::where('shop_id', $shop_id);
         if ($time_id != null)
         {
             $query = $query->where('id', '<>', $time_id);
@@ -78,7 +86,7 @@ class BaseDinningTimeRepository extends BaseRepository
     {
         $dinningTime = $this->createDinningTimeStub($input);
 
-        if ($this->isTimeConflict($input['restaurant_id'], $input['start_time'], $input['end_time']))
+        if ($this->isTimeConflict($input['shop_id'], $input['start_time'], $input['end_time']))
         {
             throw new ApiException(ErrorCode::DINNING_TIME_CONFLICT, trans('exceptions.backend.dinningTime.time_error'));
         }
@@ -113,7 +121,7 @@ class BaseDinningTimeRepository extends BaseRepository
             $end_time = $input['end_time'];
         }
 
-        if ($this->isTimeConflict($dinningTime->restaurant_id, $start_time, $end_time, $dinningTime->id))
+        if ($this->isTimeConflict($dinningTime->shop_id, $start_time, $end_time, $dinningTime->id))
         {
             throw new ApiException(ErrorCode::DINNING_TIME_CONFLICT, trans('exceptions.backend.dinningTime.time_error'));
         }
@@ -159,6 +167,7 @@ class BaseDinningTimeRepository extends BaseRepository
     {
         $dinningTime = new DinningTime();
         $dinningTime->restaurant_id = $input['restaurant_id'];
+        $dinningTime->shop_id = $input['shop_id'];
         $dinningTime->name = $input['name'];
         $dinningTime->start_time = $input['start_time'];
         $dinningTime->end_time = $input['end_time'];

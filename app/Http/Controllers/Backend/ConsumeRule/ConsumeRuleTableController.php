@@ -29,7 +29,7 @@ class ConsumeRuleTableController extends Controller
     {
         $user = Auth::User();
 
-        return DataTables::of($this->consumeRuleRepo->getByRestaurantWithRelationQuery($user->restaurant_id))
+        return DataTables::of($this->consumeRuleRepo->getByShopWithRelationQuery($user->shop_id))
             ->addColumn('actions', function ($consumeRule) {
                 return $consumeRule->restaurant_action_buttons;
             })

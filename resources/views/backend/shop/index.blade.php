@@ -56,6 +56,7 @@
                 serverSide: true,
                 autoWidth: false,
                 stateSave: true,
+                //"targets": 0,  //序号列不能排序也不能搜索
                 ajax: {
                     url: '{{ route("admin.shop.get") }}',
                     type: 'get',
@@ -65,7 +66,7 @@
                     }
                 },
                 columns: [
-                    {data: 'id', name: 'id'},
+                    {data: 'id',name:"id"},
                     {data: 'name', name: 'name'},
                     {data: 'default', name: 'default', render:function (data, type, row, meta){
                             if (data === '1')

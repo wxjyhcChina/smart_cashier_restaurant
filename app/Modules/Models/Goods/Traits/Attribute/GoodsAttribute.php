@@ -48,11 +48,20 @@ trait GoodsAttribute
     /**
      * @return string
      */
+    public function getMaterialButtonAttribute()
+    {
+        return '<a href="' . route('admin.goods.assignMaterialCategory', $this, false) . '" class="btn btn-xs btn-primary"><i class="fa fa-bars" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.goods.material') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
     public function getActionButtonsAttribute()
     {
         return
             $this->info_button .
             $this->edit_button .
+            $this->material_button.
             $this->assign_label_category_button .
             $this->delete_button;
     }
@@ -65,6 +74,7 @@ trait GoodsAttribute
         return
             $this->info_button .
             $this->edit_button .
+            $this->material_button.
             $this->assign_label_category_button .
             $this->delete_button;
     }

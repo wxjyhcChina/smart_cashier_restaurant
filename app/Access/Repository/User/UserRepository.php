@@ -27,6 +27,7 @@ use App\Events\Backend\Access\User\UserPermanentlyDeleted;
 use App\Notifications\Frontend\Auth\UserNeedsConfirmation;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UserRepository.
@@ -184,6 +185,7 @@ class UserRepository extends BaseRepository
         $user->last_name = $data['last_name'];
         $user->username = $data['username'];
         $user->status = isset($data['status']) ? $data['status'] : 0;
+        $user->shop_id = $data['shop_id'];
 
         DB::transaction(function () use ($user, $data, $roles) {
             if ($user->save()) {
@@ -443,6 +445,7 @@ class UserRepository extends BaseRepository
         $user->username = $input['username'];
         $user->password = bcrypt($input['password']);
         $user->status = isset($input['status']) ? 1 : 0;
+        $user->shop_id = $input['shop_id'];
 
         return $user;
     }
@@ -476,8 +479,13 @@ class UserRepository extends BaseRepository
         $expire = Auth('api')->setToken($token)->getPayload()->get('exp');
         $token = 'Bearer '.$token;
 
+        //是否开启前台充值/打折功能
+        $recharge_flag=Restaurant::find($user->restaurant_id)->recharge_flag;
+        Log::info("recharge_flag:".$recharge_flag);
+        $discount_flag=Restaurant::find($user->restaurant_id)->discount_flag;
+        Log::info("discount_flag:".$discount_flag);
         // all good so return the token
-        return compact('token', 'expire', 'user_id');
+        return compact('token', 'expire', 'user_id','recharge_flag','discount_flag');
     }
 
     /**

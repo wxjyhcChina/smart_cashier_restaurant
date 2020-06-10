@@ -9,10 +9,11 @@ use App\Access\Repository\User\UserRepository;
 use App\Http\Requests\Backend\Access\User\StoreUserRequest;
 use App\Http\Requests\Backend\Access\User\ManageUserRequest;
 use App\Http\Requests\Backend\Access\User\UpdateUserRequest;
+use App\Modules\Models\Shop\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-
+use Illuminate\Support\Facades\Log;
 /**
  * Class UserController.
  */
@@ -63,9 +64,16 @@ class UserController extends Controller
      */
     public function create(ManageUserRequest $request)
     {
+        //Log::info("create");
+
+        $user = Auth::user();
+        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
+        $shops = $this->getSelectArray($shops);
+
         $restaurantCode = $this->getRestaurantCode();
 
         return view('backend.access.create')
+            ->withShops($shops)
             ->withRoles($this->roles->getAll())
             ->withRestaurantCode($restaurantCode);
     }
@@ -77,6 +85,7 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        //Log::info("store");
         $user = Auth::user();
         $restaurantCode = $this->getRestaurantCode();
 
@@ -85,9 +94,10 @@ class UserController extends Controller
             'last_name',
             'username',
             'password',
-            'status'
+            'status',
+            'shop_id'
         );
-
+        //Log::info("store".json_encode($data));
         $data['status'] = 1;
         $data['restaurant_id'] = $user->restaurant_id;
         $data['username'] = $data['username'].'@'.$restaurantCode;
@@ -132,6 +142,8 @@ class UserController extends Controller
         $realUsername = substr($username, 0, $pos);
         $restaurantCode = substr($username, $pos+1);
         $firstUser = User::where('restaurant_id', $user->restaurant_id)->orderBy('id', 'asc')->first();
+        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
+        $shops = $this->getSelectArray($shops);
 
         $isFirst = false;
         if ($user->id == $firstUser->id)
@@ -145,6 +157,7 @@ class UserController extends Controller
             ->withRoles($this->roles->getAll())
             ->withUsername($realUsername)
             ->withRestaurantCode($restaurantCode)
+            ->withShops($shops)
             ->withFirstUser($isFirst);
     }
 
@@ -161,13 +174,14 @@ class UserController extends Controller
             'first_name',
             'last_name',
             'username',
-            'confirmed'
+            'confirmed',
+            'shop_id'
         );
 
         $data['username'] = $data['username'].'@'.$this->getRestaurantCode();
         $data['status'] = $user->status;
         $firstUser = User::where('restaurant_id', $user->restaurant_id)->orderBy('id', 'asc')->first();
-
+        //Log::info("update".json_encode($data));
         if ($user->id == $firstUser->id)
         {
             $this->users->update($user,
@@ -199,5 +213,20 @@ class UserController extends Controller
         $this->users->delete($user);
 
         return redirect()->route('admin.access.user.deleted')->withFlashSuccess(trans('alerts.backend.users.deleted'));
+    }
+
+    /**
+     * @param $models
+     * @return array
+     */
+    private function getSelectArray($models)
+    {
+        $selectArray = [null => '请选择'];
+        foreach ($models as $model)
+        {
+            $selectArray[$model->id] = $model->name;
+        }
+
+        return $selectArray;
     }
 }

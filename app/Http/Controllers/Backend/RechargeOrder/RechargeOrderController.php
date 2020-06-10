@@ -52,7 +52,8 @@ class RechargeOrderController extends Controller
         $start_time = date('Y-m-d 00:00:00');
         $end_time = date('Y-m-d H:i:s');
 
-        $restaurantUsers = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get();
+        //$restaurantUsers = RestaurantUser::where('restaurant_id', $user->restaurant_id)->get();
+        $restaurantUsers = RestaurantUser::where('shop_id', $user->shop_id)->get();
 
         $restaurantUser = [];
         foreach ($restaurantUsers as $user)

@@ -6,6 +6,7 @@ use App\Repositories\Api\ConsumeCategory\ConsumeCategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ConsumeCategoryController extends Controller
 {
@@ -32,8 +33,8 @@ class ConsumeCategoryController extends Controller
     {
         //
         $user = Auth::User();
-
-        $consumeCategories = $this->consumeCategoryRepo->getByRestaurant($user->restaurant_id);
+        //Log::info("user:".$user->shop_id);
+        $consumeCategories = $this->consumeCategoryRepo->getByShop($user->shop_id);
 
         return $this->responseSuccess($consumeCategories);
     }

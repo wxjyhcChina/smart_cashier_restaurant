@@ -7,6 +7,7 @@ use App\Http\Requests\Backend\Shop\ManageShopRequest;
 use App\Http\Requests\Backend\Shop\StoreShopRequest;
 use App\Modules\Models\Shop\Shop;
 use App\Repositories\Backend\Shop\ShopRepository;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -90,6 +91,7 @@ class ShopController extends Controller
     public function edit(Shop $shop, ManageShopRequest $request)
     {
         //
+        Log::info("shop:".json_encode($shop));
         return view('backend.shop.edit')->withShop($shop);
     }
 

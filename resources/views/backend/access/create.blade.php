@@ -67,6 +67,14 @@
                 </div><!--form control-->
 
                 <div class="form-group">
+                    {{ Form::label('shop_id', trans('validation.attributes.backend.goods.shop_id').":", ['class' => 'col-lg-2 control-label']) }}
+
+                    <div class="col-lg-10">
+                        {{ Form::select('shop_id', $shops, null, ['class' => 'form-control', 'required']) }}
+                    </div><!--col-lg-10-->
+                </div>
+
+                <div class="form-group">
                     {{ Form::label('associated_roles', trans('validation.attributes.backend.access.users.associated_roles'), ['class' => 'col-lg-2 control-label']) }}
 
                     <div class="col-lg-3">
