@@ -121,16 +121,20 @@ class StocksController extends Controller
     public function purchaseInfo(Stocks $stock, ManageStocksRequest $request)
     {
         //
-        $stock=$this->stocksRepo->query()->where('id',$id)->first();
+        //Log::info("Stocks:".json_encode($stock));
+        //Log::info("ManageStocksRequest:".json_encode($request));
         $materials=$this->materialsRepo->getInfoById($stock->material_id)->get();
         return view('backend.stocks.info')->withStock($stock)
             ->withMaterials($materials);
     }
 
     //记录采购信息
-    public function keepPurchase(StoreStocksRequest $request,$id){
+    public function keepPurchase(Stocks $stock,ManageStocksRequest $request){
+        Log::info("keepPurchase:".json_encode($stock));
         $input = $request->all();
-        Log::info('keepPurchase:'.json_encode($input));
+        //Log::info('keepPurchase:'.json_encode($input));
+        $this->stocksRepo->purchase($stock,$input);
+        return redirect()->route('admin.stocks.purchase')->withFlashSuccess(trans('alerts.backend.stocks.purchaseUpdated'));
     }
 
 }

@@ -1,20 +1,19 @@
 @extends ('backend.layouts.app')
 
-@section ('title', trans('labels.backend.stocks.management') . ' | ' . trans('labels.backend.stocks.edit'))
+@section ('title', trans('labels.backend.stocks.management') . ' | ' . trans('labels.backend.stocks.purchaseInfo'))
 
 @section('page-header')
     <h1>
         {{ trans('labels.backend.stocks.management') }}
-        <small>{{ trans('labels.backend.stocks.edit') }}</small>
+        <small>{{ trans('labels.backend.stocks.purchaseInfo') }}</small>
     </h1>
 @endsection
 
 @section('content')
     {{ Form::model($stock, ['route' => ['admin.stocks.keepPurchase', $stock], 'class' => 'form-horizontal', 'id'=>'edit-stock-form','role' => 'form', 'method' => 'PATCH']) }}
-    <input type="hidden" name="_token" value="{{csrf_token()}}"/>
     <div class="box box-success">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ trans('labels.backend.stocks.edit') }}</h3>
+            <h3 class="box-title">{{ trans('labels.backend.stocks.purchaseInfo') }}</h3>
 
             <div class="box-tools pull-right">
                 @include('backend.stocks.includes.partials.header-buttons')
@@ -43,7 +42,7 @@
     <div class="box box-info">
         <div class="box-body">
             <div class="pull-left">
-                {{ link_to_route('admin.stocks.index', trans('buttons.general.cancel'), [], ['class' => 'btn btn-danger btn-xs']) }}
+                {{ link_to_route('admin.stocks.purchase', trans('buttons.general.cancel'), [], ['class' => 'btn btn-danger btn-xs']) }}
             </div><!--pull-left-->
 
             <div class="pull-right">

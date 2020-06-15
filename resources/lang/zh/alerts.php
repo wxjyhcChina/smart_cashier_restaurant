@@ -106,6 +106,7 @@ return [
         'stocks' => [
             'created' => '报损信息添加成功.',
             'updated' => '报损信息更新成功.',
+            'purchaseUpdated' => '采购信息更新成功.',
         ],
     ],
 
