@@ -227,7 +227,7 @@
             @endauth
 
             <!--进销存管理模块-->
-            @permission('manage-stock')
+            @permission('manage-stocks')
             <li class="{{ active_class(Active::checkUriPattern('admin/stocks/*')) }} treeview">
                 <a href="#">
                     <i class="fa fa-list"></i>

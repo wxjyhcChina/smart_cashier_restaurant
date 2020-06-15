@@ -15,6 +15,7 @@ use App\Modules\Models\Label\LabelCategory;
 use App\Modules\Models\PayMethod\PayMethod;
 use App\Modules\Models\RechargeOrder\RechargeOrder;
 use App\Modules\Models\Shop\Shop;
+use App\Modules\Models\Stocks\Stocks;
 use App\Policies\CardPolicy;
 use App\Policies\ConsumeCategoryPolicy;
 use App\Policies\ConsumeOrderPolicy;
@@ -28,6 +29,7 @@ use App\Policies\LabelCategoryPolicy;
 use App\Policies\PayMethodPolicy;
 use App\Policies\RechargeOrderPolicy;
 use App\Policies\ShopPolicy;
+use App\Policies\StocksPolicy;
 
 /**
  * Class RestaurantAuthServiceProvider.
@@ -50,6 +52,7 @@ class RestaurantAuthServiceProvider extends AuthServiceProvider
         Customer::class => CustomerPolicy::class,
         PayMethod::class => PayMethodPolicy::class,
         Goods::class => GoodsPolicy::class,
+        Stocks::class => StocksPolicy::class,
         LabelCategory::class => LabelCategoryPolicy::class,
         ConsumeRule::class => ConsumeRulePolicy::class,
         ConsumeOrder::class => ConsumeOrderPolicy::class,

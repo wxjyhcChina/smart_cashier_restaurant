@@ -13,7 +13,7 @@ class StoreStocksRequest extends Request
      */
     public function authorize()
     {
-        return access()->allow('manage-stock');
+        return access()->allow('manage-stocks');
     }
 
     /**
