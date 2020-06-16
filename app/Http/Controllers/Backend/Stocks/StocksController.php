@@ -122,7 +122,6 @@ class StocksController extends Controller
     {
         //
         //Log::info("Stocks:".json_encode($stock));
-        //Log::info("ManageStocksRequest:".json_encode($request));
         $materials=$this->materialsRepo->getInfoById($stock->material_id)->get();
         return view('backend.stocks.info')->withStock($stock)
             ->withMaterials($materials);
@@ -130,11 +129,27 @@ class StocksController extends Controller
 
     //记录采购信息
     public function keepPurchase(Stocks $stock,ManageStocksRequest $request){
-        Log::info("keepPurchase:".json_encode($stock));
+        //Log::info("keepPurchase:".json_encode($stock));
         $input = $request->all();
         //Log::info('keepPurchase:'.json_encode($input));
         $this->stocksRepo->purchase($stock,$input);
         return redirect()->route('admin.stocks.purchase')->withFlashSuccess(trans('alerts.backend.stocks.purchaseUpdated'));
     }
 
+    public function stockConsume(Stocks $stock, ManageStocksRequest $request)
+    {
+        //
+        //Log::info("Stocks:".json_encode($stock));
+        $materials=$this->materialsRepo->getInfoById($stock->material_id)->get();
+        return view('backend.stocks.stockConsume')->withStock($stock)
+            ->withMaterials($materials);
+    }
+
+    public function keepStockConsume(Stocks $stock,ManageStocksRequest $request){
+        //Log::info("keepPurchase:".json_encode($stock));
+        $input = $request->all();
+        //Log::info('keepPurchase:'.json_encode($input));
+        $this->stocksRepo->stockConsume($stock,$input);
+        return redirect()->route('admin.stocks.index')->withFlashSuccess(trans('alerts.backend.stocks.expendUpdated'));
+    }
 }

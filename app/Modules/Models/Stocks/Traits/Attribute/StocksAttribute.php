@@ -28,6 +28,14 @@ trait StocksAttribute
     /**
      * @return string
      */
+    public function getDailyConsumeButtonAttribute()
+    {
+        return '<a href="' . route('admin.stocks.stockConsume', $this, false) . '" class="btn btn-xs btn-primary"><i class="fa fa-bars" data-toggle="tooltip" data-placement="top" title="' . trans('labels.backend.stocks.StockConsume') . '"></i></a> ';
+    }
+
+    /**
+     * @return string
+     */
     public function getActionButtonsAttribute()
     {
         return
@@ -40,7 +48,8 @@ trait StocksAttribute
     public function getRestaurantActionButtonsAttribute()
     {
         return
-            $this->edit_button;
+            $this->edit_button.
+            $this->daily_consume_button ;
     }
 
     /**

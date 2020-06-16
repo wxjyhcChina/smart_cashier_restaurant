@@ -63,10 +63,37 @@ class StocksRepository extends BaseStocksRepository
             $detail->save();
             //Log::info("detail purchase param:".json_encode($detail));
             //修改库存表
-            Log::info("stock purchase count1 param:".json_encode($input['count']));
-            Log::info("stock purchase count2 param:".json_encode($stock->count));
+            //Log::info("stock purchase count1 param:".json_encode($input['count']));
+            //Log::info("stock purchase count2 param:".json_encode($stock->count));
             $input['count']=$input['count']+$stock->count;
-            Log::info("stock purchase count3 param:".json_encode($input['count']));
+            //Log::info("stock purchase count3 param:".json_encode($input['count']));
+            $stock->update($input);
+
+            DB::commit();
+
+            return $stock;
+        }
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.stocks.update_error'));
+        }
+    }
+
+    //
+    public function stockConsume(Stocks $stock, $input){
+        //Log::info("stock purchase param:".json_encode($stock));
+        $detail=$this->createStockDetailWithConsume($stock, $input);
+        try
+        {
+            DB::beginTransaction();
+            $detail->save();
+            //Log::info("detail purchase param:".json_encode($detail));
+            //修改库存表
+            //Log::info("stock purchase count1 param:".json_encode($input['count']));
+            //Log::info("stock purchase count2 param:".json_encode($stock->count));
+            $input['count']=$stock->count-$input['count'];
+            //Log::info("stock purchase count3 param:".json_encode($input['count']));
             $stock->update($input);
 
             DB::commit();
@@ -102,6 +129,18 @@ class StocksRepository extends BaseStocksRepository
         $detail->material_id=$stock->material_id;
         $detail->number=$input['count'];
         $detail->status=StockDetailStatus::PURCHASE;
+        $detail->restaurant_user_id=$user->id;
+        $detail->shop_id=$user->shop_id;
+        return $detail;
+    }
+
+    //取出消耗
+    private function createStockDetailWithConsume(Stocks $stock,$input){
+        $user = Auth::User();
+        $detail=new StocksDetail();
+        $detail->material_id=$stock->material_id;
+        $detail->number=$input['count'];
+        $detail->status=StockDetailStatus::EXPEND;
         $detail->restaurant_user_id=$user->id;
         $detail->shop_id=$user->shop_id;
         return $detail;
