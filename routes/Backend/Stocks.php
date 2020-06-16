@@ -22,6 +22,9 @@ Route::group([
         Route::get('edit', 'StocksController@edit')->name('stocks.edit');
         Route::get('purchaseInfo', 'StocksController@purchaseInfo')->name('stocks.purchaseInfo');
         Route::patch('keepPurchase', 'StocksController@keepPurchase')->name('stocks.keepPurchase');
+
+        Route::get('stockConsume', 'StocksController@stockConsume')->name('stocks.stockConsume');
+        Route::patch('keepStockConsume', 'StocksController@keepStockConsume')->name('stocks.keepStockConsume');
     });
 
 });

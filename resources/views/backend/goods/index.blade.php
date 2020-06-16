@@ -78,7 +78,7 @@
                         });
 
                         return arr.join(', ');
-                    }},
+                    }, orderable: false, 'searchable':false},
                     {data: 'created_at', name: 'created_at'},
                     {data: 'actions', name: 'actions', orderable: false, 'searchable':false}
                 ],
