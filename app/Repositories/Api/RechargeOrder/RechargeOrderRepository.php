@@ -26,4 +26,11 @@ class RechargeOrderRepository extends BaseRechargeOrderRepository
             ->where('restaurant_id', $restaurant_id)
             ->get();
     }
+
+    public function getByShop($shop_id)
+    {
+        return $this->query()
+            ->where('shop_id', $shop_id)
+            ->get();
+    }
 }

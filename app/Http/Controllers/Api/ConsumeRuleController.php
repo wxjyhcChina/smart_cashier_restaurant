@@ -64,6 +64,7 @@ class ConsumeRuleController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $consumeRule = $this->consumeRuleRepo->create($input);
 
@@ -81,6 +82,7 @@ class ConsumeRuleController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $goods = $this->consumeRuleRepo->update($consumeRule, $input);
 

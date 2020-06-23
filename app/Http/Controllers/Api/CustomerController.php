@@ -45,6 +45,7 @@ class CustomerController extends Controller
         //
         $user = Auth::User();
 
+        //$departments = $this->customerRepo->getByRestaurant($user->restaurant_id);
         $departments = $this->customerRepo->getByRestaurant($user->restaurant_id);
 
         return $this->responseSuccess($departments);
@@ -60,6 +61,7 @@ class CustomerController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $dinningTime = $this->customerRepo->create($input);
 

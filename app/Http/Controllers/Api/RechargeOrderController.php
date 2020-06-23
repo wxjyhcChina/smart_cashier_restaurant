@@ -37,7 +37,8 @@ class RechargeOrderController extends Controller
     {
         //
         $user = Auth::User();
-        $orders = $this->rechargeOrderRepo->getByRestaurant($user->restaurant_id);
+        //$orders = $this->rechargeOrderRepo->getByRestaurant($user->restaurant_id);
+        $orders = $this->rechargeOrderRepo->getByShop($user->shop_id);
 
         return $this->responseSuccess($orders);
     }
@@ -55,6 +56,7 @@ class RechargeOrderController extends Controller
         $input = $request->all();
         $user = Auth::User();
         $input['restaurant_id'] = $user->restaurant_id;
+        $input['shop_id'] = $user->shop_id;
         $input['restaurant_user_id'] = $user->id;
 
         $order = $this->rechargeOrderRepo->create($input);

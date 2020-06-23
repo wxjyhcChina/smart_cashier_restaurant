@@ -15,4 +15,5 @@ class PayMethodType
     const CASH = "CASH";
     const ALIPAY = "ALIPAY";
     const WECHAT_PAY = "WECHAT_PAY";
+    const FACE = "FACE";
 }

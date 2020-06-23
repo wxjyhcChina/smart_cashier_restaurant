@@ -40,6 +40,21 @@ class CustomerRepository extends BaseCustomerRepository
     }
 
     /**
+     * @param $restaurant_id
+     * @return mixed
+     */
+    public function getByShopQuery($shop_id)
+    {
+        return $this->query()
+            ->select('customers.*', 'cards.number as card_number', 'departments.name as department_name', 'consume_categories.name as consume_category_name', 'accounts.balance as account_balance', 'accounts.subsidy_balance as account_subsidy_balance')
+            ->leftJoin('cards', 'cards.customer_id', '=', 'customers.id')
+            ->leftJoin('departments', 'departments.id', '=', 'customers.department_id')
+            ->leftJoin('consume_categories', 'consume_categories.id', '=', 'customers.consume_category_id')
+            ->leftJoin('accounts', 'accounts.customer_id', '=', 'customers.id')
+            ->where('customers.shop_id', $shop_id);
+    }
+
+    /**
      * @param Customer $customer
      * @return mixed
      */
