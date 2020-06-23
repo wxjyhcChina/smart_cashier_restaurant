@@ -9,9 +9,10 @@ use App\Modules\Models\Card\Card;
 use App\Modules\Models\Customer\Account;
 use App\Modules\Models\Customer\Customer;
 use App\Modules\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use GuzzleHttp;
 /**
  * Class BaseCustomerRepository.
  */
@@ -53,9 +54,29 @@ class BaseCustomerRepository extends BaseRepository
                 $card->save();
 
                 $this->createAccount($customer->id, isset($input['balance']) ? $input['balance'] : 0);
-            }
 
-            DB::commit();
+                //如果有uface信息
+                //
+                /** $http = new GuzzleHttp\Client;
+                $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/create', [
+                    'query' => [
+                        'ip' => 'http://192.168.1.188:8090',
+                        'pass' => '123456',
+                        'id'=>$customer->id,
+                        'name'=>$customer->user_name,
+                        'cardNo'=>$card->internal_number,
+                    ],
+                ]);
+                //log::info("res:".json_encode($response));
+                $res = json_decode( $response->getBody(), true);
+                log::info("res:".json_encode($res));
+                $result=$res["success"];**/
+            }
+            //if($result!="true"){
+                DB::commit();
+            //}else{
+               // DB::rollBack();
+            //}
         }
         catch (\Exception $exception)
         {
@@ -87,7 +108,23 @@ class BaseCustomerRepository extends BaseRepository
         {
             DB::beginTransaction();
             $customer->update($input);
-
+/**
+            //如果有uface信息
+            //
+            $http = new GuzzleHttp\Client;
+            $response = $http->get('http://192.168.1.188:8090/FaceMaven_war_exploded/person/update', [
+                'query' => [
+                    'ip' => 'http://192.168.1.188:8090',
+                    'pass' => '123456',
+                    'id'=>$customer->id,
+                    'name'=>$customer->user_name,
+                    'cardNo'=>$input->internal_number,
+                ],
+            ]);
+            //log::info("res:".json_encode($response));
+            $res = json_decode( $response->getBody(), true);
+            log::info("res:".json_encode($res));
+            **/
             DB::commit();
 
             return $customer;
@@ -152,6 +189,7 @@ class BaseCustomerRepository extends BaseRepository
     {
         $customer = new Customer();
         $customer->restaurant_id = $input['restaurant_id'];
+        $customer->shop_id = $input['shop_id'];
         $customer->user_name = $input['user_name'];
         $customer->telephone = isset($input['telephone']) ? $input['telephone']: '';
         $customer->id_license = isset($input['id_license']) ? $input['id_license'] : '';

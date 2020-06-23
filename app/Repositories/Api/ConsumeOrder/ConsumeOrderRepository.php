@@ -31,7 +31,7 @@ use App\Modules\Services\Pay\Facades\Pay;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use GuzzleHttp;
 /**
  * Class ConsumeOrderRepository
  * @package App\Repositories\Backend\ConsumeOrder
@@ -89,7 +89,8 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $query = $this->query()
             ->select('pay_method', DB::raw('SUM(discount_price) as money'), DB::raw('count(*) as count'))
             ->where('consume_orders.restaurant_user_id', $restaurant_user_id)
-            ->where('status', ConsumeOrderStatus::COMPLETE);
+            ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->where('shop',$input['shop_id']);
 
         if (isset($input['start_time']) && isset($input['end_time']))
         {
@@ -130,14 +131,15 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      * @throws ApiException
      */
-    private function getCurrentDinningTime($restaurant_id)
+    private function getCurrentDinningTime($shop_id)
     {
         $current_time = Carbon::now()->format("H:i");
 
         $dinningTime = DinningTime::where('enabled', 1)
             ->where('start_time', '<=' , $current_time)
             ->where('end_time', '>', $current_time)
-            ->where('restaurant_id', $restaurant_id)
+            //->where('restaurant_id', $restaurant_id)
+            ->where('shop_id', $shop_id)
             ->first();
 
         if ($dinningTime == null)
@@ -215,9 +217,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      * @return array
      * @throws ApiException
      */
-    private function getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount)
+    private function getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount,$shop_id)
     {
-        $dinningTime = $this->getCurrentDinningTime($restaurant_id);
+        $dinningTime = $this->getCurrentDinningTime($shop_id);
 
         $excludeLabels = $this->excludeLabels($restaurant_id, $dinningTime->id);
 
@@ -279,8 +281,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         $forceDiscount = isset($input['discount']) ? $input['discount'] : null;
         $restaurant_id = $input['restaurant_id'];
+        $shop_id = $input['shop_id'];
 
-        return $this->getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount);
+        return $this->getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount,$shop_id);
     }
 
     /**
@@ -295,9 +298,10 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         $forceDiscount = isset($input['discount']) ? $input['discount'] : null;
         $restaurant_id = $input['restaurant_id'];
+        $shop_id = $input['shop_id'];
         $restaurant_user_id = $input['restaurant_user_id'];
 
-        $response = $this->getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount);
+        $response = $this->getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount,$shop_id);
 
         try
         {
@@ -306,6 +310,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $consumeOrder = new ConsumeOrder();
             $consumeOrder->order_id = OrderUtil::generateConsumeOrderId();
             $consumeOrder->restaurant_id = $restaurant_id;
+            $consumeOrder->shop_id = $shop_id;
             $consumeOrder->restaurant_user_id = $restaurant_user_id;
             $consumeOrder->dinning_time_id = $response['dinning_time_id'];
             $consumeOrder->price = $response['price'];
@@ -426,6 +431,78 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         return $discount;
     }
 
+    /**
+     * @param ConsumeOrder $order
+     * @param $cardId
+     * @return ConsumeOrder
+     * @throws ApiException
+     */
+    private function payWithFace(ConsumeOrder $order, $cardId)
+    {
+        $card = CardService::getCardByInternalNumber($cardId);
+
+        if ($order->restaurant_id != $card->restaurant_id)
+        {
+            throw new ApiException(ErrorCode::INVALID_CARD, trans('api.error.invalid_card'));
+        }
+
+        $customer = CardService::getCustomerByCard($card);
+
+        $discount = $this->getCardDiscount($order, $customer);
+
+        //check account balance
+        $account = $customer->account;
+        $original_price = $order->price;
+        $discount_price = $original_price;
+
+        $orderDiscount = $order->force_discount;
+        if ($orderDiscount == null)
+        {
+            $orderDiscount = $discount;
+        }
+
+        if ($orderDiscount != null)
+        {
+            $discount_price = bcmul($original_price, bcdiv($orderDiscount, 10, 2), 2);
+        }
+
+        Account::compareBalance($account, $discount_price);
+
+        try
+        {
+            DB::beginTransaction();
+
+            //add account record
+            Account::payAccount($order->id, $account, $discount_price);
+
+            //modify order status
+            $order->customer_id = $customer->id;
+            $order->card_id = $card->id;
+            $order->department_id = $customer->department_id;
+            $order->consume_category_id = $customer->consume_category_id;
+            $order->discount_price = doubleval($discount_price);
+            $order->discount = $discount;
+            $order->pay_method = PayMethodType::FACE;
+            $order->online_pay = false;
+            $order->status = ConsumeOrderStatus::COMPLETE;
+            $order->save();
+
+            DB::commit();
+        }
+        catch (\Exception $exception)
+        {
+            DB::rollBack();
+
+            if ($exception instanceof ApiException)
+            {
+                throw $exception;
+            }
+
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('api.error.database_error'));
+        }
+
+        return $order->load('customer');
+    }
 
     /**
      * @param ConsumeOrder $order
@@ -614,6 +691,24 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             }
             else if ($payMethod == PayMethodType::CARD)
             {
+                //TODO:是否能通过uface人脸
+/**
+                $http = new GuzzleHttp\Client;
+                $start_time = Carbon::now();
+                $end_time =Carbon::now()->addSeconds(5);//5秒后
+                $response = $http->get('http://192.168.1.188:8090/FaceMaven_war_exploded/findRecords', [
+                    'query' => [
+                        'ip' => 'http://192.168.1.188:8090',
+                        'pass' => '123456',
+                        'startTime'=>$start_time,
+                        'endTime'=>$end_time,
+                    ],
+                ]);
+
+                $res = json_decode( $response->getBody(), true);
+                log::info("res:".json_encode($res));
+                //验证通过进入payWithFace
+ **/
                 if (!isset($input['card_id']))
                 {
                     throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
