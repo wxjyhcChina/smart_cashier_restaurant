@@ -37,7 +37,8 @@ class GoodsController extends Controller
         //
         $user = Auth::User();
 
-        $goods = $this->goodsRepo->getByRestaurant($user->restaurant_id, $request->all());
+        //$goods = $this->goodsRepo->getByRestaurant($user->restaurant_id, $request->all());
+        $goods = $this->goodsRepo->getByShop($user->shop_id, $request->all());
 
         return $this->responseSuccess($goods);
     }
@@ -63,6 +64,7 @@ class GoodsController extends Controller
         $input = $request->all();
 
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $goods = $this->goodsRepo->create($input);
 
@@ -150,7 +152,8 @@ class GoodsController extends Controller
         //
         $user = Auth::User();
 
-        $goods = $this->goodsRepo->getTableByRestaurant($user->restaurant_id, $request->all());
+        //$goods = $this->goodsRepo->getTableByRestaurant($user->restaurant_id, $request->all());
+        $goods = $this->goodsRepo->getTableByShop($user->shop_id, $request->all());
 
         return $this->responseSuccess($goods);
     }

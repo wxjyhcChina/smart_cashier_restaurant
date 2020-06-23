@@ -33,7 +33,8 @@ class PayMethodController extends Controller
         //
         $user = Auth::User();
 
-        $payMethods = $this->payMethodRepo->getByRestaurant($user->restaurant_id);
+        //$payMethods = $this->payMethodRepo->getByRestaurant($user->restaurant_id);
+        $payMethods = $this->payMethodRepo->getByShopQuery($user->shop_id);
 
         return $this->responseSuccess($payMethods);
     }

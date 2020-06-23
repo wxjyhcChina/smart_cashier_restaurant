@@ -43,7 +43,9 @@ class CustomerTableController extends Controller
     {
         $user = Auth::User();
 
-        return DataTables::of($this->customerRepo->getByRestaurantQuery($user->restaurant_id))
+        //
+        //return DataTables::of($this->customerRepo->getByRestaurantQuery($user->restaurant_id))
+        return DataTables::of($this->customerRepo->getByShopQuery($user->shop_id))
             ->addColumn('actions', function ($customer) {
                 return $customer->restaurant_action_buttons;
             })

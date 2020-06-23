@@ -36,7 +36,8 @@ class DinningTimeController extends Controller
         //
         $user = Auth::User();
 
-        $dinningTimes = $this->dinningTimeRepo->getByRestaurant($user->restaurant_id);
+        //$dinningTimes = $this->dinningTimeRepo->getByRestaurant($user->restaurant_id);
+        $dinningTimes = $this->dinningTimeRepo->getByShopQuery($user->shop_id);
 
         return $this->responseSuccess($dinningTimes);
     }
@@ -51,6 +52,7 @@ class DinningTimeController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $dinningTime = $this->dinningTimeRepo->create($input);
 

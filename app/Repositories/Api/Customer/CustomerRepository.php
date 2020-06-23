@@ -28,4 +28,13 @@ class CustomerRepository extends BaseCustomerRepository
             ->where('restaurant_id', $restaurant_id)
             ->get();
     }
+
+    public function getByShop($shop_id)
+    {
+        return $this->query()->with('card')
+            ->with('department')
+            ->with('consume_category')
+            ->where('shop_id', $shop_id)
+            ->get();
+    }
 }

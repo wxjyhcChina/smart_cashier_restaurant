@@ -97,8 +97,10 @@ class CustomerController extends Controller
     {
         //
         $user = Auth::User();
-        $departments = $this->departmentRepo->getByRestaurantQuery($user->restaurant_id)->get();
-        $consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        //$departments = $this->departmentRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $departments = $this->departmentRepo->getByShopQuery($user->shop_id)->get();
+        //$consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $consumeCategories = $this->consumeCategoryRepo->getByShopQuery($user->shop_id)->get();
 
         return view('backend.customer.create')
             ->withDepartments($this->getModelArray($departments))
@@ -117,6 +119,7 @@ class CustomerController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $this->customerRepo->create($input);
 
@@ -145,9 +148,11 @@ class CustomerController extends Controller
     public function edit(Customer $customer, ManageCustomerRequest $request)
     {
         $user = Auth::User();
-        $departments = $this->departmentRepo->getByRestaurantQuery($user->restaurant_id)->get();
-        $consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
 
+        //$departments = $this->departmentRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $departments = $this->departmentRepo->getByShopQuery($user->shop_id)->get();
+        //$consumeCategories = $this->consumeCategoryRepo->getByRestaurantQuery($user->restaurant_id)->get();
+        $consumeCategories = $this->consumeCategoryRepo->getByShopQuery($user->shop_id)->get();
         //
         return view('backend.customer.edit')
             ->withCustomer($customer)

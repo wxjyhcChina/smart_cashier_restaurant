@@ -163,6 +163,7 @@ class BaseRechargeOrderRepository extends BaseRepository
         $rechargeOrder->card_id = $input['card_id'];
         $rechargeOrder->customer_id = $input['customer_id'];
         $rechargeOrder->restaurant_id = $input['restaurant_id'];
+        $rechargeOrder->shop_id = $input['shop_id'];
         $rechargeOrder->restaurant_user_id = $input['restaurant_user_id'];
         $rechargeOrder->money = $input['money'];
         $rechargeOrder->pay_method = isset($input['pay_method']) ? $input['pay_method'] : '';

@@ -160,6 +160,7 @@ class UserRepository extends BaseRepository
 
                 event(new UserCreated($user));
 
+
                 return true;
             }
 

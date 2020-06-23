@@ -33,6 +33,13 @@ class BaseGoodsRepository extends BaseRepository
             ->whereNotIn('is_temp', [1]);
     }
 
+    public function getByShopQuery($shop_id)
+    {
+        return $this->query()
+            ->where('shop_id', $shop_id)
+            ->whereNotIn('is_temp', [1]);
+    }
+
 
     /**
      * @param Goods $goods
@@ -263,6 +270,7 @@ class BaseGoodsRepository extends BaseRepository
         if (isset($input['is_temp']) && $input['is_temp'] == 1)
         {
             $input['name'] = '临时商品';
+            /**
             $shop = Shop::where('default', true)
                 ->where('restaurant_id', $input['restaurant_id'])
                 ->first();
@@ -272,6 +280,7 @@ class BaseGoodsRepository extends BaseRepository
                 throw new ApiException(ErrorCode::NO_DEFAULT_SHOP, trans('api.error.no_default_shop'));
             }
             $input['shop_id'] = $shop->id;
+             **/
         }
 
         $goods = new Goods();
@@ -290,6 +299,13 @@ class BaseGoodsRepository extends BaseRepository
     {
         return $this->query()
             ->where('restaurant_id', $restaurant_id)
+            ->where('is_temp', 2);
+    }
+
+    public function getTableFoodByShopQuery($shop_id)
+    {
+        return $this->query()
+            ->where('shop_id', $shop_id)
             ->where('is_temp', 2);
     }
 

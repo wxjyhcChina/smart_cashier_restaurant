@@ -32,7 +32,8 @@ class DepartmentController extends Controller
         //
         $user = Auth::User();
 
-        $departments = $this->departmentRepo->getByRestaurant($user->restaurant_id);
+        //$departments = $this->departmentRepo->getByRestaurant($user->restaurant_id);
+        $departments = $this->departmentRepo->getByShopQuery($user->shop_id);
 
         return $this->responseSuccess($departments);
     }
