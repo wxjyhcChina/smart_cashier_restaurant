@@ -10,6 +10,7 @@ use App\Modules\Models\Customer\Customer;
 use App\Modules\Models\Department\Department;
 use App\Modules\Models\Device\Device;
 use App\Modules\Models\DinningTime\DinningTime;
+use App\Modules\Models\GoodCategory\GoodCategory;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Label\LabelCategory;
 use App\Modules\Models\PayMethod\PayMethod;
@@ -24,6 +25,7 @@ use App\Policies\CustomerPolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\DevicePolicy;
 use App\Policies\DinningTimePolicy;
+use App\Policies\GoodCategoryPolicy;
 use App\Policies\GoodsPolicy;
 use App\Policies\LabelCategoryPolicy;
 use App\Policies\PayMethodPolicy;
@@ -52,6 +54,7 @@ class RestaurantAuthServiceProvider extends AuthServiceProvider
         Customer::class => CustomerPolicy::class,
         PayMethod::class => PayMethodPolicy::class,
         Goods::class => GoodsPolicy::class,
+        GoodCategory::class=>GoodCategoryPolicy::class,
         Stocks::class => StocksPolicy::class,
         LabelCategory::class => LabelCategoryPolicy::class,
         ConsumeRule::class => ConsumeRulePolicy::class,

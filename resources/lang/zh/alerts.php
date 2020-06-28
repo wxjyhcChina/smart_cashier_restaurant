@@ -68,6 +68,12 @@ return [
             'lost' => '卡挂失成功',
         ],
 
+        'goodCategory' => [
+            'created' => '商品大类添加成功.',
+            'updated' => '商品大类更新成功.',
+            'deleted' => '商品大类删除成功.',
+        ],
+
         'goods' => [
             'created' => '商品添加成功.',
             'updated' => '商品更新成功.',

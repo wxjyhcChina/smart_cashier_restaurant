@@ -88,6 +88,13 @@ return [
             'already_exist' => '消费类别已经存在'
         ],
 
+        'goodCategory' => [
+            'mark_error' => '更新商品大类失败，请稍后重试',
+            'update_error' => '更新商品大类失败，请稍后重试',
+            'create_error' => '创建商品大类失败，请稍后重试',
+            'already_exist' => '商品大类已经存在',
+        ],
+
         'goods' => [
             'mark_error' => '更新商品失败，请稍后重试',
             'update_error' => '更新商品失败，请稍后重试',

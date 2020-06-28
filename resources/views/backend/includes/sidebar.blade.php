@@ -97,6 +97,15 @@
             @endauth
 
             @permission('manage-goods')
+            <li class="{{ active_class(Active::checkUriPattern('admin/goodCategory*')) }}">
+                <a href="{{ route('admin.goodCategory.index') }}">
+                    <i class="fa fa-cutlery"></i>
+                    <span>{{ trans('menus.backend.goodCategory.title') }}</span>
+                </a>
+            </li>
+            @endauth
+
+            @permission('manage-goods')
             <li class="{{ active_class(Active::checkUriPattern('admin/goods*')) }}">
                 <a href="{{ route('admin.goods.index') }}">
                     <i class="fa fa-cutlery"></i>

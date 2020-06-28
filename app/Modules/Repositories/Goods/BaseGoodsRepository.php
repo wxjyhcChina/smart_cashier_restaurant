@@ -166,7 +166,6 @@ class BaseGoodsRepository extends BaseRepository
      */
     public function create($input)
     {
-        //TODO: check shop/dinning_time
         $goods = $this->createGoodsStub($input);
 
         if ($goods->save())
@@ -286,10 +285,11 @@ class BaseGoodsRepository extends BaseRepository
         $goods = new Goods();
         $goods->restaurant_id = $input['restaurant_id'];
         $goods->shop_id = $input['shop_id'];
+        $goods->good_category_id=$input['good_category_id'];
         $goods->name = $input['name'];
         $goods->price = $input['price'];
         $goods->image = isset($input['image']) ? $input['image'] : '';
-        Log::info("goods store param:".json_encode($input));
+        //Log::info("goods store param:".json_encode($input));
         $goods->is_temp = isset($input['is_temp']) ? $input['is_temp'] : 0;
 
         return $goods;

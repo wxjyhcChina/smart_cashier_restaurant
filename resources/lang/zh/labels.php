@@ -226,6 +226,20 @@ return [
             ],
         ],
 
+        'goodCategory' => [
+            'management' => '商品大类管理',
+            'active' => '所有商品大类',
+            'edit' => '编辑商品大类',
+            'info' => '商品大类详情',
+            'create' => '创建商品大类',
+
+            'table' => [
+                'id' => '编号',
+                'name' => '商品大类名',
+                'created_at' => '创建时间',
+            ]
+        ],
+
         'goods' => [
             'management' => '商品管理',
             'active' => '所有商品',

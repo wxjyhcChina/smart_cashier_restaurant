@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Access\Model\User\User;
+use App\Modules\Models\GoodCategory\GoodCategory;
 use App\Modules\Models\Stocks\Stocks;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -42,6 +43,7 @@ class RouteServiceProvider extends ServiceProvider
             return User::withTrashed()->where($user->getRouteKeyName(), $value)->first();
         });
         Route::model('stocks',Stocks::class);
+        Route::model('goodCategory',GoodCategory::class);
 
         parent::boot();
     }
