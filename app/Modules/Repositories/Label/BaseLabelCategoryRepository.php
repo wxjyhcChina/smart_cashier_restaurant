@@ -30,6 +30,11 @@ class BaseLabelCategoryRepository extends BaseRepository
         return $this->query()->where('restaurant_id', $restaurant_id);
     }
 
+    public function getByShopQuery($shop_id)
+    {
+        return $this->query()->where('shop_id', $shop_id);
+    }
+
     /**
      * @param $labelCategory
      * @return mixed
@@ -39,9 +44,9 @@ class BaseLabelCategoryRepository extends BaseRepository
         return $labelCategory->labels;
     }
 
-    public function labelCategoryExist($name, $updatedLabelsCategory = null)
+    public function labelCategoryExist($input, $updatedLabelsCategory = null)
     {
-        $labelCategoryQuery = LabelCategory::where('name', $name);
+        $labelCategoryQuery = LabelCategory::where('name', $input['name'])->where('shop_id', $input['shop_id']);;
 
         if ($updatedLabelsCategory != null)
         {
@@ -61,7 +66,7 @@ class BaseLabelCategoryRepository extends BaseRepository
      */
     public function create($input)
     {
-        $this->labelCategoryExist($input['name']);
+        $this->labelCategoryExist($input);
         $labelCategory = $this->createLabelCategoryStub($input);
 
         if ($labelCategory->save())
@@ -79,7 +84,7 @@ class BaseLabelCategoryRepository extends BaseRepository
      */
     public function update(LabelCategory $labelCategory, $input)
     {
-        $this->labelCategoryExist($input['name'], $labelCategory);
+        $this->labelCategoryExist($input, $labelCategory);
         Log::info("restaurant update param:".json_encode($input));
 
         try

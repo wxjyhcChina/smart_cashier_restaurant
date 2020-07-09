@@ -30,7 +30,19 @@ class LabelCategoryRepository extends BaseLabelCategoryRepository
 
         if (isset($input['key']))
         {
-            $query->where('name', 'like', '%'.$input['key'].'%');
+            $query->where('name', 'like', '%'.$input['key'].'%')->where('restaurant_id', $restaurant_id);
+        }
+
+        return $query->paginate($size);
+    }
+
+    public function getByShop($shop_id, $input, $size=15)
+    {
+        $query = $this->getByShopQuery($shop_id);
+
+        if (isset($input['key']))
+        {
+            $query->where('name', 'like', '%'.$input['key'].'%')->where('shop_id', $shop_id);
         }
 
         return $query->paginate($size);

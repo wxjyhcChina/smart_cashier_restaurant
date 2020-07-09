@@ -38,7 +38,7 @@ class ConsumeRuleRepository extends BaseConsumeRuleRepository
         return $this->query()
             ->with('dinning_time')
             ->with('consume_categories')
-            ->where('restaurant_id', $shop_id)
+            ->where('shop_id', $shop_id)
             ->get();
     }
 
