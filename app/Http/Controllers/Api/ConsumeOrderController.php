@@ -54,6 +54,7 @@ class ConsumeOrderController extends Controller
         $user = Auth::User();
 
         $input = $request->all();
+        $input['shop_id']=$user->shop_id;
         $result = $this->consumeOrderRepo->statistics($user->id, $input);
 
         $user['statistics'] = $result;

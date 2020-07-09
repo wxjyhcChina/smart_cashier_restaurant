@@ -90,7 +90,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             ->select('pay_method', DB::raw('SUM(discount_price) as money'), DB::raw('count(*) as count'))
             ->where('consume_orders.restaurant_user_id', $restaurant_user_id)
             ->where('status', ConsumeOrderStatus::COMPLETE)
-            ->where('shop',$input['shop_id']);
+            ->where('shop_id',$input['shop_id']);
 
         if (isset($input['start_time']) && isset($input['end_time']))
         {

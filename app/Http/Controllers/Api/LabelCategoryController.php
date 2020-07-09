@@ -37,8 +37,8 @@ class LabelCategoryController extends Controller
         //
         $user = Auth::User();
 
-        $labelCategories = $this->labelCategoryRepo->getByRestaurant($user->restaurant_id, $request->all());
-
+        //$labelCategories = $this->labelCategoryRepo->getByRestaurant($user->restaurant_id, $request->all());
+        $labelCategories = $this->labelCategoryRepo->getByShop($user->shop_id, $request->all());
         return $this->responseSuccess($labelCategories);
     }
 
@@ -81,6 +81,7 @@ class LabelCategoryController extends Controller
         //
         $input = $request->all();
         $input['restaurant_id'] = Auth::User()->restaurant_id;
+        $input['shop_id'] = Auth::User()->shop_id;
 
         $labelCategory = $this->labelCategoryRepo->create($input);
 
