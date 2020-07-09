@@ -9,6 +9,7 @@
 namespace App\Repositories\Api\ConsumeCategory;
 
 use App\Modules\Repositories\ConsumeCategory\BaseConsumeCategoryRepository;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ConsumeCategoryRepository
@@ -31,6 +32,6 @@ class ConsumeCategoryRepository extends BaseConsumeCategoryRepository
      */
     public function getByShop($shop_id)
     {
-        return $this->getByShop($shop_id)->get();
+        return $this->getByShopQuery($shop_id)->get();
     }
 }

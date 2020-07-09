@@ -84,6 +84,12 @@ return [
             'clearSubsidyBalance' => '清空补贴金额',
         ],
 
+        'goodCategory' => [
+            'title' => '商品大类管理',
+            'all' => '所有商品大类',
+            'create' => '创建商品大类',
+        ],
+
         'goods' => [
             'title' => '商品管理',
             'all' => '所有商品',

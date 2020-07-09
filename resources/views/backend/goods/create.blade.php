@@ -67,6 +67,14 @@
             </div><!--form control-->
 
             <div class="form-group">
+                {{ Form::label('good_category_id', trans('validation.attributes.backend.goods.good_category_id').":", ['class' => 'col-lg-2 control-label']) }}
+
+                <div class="col-lg-10">
+                    {{ Form::select('good_category_id', $goodCategory, null, ['class' => 'form-control', 'required']) }}
+                </div><!--col-lg-10-->
+            </div><!--form control-->
+
+            <div class="form-group">
                 {{ Form::label('dinning_time', trans('validation.attributes.backend.consumeRule.dinning_time').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10" style="padding-top: 7px">

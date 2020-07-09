@@ -6,6 +6,7 @@ use App\Common\Qiniu;
 use App\Http\Requests\Backend\Goods\ManageGoodsRequest;
 use App\Http\Requests\Backend\Goods\StoreGoodsRequest;
 use App\Modules\Models\DinningTime\DinningTime;
+use App\Modules\Models\GoodCategory\GoodCategory;
 use App\Modules\Models\Goods\Goods;
 use App\Modules\Models\Materials\Materials;
 use App\Modules\Models\Shop\Shop;
@@ -79,14 +80,18 @@ class GoodsController extends Controller
     {
         //
         $user = Auth::User();
-        $shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
+        $shops = Shop::where('id', $user->shop_id)->get();
         $shops = $this->getSelectArray($shops);
+
+        $goodCategory=GoodCategory::where('shop_id',$user->shop_id)->get();
+        $goodCategory= $this->getSelectArray($goodCategory);
 
         //$dinningTime = $this->dinningTimeRepo->getByRestaurantQuery($user->restaurant_id)->get();
         $dinningTime = $this->dinningTimeRepo->getByShopQuery($user->shop_id)->get();
 
         return view('backend.goods.create')
             ->withShops($shops)
+            ->withGoodCategory($goodCategory)
             ->withDinningTime($dinningTime);
     }
 
@@ -145,12 +150,15 @@ class GoodsController extends Controller
         //$shops = Shop::where('restaurant_id', $user->restaurant_id)->get();
         $shops = Shop::where('id', $user->shop_id)->get();
         $shops = $this->getSelectArray($shops);
+        $goodCategory=GoodCategory::where('shop_id',$user->shop_id)->get();
+        $goodCategory= $this->getSelectArray($goodCategory);
 
         $dinningTime = $this->dinningTimeRepo->getByShopQuery($user->shop_id)->get();
 
         return view('backend.goods.edit')
             ->withGoods($goods)
             ->withShops($shops)
+            ->withGoodCategory($goodCategory)
             ->withDinningTime($dinningTime);
     }
 

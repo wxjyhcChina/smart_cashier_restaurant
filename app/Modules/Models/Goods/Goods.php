@@ -13,7 +13,7 @@ class Goods extends Model
 {
     use GoodsAttribute, GoodsRelationship, SoftDeletes;
 
-    protected $fillable = ['id', 'restaurant_id', 'shop_id', 'name', 'price', 'image', 'is_temp'];
+    protected $fillable = ['id', 'restaurant_id', 'shop_id', 'good_category_id', 'name', 'price', 'image', 'is_temp'];
 
     protected $table = 'goods';
 

@@ -203,10 +203,20 @@ return [
                 'pay_method' => '支付方式',
             ],
 
+            'goodCategory' => [
+                'image' => '图片',
+                'name' => '大类名称',
+                'price' => '价格',
+                'shop_id' => '所属小店',
+                'dinning_time_id' => '用餐时间',
+                'fastSell'=>'快销品',
+            ],
+
             'goods' => [
                 'image' => '图片',
                 'name' => '商品名',
                 'price' => '价格',
+                'good_category_id' => '所属大类',
                 'shop_id' => '所属小店',
                 'dinning_time_id' => '用餐时间',
                 'fastSell'=>'快销品',
