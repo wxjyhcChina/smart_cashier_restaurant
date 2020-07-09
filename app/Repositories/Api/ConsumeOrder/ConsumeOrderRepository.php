@@ -134,14 +134,14 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     private function getCurrentDinningTime($shop_id)
     {
         $current_time = Carbon::now()->format("H:i");
-
+        Log::info("current_time:".json_encode($current_time));
         $dinningTime = DinningTime::where('enabled', 1)
             ->where('start_time', '<=' , $current_time)
             ->where('end_time', '>', $current_time)
             //->where('restaurant_id', $restaurant_id)
             ->where('shop_id', $shop_id)
             ->first();
-
+        Log::info("dinningTime:".json_encode($dinningTime));
         if ($dinningTime == null)
         {
             throw new ApiException(ErrorCode::NOT_IN_DINNING_TIME, trans('api.error.not_in_dinning_time'));
@@ -737,14 +737,16 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         Log::info("order param:".json_encode($data));
         foreach ($data as $goods){
             $material_goods=DB::table('material_goods')->where('goods_id',$goods->goods_id)->get();
-            foreach($material_goods as $material){
-                //修改库存表stock
-                $stock=Stocks::where("material_id",$material->material_id)->first();
-                $stock->count=$stock->count-$material->number;
-                $stock->save();
-                //记录stock_detail表
-                $detail=$this->createConsumeMaterials($material);
-                $detail->save();
+            if($material_goods ->first() != null){
+                foreach($material_goods as $material){
+                    //修改库存表stock
+                    $stock=Stocks::where("material_id",$material->material_id)->first();
+                    $stock->count=$stock->count-$material->number;
+                    $stock->save();
+                    //记录stock_detail表
+                    $detail=$this->createConsumeMaterials($material);
+                    $detail->save();
+                }
             }
         }
         return $order->load('goods', 'customer', 'card');
