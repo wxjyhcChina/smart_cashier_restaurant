@@ -292,43 +292,6 @@
             "time": "2017-06-24T11:10:49+00:00"
         },
         {
-            "name": "iwanli/wxxcx",
-            "version": "v2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/lanceWan/wxxcx.git",
-                "reference": "c6a1c4a62ac5028f99245fa5bcb4d6a8fbddc655"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/lanceWan/wxxcx/zipball/c6a1c4a62ac5028f99245fa5bcb4d6a8fbddc655",
-                "reference": "c6a1c4a62ac5028f99245fa5bcb4d6a8fbddc655",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/support": "~5",
-                "php": ">=5.5.9"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Iwanli\\Wxxcx\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "晚黎",
-                    "email": "ibanya@126.com"
-                }
-            ],
-            "description": "A WeChat applet (xiaochengxu) plugins for Laravel 5.",
-            "time": "2017-06-08T03:13:33+00:00"
-        },
-        {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "0.1",
             "source": {

@@ -17,7 +17,6 @@
         "doctrine/dbal": "^2.5",
         "filp/whoops": "~2.0",
         "hieu-le/active": "~3.0",
-        "iwanli/wxxcx": "~2.0",
         "jpush/jpush": "v3.3.9",
         "laravel/framework": "5.5.*",
         "laravel/socialite": "^3.0",
@@ -26,8 +25,8 @@
         "maatwebsite/excel": "~2.1.0",
         "predis/predis": "^1.1",
         "qiniu/php-sdk": "^7.0",
-        "workerman/gatewayclient": "^3.0",
-        "yajra/laravel-datatables-oracle": "~8.0"
+        "yajra/laravel-datatables-oracle": "~8.0",
+        "workerman/gatewayclient": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.0",
@@ -87,7 +86,7 @@
     "repositories": {
         "packagist": {
             "type": "composer",
-            "url": "https://packagist.phpcomposer.com"
+            "url": "https://packagist.laravel-china.org"
         }
     }
 }
