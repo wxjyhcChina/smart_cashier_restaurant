@@ -49,7 +49,7 @@ class GoodsRepository extends BaseGoodsRepository
 
     public function getByShop($shop_id, $input, $size=15)
     {
-        $query = $this->getByRestaurantQuery($shop_id)
+        $query = $this->getByShopQuery($shop_id)
             ->with('shop')
             ->with('dinning_time')
             ->with('label_categories');

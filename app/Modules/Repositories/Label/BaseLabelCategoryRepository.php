@@ -113,7 +113,7 @@ class BaseLabelCategoryRepository extends BaseRepository
         $labelCategory->image = isset($input['image']) ? $input['image'] : '';
         $labelCategory->name = $input['name'];
         $labelCategory->restaurant_id = $input['restaurant_id'];
-
+        $labelCategory->restaurant_id = $input['shop_id'];
         return $labelCategory;
     }
 }
