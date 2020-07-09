@@ -10,6 +10,7 @@ use App\Repositories\Api\Label\LabelCategoryRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class LabelCategoryController extends Controller
 {
@@ -39,6 +40,7 @@ class LabelCategoryController extends Controller
 
         //$labelCategories = $this->labelCategoryRepo->getByRestaurant($user->restaurant_id, $request->all());
         $labelCategories = $this->labelCategoryRepo->getByShop($user->shop_id, $request->all());
+        Log::info("labelCategories:".json_encode($labelCategories));
         return $this->responseSuccess($labelCategories);
     }
 

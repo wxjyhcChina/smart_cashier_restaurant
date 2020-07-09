@@ -7,6 +7,7 @@ use App\Exceptions\Api\ApiException;
 use App\Http\Middleware\AuthUtil;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Restaurant\Restaurant;
+use App\Modules\Models\Shop\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\GeneralException;
@@ -481,9 +482,9 @@ class UserRepository extends BaseRepository
         $token = 'Bearer '.$token;
 
         //是否开启前台充值/打折功能
-        $recharge_flag=Restaurant::find($user->restaurant_id)->recharge_flag;
+        $recharge_flag=Shop::find($user->shop_id)->recharge_flag;
         Log::info("recharge_flag:".$recharge_flag);
-        $discount_flag=Restaurant::find($user->restaurant_id)->discount_flag;
+        $discount_flag=Shop::find($user->shop_id)->discount_flag;
         Log::info("discount_flag:".$discount_flag);
         // all good so return the token
         return compact('token', 'expire', 'user_id','recharge_flag','discount_flag');
