@@ -56,27 +56,31 @@ class BaseCustomerRepository extends BaseRepository
                 $this->createAccount($customer->id, isset($input['balance']) ? $input['balance'] : 0);
 
                 //如果有uface信息
-                //
-                /** $http = new GuzzleHttp\Client;
+                //TODO:建立shop关于是否使用人脸信息的数据库
+                /**
+                $http = new GuzzleHttp\Client;
                 $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/create', [
                     'query' => [
-                        'ip' => 'http://192.168.1.188:8090',
-                        'pass' => '123456',
+                        'ip' => 'http://192.168.1.121:8090',
+                        'pass' => 'admin123',
                         'id'=>$customer->id,
                         'name'=>$customer->user_name,
-                        'cardNo'=>$card->internal_number,
+                        'idcardNum'=>$card->internal_number,
                     ],
                 ]);
                 //log::info("res:".json_encode($response));
                 $res = json_decode( $response->getBody(), true);
                 log::info("res:".json_encode($res));
-                $result=$res["success"];**/
+                $result=$res["success"];
+                 **/
+                //if($result=="true"){
+                    DB::commit();
+                //}else{
+                   // DB::rollBack();
+                   // throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
+                //}
             }
-            //if($result!="true"){
-                DB::commit();
-            //}else{
-               // DB::rollBack();
-            //}
+
         }
         catch (\Exception $exception)
         {
@@ -88,7 +92,7 @@ class BaseCustomerRepository extends BaseRepository
 
             throw $exception;
 
-//            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.create_error'));
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.create_error'));
         }
 
         return $customer;
@@ -108,23 +112,32 @@ class BaseCustomerRepository extends BaseRepository
         {
             DB::beginTransaction();
             $customer->update($input);
-/**
+            Log::info("update");
+
             //如果有uface信息
-            //
+            //TODO:建立shop关于是否使用人脸信息的数据库
+            /**
             $http = new GuzzleHttp\Client;
-            $response = $http->get('http://192.168.1.188:8090/FaceMaven_war_exploded/person/update', [
+            $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/update', [
                 'query' => [
-                    'ip' => 'http://192.168.1.188:8090',
-                    'pass' => '123456',
+                    'ip' => 'http://192.168.1.121:8090',
+                    'pass' => 'admin123',
                     'id'=>$customer->id,
                     'name'=>$customer->user_name,
-                    'cardNo'=>$input->internal_number,
+                    'idcardNum'=>"",
                 ],
             ]);
             //log::info("res:".json_encode($response));
             $res = json_decode( $response->getBody(), true);
             log::info("res:".json_encode($res));
-            **/
+            $result=$res["success"];
+
+            if($result =="true"){
+                DB::commit();
+            }else{
+                DB::rollBack();
+                throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
+            }**/
             DB::commit();
 
             return $customer;

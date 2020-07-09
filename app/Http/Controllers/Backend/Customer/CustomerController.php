@@ -297,9 +297,9 @@ class CustomerController extends Controller
     /**
      * @return array
      */
-    private function getEnabledPayMethod($restaurant_id)
+    private function getEnabledPayMethod($shop_id)
     {
-        $payMethods = PayMethod::where('restaurant_id', $restaurant_id)->get();
+        $payMethods = PayMethod::where('shop_id', $shop_id)->get();
 
         $array = [];
         foreach ($payMethods as $payMethod) {
@@ -323,7 +323,7 @@ class CustomerController extends Controller
     public function recharge(Customer $customer, ManageCustomerRequest $request)
     {
         $user = Auth::User();
-        $payMethods = $this->getEnabledPayMethod($user->restaurant_id);
+        $payMethods = $this->getEnabledPayMethod($user->shop_id);
 
         return view('backend.customer.recharge')
             ->withCustomer($customer)
@@ -409,6 +409,7 @@ class CustomerController extends Controller
 
         $user = Auth::User();
         $input['restaurant_id'] = $user->restaurant_id;
+        $input['shop_id'] = $user->shop_id;
         $input['restaurant_user_id'] = $user->id;
         $input['customer_id'] = $customer->id;
         $input['card_id'] = $customer->card->internal_number;

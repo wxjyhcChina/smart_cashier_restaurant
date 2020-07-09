@@ -9,6 +9,7 @@ use App\Repositories\Api\DinningTime\DinningTimeRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class DinningTimeController extends Controller
 {
@@ -35,10 +36,10 @@ class DinningTimeController extends Controller
     {
         //
         $user = Auth::User();
-
+        Log::info("user:".json_encode($user));
         //$dinningTimes = $this->dinningTimeRepo->getByRestaurant($user->restaurant_id);
-        $dinningTimes = $this->dinningTimeRepo->getByShopQuery($user->shop_id);
-
+        $dinningTimes = $this->dinningTimeRepo->getByShop($user->shop_id);
+        Log::info("dinningTimes:".json_encode($dinningTimes));
         return $this->responseSuccess($dinningTimes);
     }
 

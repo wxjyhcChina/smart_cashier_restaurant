@@ -285,7 +285,9 @@ class BaseGoodsRepository extends BaseRepository
         $goods = new Goods();
         $goods->restaurant_id = $input['restaurant_id'];
         $goods->shop_id = $input['shop_id'];
-        $goods->good_category_id=$input['good_category_id'];
+        if(isset($input['good_category_id'])){
+            $goods->good_category_id=$input['good_category_id'];
+        }
         $goods->name = $input['name'];
         $goods->price = $input['price'];
         $goods->image = isset($input['image']) ? $input['image'] : '';

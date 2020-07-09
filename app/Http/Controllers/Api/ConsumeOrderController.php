@@ -10,6 +10,7 @@ use App\Repositories\Api\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ConsumeOrderController extends Controller
 {
@@ -120,7 +121,7 @@ class ConsumeOrderController extends Controller
     public function pay(ConsumeOrder $consumeOrder, Request $request)
     {
         $consumeOrder = $this->consumeOrderRepo->pay($consumeOrder, $request->all());
-
+        Log::info("consumeOrder:".json_encode($consumeOrder));
         return $this->responseSuccess($consumeOrder);
     }
 
