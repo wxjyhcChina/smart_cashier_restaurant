@@ -14,9 +14,13 @@ use App\Modules\Enums\CardStatus;
 use App\Modules\Enums\ErrorCode;
 use App\Modules\Models\Card\Card;
 use App\Modules\Models\Customer\Customer;
+use App\Modules\Models\Shop\Shop;
 use App\Modules\Repositories\Customer\BaseCustomerRepository;
 use App\Modules\Services\Account\Facades\Account;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use GuzzleHttp;
 
 /**
  * Class CustomerRepository
@@ -183,9 +187,45 @@ class CustomerRepository extends BaseCustomerRepository
             throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
         }
 
-        $card->customer_id = $customer->id;
-        $card->status = CardStatus::ACTIVATED;
-        $card->save();
+        try{
+            DB::beginTransaction();
+            $user=Auth::User();
+            $shop=Shop::where('id', $user->shop_id)->get();
+
+            $card->customer_id = $customer->id;
+            $card->status = CardStatus::ACTIVATED;
+            $card->save();
+
+            //如果有uface信息
+            //TODO:建立shop关于是否使用人脸信息的数据库
+            /**
+            $http = new GuzzleHttp\Client;
+            $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/update', [
+                'query' => [
+                    'ip' => 'http://192.168.1.121:8090',
+                    'pass' => 'admin123',
+                    'id'=>$customer->id,
+                    'name'=>$customer->user_name,
+                    'idcardNum'=>$card->internal_number,
+                ],
+            ]);
+            //log::info("res:".json_encode($response));
+            $res = json_decode( $response->getBody(), true);
+            log::info("res:".json_encode($res));
+            $result=$res["success"];
+
+            if($result =="true"){
+                DB::commit();
+            }else{
+                DB::rollBack();
+                throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
+            }**/
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));
+        }
+
     }
 
     public function unbindCard($customer)
@@ -197,9 +237,43 @@ class CustomerRepository extends BaseCustomerRepository
             throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
         }
 
-        $card->status = CardStatus::UNACTIVATED;
-        $card->customer_id = null;
-        $card->save();
+        try {
+            DB::beginTransaction();
+
+            $card->status = CardStatus::UNACTIVATED;
+            $card->customer_id = null;
+            $card->save();
+
+            //如果有uface信息
+            //TODO:建立shop关于是否使用人脸信息的数据库
+            /**
+            $http = new GuzzleHttp\Client;
+            $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/unbindCard', [
+                'query' => [
+                    'ip' => 'http://192.168.1.121:8090',
+                    'pass' => 'admin123',
+                    'id'=>$customer->id,
+                    'name'=>$customer->user_name,
+                    'idcardNum'=>'',
+                ],
+            ]);
+            //log::info("res:".json_encode($response));
+            $res = json_decode( $response->getBody(), true);
+            log::info("res:".json_encode($res));
+            $result=$res["success"];
+
+            if($result =="true"){
+                DB::commit();
+            }else{
+                DB::rollBack();
+                throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
+            }**/
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));
+        }
+
     }
 
     public function lostCard($customer, $input)
@@ -210,23 +284,56 @@ class CustomerRepository extends BaseCustomerRepository
         {
             throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
         }
+        try {
+            DB::beginTransaction();
 
-        $originalCard->status = CardStatus::LOST;
-        $originalCard->customer_id = null;
-        $originalCard->save();
+            $originalCard->status = CardStatus::LOST;
+            $originalCard->customer_id = null;
+            $originalCard->save();
 
-        $card = Card::where('internal_number', $input['card_id'])->first();
-        if ($card == null)
-        {
-            throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
+            $card = Card::where('internal_number', $input['card_id'])->first();
+            if ($card == null)
+            {
+                throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
+            }
+            else if ($card->status != CardStatus::UNACTIVATED)
+            {
+                throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
+            }
+
+            $card->customer_id = $customer->id;
+            $card->status = CardStatus::ACTIVATED;
+            $card->save();
+
+            //如果有uface信息
+            //TODO:建立shop关于是否使用人脸信息的数据库
+            /**
+            $http = new GuzzleHttp\Client;
+            $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/update', [
+                'query' => [
+                    'ip' => 'http://192.168.1.121:8090',
+                    'pass' => 'admin123',
+                    'id'=>$customer->id,
+                    'name'=>$customer->user_name,
+                    'idcardNum'=>$card->internal_number,
+                ],
+            ]);
+            //log::info("res:".json_encode($response));
+            $res = json_decode( $response->getBody(), true);
+            log::info("res:".json_encode($res));
+            $result=$res["success"];
+
+            if($result =="true"){
+                DB::commit();
+            }else{
+                DB::rollBack();
+                throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
+            }**/
+            DB::commit();
+        }catch (\Exception $exception){
+            DB::rollBack();
+            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));
         }
-        else if ($card->status != CardStatus::UNACTIVATED)
-        {
-            throw new ApiException(ErrorCode::CARD_STATUS_INCORRECT, trans('api.error.card_status_incorrect'));
-        }
 
-        $card->customer_id = $customer->id;
-        $card->status = CardStatus::ACTIVATED;
-        $card->save();
     }
 }

@@ -10,7 +10,7 @@
 @endsection
 
 @section('content')
-    {{ Form::model($customer, ['route' => ['admin.customer.', $customer], 'class' => 'form-horizontal', 'id'=>'edit-customer-form','role' => 'form', 'method' => 'PATCH']) }}
+    {{ Form::model($customer, ['route' => ['admin.customer.rechargeAndPay', $customer], 'class' => 'form-horizontal', 'id'=>'edit-customer-form','role' => 'form', 'method' => 'PATCH']) }}
 
     <div class="box box-success">
         <div class="box-header with-border">

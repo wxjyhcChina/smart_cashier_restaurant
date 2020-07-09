@@ -24,4 +24,9 @@ class DinningTimeRepository extends BaseDinningTimeRepository
     {
         return $this->getByRestaurantQuery($restaurant_id)->get();
     }
+
+    public function getByShop($shop_id)
+    {
+        return $this->getByShopQuery($shop_id)->get();
+    }
 }

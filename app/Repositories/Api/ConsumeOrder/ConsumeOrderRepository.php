@@ -736,6 +736,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $data=DB::table('consume_order_goods')->where('consume_order_id','=',$order->id)->get();
         Log::info("order param:".json_encode($data));
         foreach ($data as $goods){
+            Log::info("ordergoods param:".json_encode($goods));
             $material_goods=DB::table('material_goods')->where('goods_id',$goods->goods_id)->get();
             if($material_goods ->first() != null){
                 foreach($material_goods as $material){
