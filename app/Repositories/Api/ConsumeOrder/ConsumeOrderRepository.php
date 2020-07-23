@@ -292,7 +292,6 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         if (count($goodsArray) == 0)
         {
-            //去除, trans('api.error.order_goods_not_exist'),方便安卓处理
             throw  new ApiException(ErrorCode::ORDER_GOODS_NOT_EXIST, trans('api.error.order_goods_not_exist'));
         }
 
@@ -316,7 +315,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     {
         $labels = isset($input['labels']) ? $input['labels'] : array();
         $tempGoods = isset($input['temp_goods']) ? $input['temp_goods'] : array();
-
+        Log::info('tempGoods, input'.json_encode($tempGoods));
         $forceDiscount = isset($input['discount']) ? $input['discount'] : null;
         $restaurant_id = $input['restaurant_id'];
         $shop_id = $input['shop_id'];
@@ -337,7 +336,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $forceDiscount = isset($input['discount']) ? $input['discount'] : null;
         $restaurant_id = $input['restaurant_id'];
         $shop_id = $input['shop_id'];
-        $restaurant_user_id = $input['restaurant_user_id'];
+        $restaurant_user_id = isset($input['restaurant_user_id']) ? $input['restaurant_user_id'] : null;
 
         $response = $this->getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount,$shop_id);
 

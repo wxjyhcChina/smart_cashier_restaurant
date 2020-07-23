@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Repositories\Api\Card\CardRepository;
-use EasyWeChatComposer\EasyWeChat;
+use App\Repositories\Api\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -12,6 +13,20 @@ use Iwanli\Wxxcx\Wxxcx;
 
 class WxController extends Controller
 {
+    /**
+     * @var ConsumeOrderRepository
+     */
+    private $consumeOrderRepo;
+
+    /**
+     * ConsumeOrderController constructor.
+     * @param $consumeOrderRepo
+     */
+    public function __construct(ConsumeOrderRepository $consumeOrderRepo)
+    {
+        $this->consumeOrderRepo = $consumeOrderRepo;
+    }
+
     public function index(Request $request)
     {
 
@@ -152,7 +167,7 @@ class WxController extends Controller
             $order_id = $data['attach'];		//附加参数,选择传递订单ID
             $openid = $data['openid'];			//付款人openID
             $total_fee = $data['total_fee'];	//付款金额
-
+            Log::info("data param:".json_encode($data));
             //更新状态,完成订单
             //$this->updatePsDB($order_sn,$order_id,$openid,$total_fee);
         } else {
@@ -170,20 +185,47 @@ class WxController extends Controller
 
     }
 
+    /**
+     * 卡支付
+     * @param Request $request
+     */
+    public function pay(Request $request){
+        $input = $request->all();
+        $restaurant_id=$input['restaurantId'];
+        $shop_id=$input['shopId'];
+        $temp_goods=$input['tempGoods'];
+        $temp_goods = explode(",", $temp_goods);
+        $response=$this->preCreate($restaurant_id,$shop_id,$temp_goods);
+        Log::info("pay:".json_encode($response));
+        return $this->responseSuccess($response);
+    }
+
+    public function payWithCard( Request $request)
+    {
+        $input = $request->all();
+        $consumeOrder=ConsumeOrder::query()
+            ->where('id',$input['orderId'])->first();
+
+        $consumeOrder = $this->consumeOrderRepo->pay($consumeOrder, $input);
+        Log::info("payWithCard:".json_encode($consumeOrder));
+        return $this->responseSuccess($consumeOrder);
+    }
 
     /**
-     * 预支付
+     * 微信小程序预支付
+     * @param  Request $request
+     * @return $data
      */
-    public function prepay(){
-        Log::info("WxController pay() arrived");
-        if($_REQUEST['code']){
-            $code=$_REQUEST['code'];
-            $openid=$this->getOpenId($code);
-        }
-        $shop_id=$code=$_REQUEST['shopId'];
+    public function prepay(Request $request){
+        $input = $request->all();
+        Log::info("WxController pay() arrived:".json_encode($input));
+        $restaurant_id=$input['restaurantId'];
+        $shop_id=$input['shopId'];
+        $temp_goods=$input['tempGoods'];
+        $temp_goods = explode(",", $temp_goods);
         $db=DB::table("pay_methods")
             ->where("shop_id",$shop_id)
-            ->where("enabled",0)
+            ->where("enabled",1)
             ->where('method','WECHAT_PAY')
             ->first();
         $wechatPay=DB::table("wechat_pay_detail")
@@ -193,15 +235,25 @@ class WxController extends Controller
         $mch_id=$wechatPay->mch_id;
         Log::info("prepay openid:".json_encode($appid));
         Log::info("prepay openid:".json_encode($mch_id));
-        //Log::info("prepay openid:".json_encode($openid));
-        //print_r($openid);die;
-        //$openid = 'ossyJ5TjaHcDq9tAVVh90a07F0QM';
-        $fee =$_REQUEST['pay'];//举例支付0.01
+
+        //写入
+
+        $res=$this->preCreate($restaurant_id,$shop_id,$temp_goods);
+
         $appid="wx7f0a0b52520c1c68";//appid.如果是公众号 就是公众号的appid
         $body="test";
         $mch_id="1549500931";//商户号
+        $secret="a5aa218b35d2ed0c212ef420ddd06e5e";
+        if($input['code']){
+            $code=$input['code'];
+            $openid=$this->getOpenId($code,$appid,$secret);
+        }
+        //Log::info("prepay openid:".json_encode($openid));
+        //print_r($openid);die;
+        //$openid = 'ossyJ5TjaHcDq9tAVVh90a07F0QM';
+        $fee =$res[price];//举例支付0.01
         $nonce_str=$this->nonce_str();//随机字符串
-        $notify_url='https://www.jyjiesuan.com/api/v1/wx/payCallback';//回调的url【自己填写】
+        $notify_url='https://www.jyjiesuan.com/api/v1/wx/payCallback';//回调的url
         $openid=$openid;
         $out_trade_no=$this->order_number($openid);
         $spbill_create_ip = $this->get_client_ip();//'127.0.0.1';
@@ -270,7 +322,6 @@ class WxController extends Controller
             $data['RETURN_CODE'] = $array['RETURN_CODE'];
             $data['RETURN_MSG'] = $array['RETURN_MSG'];
         }
-        //写入
 
 
         echo json_encode($data);
@@ -292,10 +343,8 @@ class WxController extends Controller
     /**
      * 通过code 获取 openid
      */
-    function getOpenId($code){
+    function getOpenId($code,$appid,$secret){
         //获得appid和secret
-        $appid="wx7f0a0b52520c1c68";
-        $secret="a5aa218b35d2ed0c212ef420ddd06e5e";
 
         $url="https://api.weixin.qq.com/sns/jscode2session?appid=$appid&secret=$secret&js_code=$code&grant_type=authorization_code";
         //Log::info($url);
@@ -369,11 +418,18 @@ class WxController extends Controller
     }
 
     //生成订单
-    private function preCreate(){
+    private function preCreate($restaurant_id,$shop_id,$temp_goods){
         //restaurant_id
-        //discount
+        $input['restaurant_id'] =$restaurant_id;
+        //discount无
         //shop_id
+        $input['shop_id'] =$shop_id;
         //temp_goods
+        $input['temp_goods'] =$temp_goods;
+
+        $response = $this->consumeOrderRepo->create($input);
+        Log::info(json_encode($response));
+        return $response;
     }
 
     //更新订单状态
