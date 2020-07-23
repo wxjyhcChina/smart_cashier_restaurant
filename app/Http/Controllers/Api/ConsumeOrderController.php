@@ -104,9 +104,9 @@ class ConsumeOrderController extends Controller
      */
     public function latestOrder(Request $request)
     {
-        $restaurant_id = Auth::User()->restaurant_id;
-
-        $order = $this->consumeOrderRepo->latestOrder($restaurant_id);
+        //$restaurant_id = Auth::User()->restaurant_id;
+        $shop_id = Auth::User()->shop_id;
+        $order = $this->consumeOrderRepo->latestOrder($shop_id);
 
         return $this->responseSuccess($order);
     }

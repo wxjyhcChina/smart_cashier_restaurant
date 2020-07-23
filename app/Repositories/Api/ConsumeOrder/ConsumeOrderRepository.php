@@ -163,7 +163,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
-     * @param $restaurant_id
+     * @param $shop_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      * @throws ApiException
      */
@@ -250,6 +250,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      * @param $labels
      * @param $tempGoods
      * @param $forceDiscount
+     * @param $shop_id
      * @return array
      * @throws ApiException
      */
@@ -257,7 +258,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     {
         $dinningTime = $this->getCurrentDinningTime($shop_id);
 
-        $excludeLabels = $this->excludeLabels($restaurant_id, $dinningTime->id);
+        $excludeLabels = $this->excludeLabels($shop_id, $dinningTime->id);
 
         $price = 0;
         $goodsArray = [];
@@ -377,12 +378,12 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
-     * @param $restaurant_id
+     * @param $shop_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      */
-    public function latestOrder($restaurant_id)
+    public function latestOrder($shop_id)
     {
-        $order = ConsumeOrder::where('restaurant_id', $restaurant_id)
+        $order = ConsumeOrder::where('shop_id', $shop_id)
             ->orderBy('id', 'desc')
             ->with('goods')
             ->first();
@@ -391,16 +392,16 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
-     * @param $restaurant_id
+     * @param $shop_id
      * @param $dinning_time_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      */
-    private function excludeLabels($restaurant_id, $dinning_time_id)
+    private function excludeLabels($shop_id, $dinning_time_id)
     {
         $now = Carbon::now();
         $excludeTime = Carbon::now()->subSeconds(config('constants.order.exclude_time'));
 
-        $order = ConsumeOrder::where('restaurant_id', $restaurant_id)
+        $order = ConsumeOrder::where('shop_id', $shop_id)
             ->where('dinning_time_id', $dinning_time_id)
             ->whereBetween('updated_at', [$excludeTime, $now])
             ->where('status','<>', ConsumeOrderStatus::CLOSED)
@@ -710,7 +711,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         {
             $payMethod = $input['pay_method'];
             $method = PayMethod::where('method', $payMethod)
-                ->where('restaurant_id', $order->restaurant_id)
+                ->where('shop_id', $order->shop_id)
                 ->first();
             if ($method == null
                 || (($payMethod == PayMethodType::CASH || $payMethod == PayMethodType::CARD)
@@ -734,6 +735,14 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
                 }
 
                 $order = $this->payWithCard($order, $input['card_id']);
+            }else if ($payMethod == PayMethodType::FACE)
+            {
+                if (!isset($input['card_id']))
+                {
+                    throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
+                }
+
+                $order = $this->payWithFace($order, $input['card_id']);
             }
             else
             {
