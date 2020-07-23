@@ -79,6 +79,42 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         return $query->orderBy('consume_orders.created_at', 'desc')->paginate(15);
     }
 
+    public function getByShop($shop_id, $input)
+    {
+        $query = $this->getByShopQuery($shop_id);
+        if (isset($input['start_time']) && isset($input['end_time']))
+        {
+            $query = $query->whereBetween('created_at', [$input['start_time'].' 00:00:00', $input['end_time']." 23:59:59"]);
+        }
+
+        if (isset($input['key'])) {
+            $query->where(function ($query) use ($input) {
+                $query->where('id', 'like', '%' . $input['key'] . '%')
+                    ->orWhereHas('customer', function ($query) use ($input) {
+                        $query->where('user_name', 'like', '%' . $input['key'] . '%');
+                    })
+                    ->orWhereHas('card', function ($query) use ($input) {
+                        $query->where('number', 'like', '%' . $input['key'] . '%');
+                    });
+            });
+        }
+
+        if (isset($input['dinning_time_id']))
+        {
+            $query = $query->where('dinning_time_id', $input['dinning_time_id']);
+        }
+
+        if (isset($input['pay_method']))
+        {
+            $query = $query->where('pay_method', $input['pay_method']);
+        }
+
+        $query->where('status', '<>', ConsumeOrderStatus::WAIT_PAY)
+            ->where('status', '<>', ConsumeOrderStatus::PAY_IN_PROGRESS)
+            ->where('status', '<>', ConsumeOrderStatus::CLOSED);
+        return $query->orderBy('consume_orders.created_at', 'desc')->paginate(15);
+    }
+
     /**
      * @param $restaurant_user_id
      * @param $input
@@ -134,14 +170,14 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     private function getCurrentDinningTime($shop_id)
     {
         $current_time = Carbon::now()->format("H:i");
-        Log::info("current_time:".json_encode($current_time));
+        //Log::info("current_time:".json_encode($current_time));
         $dinningTime = DinningTime::where('enabled', 1)
             ->where('start_time', '<=' , $current_time)
             ->where('end_time', '>', $current_time)
             //->where('restaurant_id', $restaurant_id)
             ->where('shop_id', $shop_id)
             ->first();
-        Log::info("dinningTime:".json_encode($dinningTime));
+        //Log::info("dinningTime:".json_encode($dinningTime));
         if ($dinningTime == null)
         {
             throw new ApiException(ErrorCode::NOT_IN_DINNING_TIME, trans('api.error.not_in_dinning_time'));
@@ -255,6 +291,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
 
         if (count($goodsArray) == 0)
         {
+            //去除, trans('api.error.order_goods_not_exist'),方便安卓处理
             throw  new ApiException(ErrorCode::ORDER_GOODS_NOT_EXIST, trans('api.error.order_goods_not_exist'));
         }
 
@@ -691,24 +728,6 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             }
             else if ($payMethod == PayMethodType::CARD)
             {
-                //TODO:是否能通过uface人脸
-/**
-                $http = new GuzzleHttp\Client;
-                $start_time = Carbon::now();
-                $end_time =Carbon::now()->addSeconds(5);//5秒后
-                $response = $http->get('http://192.168.1.188:8090/FaceMaven_war_exploded/findRecords', [
-                    'query' => [
-                        'ip' => 'http://192.168.1.188:8090',
-                        'pass' => '123456',
-                        'startTime'=>$start_time,
-                        'endTime'=>$end_time,
-                    ],
-                ]);
-
-                $res = json_decode( $response->getBody(), true);
-                log::info("res:".json_encode($res));
-                //验证通过进入payWithFace
- **/
                 if (!isset($input['card_id']))
                 {
                     throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
@@ -734,9 +753,9 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         }
         //消耗食材部分
         $data=DB::table('consume_order_goods')->where('consume_order_id','=',$order->id)->get();
-        Log::info("order param:".json_encode($data));
+        //Log::info("order param:".json_encode($data));
         foreach ($data as $goods){
-            Log::info("ordergoods param:".json_encode($goods));
+            //Log::info("ordergoods param:".json_encode($goods));
             $material_goods=DB::table('material_goods')->where('goods_id',$goods->goods_id)->get();
             if($material_goods ->first() != null){
                 foreach($material_goods as $material){

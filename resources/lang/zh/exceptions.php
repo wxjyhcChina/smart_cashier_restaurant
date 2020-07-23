@@ -79,6 +79,7 @@ return [
             'mark_error' => '更新卡用户失败，请稍后重试',
             'update_error' => '更新卡用户失败，请稍后重试',
             'create_error' => '创建卡用户失败，请稍后重试',
+            'net_error' => '由于不明原因导致外接设备同步失败，请联系管理员',
         ],
 
         'consumeCategory' => [

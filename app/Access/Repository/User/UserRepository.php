@@ -483,9 +483,9 @@ class UserRepository extends BaseRepository
 
         //是否开启前台充值/打折功能
         $recharge_flag=Shop::find($user->shop_id)->recharge_flag;
-        Log::info("recharge_flag:".$recharge_flag);
+        //Log::info("recharge_flag:".$recharge_flag);
         $discount_flag=Shop::find($user->shop_id)->discount_flag;
-        Log::info("discount_flag:".$discount_flag);
+        //Log::info("discount_flag:".$discount_flag);
         // all good so return the token
         return compact('token', 'expire', 'user_id','recharge_flag','discount_flag');
     }

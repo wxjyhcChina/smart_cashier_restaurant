@@ -217,7 +217,7 @@ return [
         App\Modules\Services\Pay\PayServiceProvider::class,
 
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-
+        Overtrue\LaravelWeChat\ServiceProvider::class,
     ],
 
     /*
@@ -280,7 +280,7 @@ return [
         'Gravatar'    => Creativeorange\Gravatar\Facades\Gravatar::class,
         'Html'        => Collective\Html\HtmlFacade::class,
         'Socialite'   => Laravel\Socialite\Facades\Socialite::class,
-
+        'EasyWeChat' => Overtrue\LaravelWeChat\Facade::class,
     ],
 
 ];

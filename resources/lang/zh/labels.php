@@ -442,7 +442,10 @@ return [
                 'count' => '数量',
                 'kilogram' => '单位',
                 'main_supplier' => '主要供应商',
-                'status'=>'消耗途径'
+                'status'=>'途径',
+                'dailyCount'=>'现存库存',
+                'plusStatus'=>'导入途径',
+                'minusStatus'=>'消耗途径',
             ]
         ],
 

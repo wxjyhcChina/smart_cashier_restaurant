@@ -11,6 +11,8 @@ Route::group([
     Route::get('stocks/getDailyConsumeStatistics', 'StocksTableController@getDailyConsumeStatistics')->name('stocks.getDailyConsumeStatistics');
     Route::get('stocks/getPurchase', 'StocksTableController@getPurchase')->name('stocks.getPurchase');
 
+    Route::get('stocks/materialStatistics', 'StocksController@materialStatistics')->name('stocks.materialStatistics');
+
     Route::get('stocks/test/{user}', function (App\Modules\Models\Stocks\Stocks $stocks) {
         dd($stocks);
     });

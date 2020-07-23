@@ -145,4 +145,19 @@ class StocksRepository extends BaseStocksRepository
         $detail->shop_id=$user->shop_id;
         return $detail;
     }
+
+    //
+    public function getByShopWithRelationQuery($start_time, $end_time, $shop_id){
+        $query = StocksDetail::query()
+            ->select(DB::raw('round(sum(if(status=\'FRMLOSSPLUS\'or status=\'PURCHASE\',number,0)),4) as plus'),DB::raw('round(sum(if(status=\'CONSUME\'or status=\'FRMLOSSMINUS\' or status=\'EXPEND\',number,0)),4) as minus'),'materials.name as name','stocks.count as count')
+            ->leftJoin('stocks', 'stocks.material_id', '=', 'stocks_detail.material_id')
+            ->leftJoin('materials', 'materials.id', '=', 'stocks.material_id')
+            ->where('stocks.shop_id',$shop_id)
+            ->where('stocks_detail.created_at', '>=', $start_time)
+            ->where('stocks_detail.created_at', '<=', $end_time)
+            ->groupBy('stocks_detail.material_id');
+
+        return $query;
+    }
+
 }
