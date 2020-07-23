@@ -146,7 +146,7 @@ class StocksRepository extends BaseStocksRepository
         return $detail;
     }
 
-    //
+    //库存出入总计
     public function getByShopWithRelationQuery($start_time, $end_time, $shop_id){
         $query = StocksDetail::query()
             ->select(DB::raw('round(sum(if(status=\'FRMLOSSPLUS\'or status=\'PURCHASE\',number,0)),4) as plus'),DB::raw('round(sum(if(status=\'CONSUME\'or status=\'FRMLOSSMINUS\' or status=\'EXPEND\',number,0)),4) as minus'),'materials.name as name','stocks.count as count')
