@@ -47,11 +47,7 @@ class Utils
      */
     public static function isPast($timestamp, $leeway = 0)
     {
-        $timestamp = static::timestamp($timestamp);
-
-        return $leeway > 0
-            ? $timestamp->addSeconds($leeway)->isPast()
-            : $timestamp->isPast();
+        return static::timestamp($timestamp)->addSeconds($leeway)->isPast();
     }
 
     /**
@@ -64,10 +60,6 @@ class Utils
      */
     public static function isFuture($timestamp, $leeway = 0)
     {
-        $timestamp = static::timestamp($timestamp);
-
-        return $leeway > 0
-            ? $timestamp->subSeconds($leeway)->isFuture()
-            : $timestamp->isFuture();
+        return static::timestamp($timestamp)->subSeconds($leeway)->isFuture();
     }
 }

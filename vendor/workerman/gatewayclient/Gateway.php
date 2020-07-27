@@ -16,12 +16,9 @@ use \Exception;
 
 /**
  * 数据发送相关
- * @version 3.0.12
+ * @version 3.0.10
  */
 
-/**
- * 数据发送相关
- */
 class Gateway
 {
     /**
@@ -34,7 +31,7 @@ class Gateway
     /**
      * 注册中心地址
      *
-     * @var string|array
+     * @var string
      */
     public static $registerAddress = '127.0.0.1:1236';
 
@@ -55,7 +52,7 @@ class Gateway
      * @var bool
      */
     public static $persistentConnection = false;
-    
+
     /**
      * 向所有客户端连接(或者 client_id_array 指定的客户端连接)广播消息
      *
@@ -127,6 +124,10 @@ class Gateway
         } // 运行在其它环境中，通过注册中心得到gateway地址
         else {
             $all_addresses = static::getAllGatewayAddressesFromRegister();
+            if (!$all_addresses) {
+                throw new Exception('Gateway::getAllGatewayAddressesFromRegister() with registerAddress:' .
+                    static::$registerAddress . '  return ' . var_export($all_addresses, true));
+            }
             foreach ($all_addresses as $address) {
                 $gateway_data['ext_data'] = isset($address_connection_array[$address]) ?
                     json_encode(array('exclude'=> $address_connection_array[$address])) : '';
@@ -158,7 +159,7 @@ class Gateway
     {
         return (int)static::getClientIdByUid($uid);
     }
-    
+
     /**
      * 判断client_id对应的连接是否在线
      *
@@ -207,7 +208,7 @@ class Gateway
         if (!$group) {
             $gateway_data['cmd']      = GatewayProtocol::CMD_GET_ALL_CLIENT_SESSIONS;
         } else {
-            $gateway_data['cmd']      = GatewayProtocol::CMD_GET_CLIENT_SESSIONS_BY_GROUP;
+            $gateway_data['cmd']      = GatewayProtocol::CMD_GET_CLINET_SESSUONS_BY_GROUP;
             $gateway_data['ext_data'] = $group;
         }
         $status_data      = array();
@@ -655,7 +656,7 @@ class Gateway
 
     /**
      * 生成验证包，用于验证此客户端的合法性
-     * 
+     *
      * @return string
      */
     protected static function generateAuthBuffer()
@@ -701,7 +702,9 @@ class Gateway
         $addresses = static::getAllGatewayAddress();
         $gateway_buffer_array = array();
         $gateway_buffer = GatewayProtocol::encode($gateway_data);
-        $gateway_buffer = static::$secretKey ? static::generateAuthBuffer() . $gateway_buffer : $gateway_buffer;
+        if (!is_array($gateway_data)) {
+            $gateway_buffer = static::$secretKey ? static::generateAuthBuffer() . $gateway_buffer : $gateway_buffer;
+        }
         foreach ($addresses as $address) {
             $gateway_buffer_array[$address] = $gateway_buffer;
         }
@@ -807,6 +810,22 @@ class Gateway
             $address      = long2ip($address_data['local_ip']) . ":{$address_data['local_port']}";
             return static::kickAddress($address, $address_data['connection_id'], $message);
         }
+    }
+
+    /**
+     * 踢掉当前客户端，并以$message通知被踢掉客户端
+     *
+     * @param string $message
+     * @return bool
+     * @throws Exception
+     */
+    public static function closeCurrentClient($message = null)
+    {
+        if (!Context::$connection_id) {
+            throw new Exception('closeCurrentClient can not be called in async context');
+        }
+        $address = long2ip(Context::$local_ip) . ':' . Context::$local_port;
+        return static::kickAddress($address, Context::$connection_id, $message);
     }
 
     /**
@@ -988,6 +1007,10 @@ class Gateway
         } // 运行在其它环境中，通过注册中心得到gateway地址
         else {
             $addresses = static::getAllGatewayAddressesFromRegister();
+            if (!$addresses) {
+                throw new Exception('Gateway::getAllGatewayAddressesFromRegister() with registerAddress:' .
+                    static::$registerAddress . '  return ' . var_export($addresses, true));
+            }
             foreach ($addresses as $address) {
                 $gateway_data['ext_data'] = isset($address_connection_array[$address]) ?
                     json_encode(array('group'=> $group, 'exclude'=> $address_connection_array[$address])) :
@@ -1025,7 +1048,7 @@ class Gateway
         }
         static::setSocketSession($client_id, Context::sessionEncode($session));
     }
-    
+
     /**
      * 更新 session，实际上是与老的session合并
      *
@@ -1037,17 +1060,17 @@ class Gateway
     public static function updateSession($client_id, array $session)
     {
         if (Context::$client_id === $client_id) {
-            $_SESSION = array_replace_recursive((array)$_SESSION, $session);
+            $_SESSION = $session + (array)$_SESSION;
             Context::$old_session = $_SESSION;
         }
         static::sendCmdAndMessageToClient($client_id, GatewayProtocol::CMD_UPDATE_SESSION, '', Context::sessionEncode($session));
     }
-    
+
     /**
      * 获取某个client_id的session
      *
      * @param int   $client_id
-     * @return mixed false表示出错、null表示用户不存在、array表示具体的session信息 
+     * @return mixed false表示出错、null表示用户不存在、array表示具体的session信息
      */
     public static function getSession($client_id)
     {
@@ -1208,6 +1231,10 @@ class Gateway
         } // 运行在其它环境中，通过注册中心得到gateway地址
         else {
             $all_addresses = static::getAllGatewayAddressesFromRegister();
+            if (!$all_addresses) {
+                throw new Exception('Gateway::getAllGatewayAddressesFromRegister() with registerAddress:' .
+                    static::$registerAddress . '  return ' . var_export($all_addresses, true));
+            }
             foreach ($all_addresses as $address) {
                 static::sendBufferToGateway($address, $buffer);
             }
@@ -1283,36 +1310,24 @@ class Gateway
      */
     protected static function getAllGatewayAddressesFromRegister()
     {
-        static $addresses_cache, $last_update;
-        $time_now = time();
+        static $addresses_cache, $last_update, $last_register_address;
+        $time_now        = time();
         $expiration_time = 1;
-        $register_addresses = (array)static::$registerAddress;
-        if(empty($addresses_cache) || $time_now - $last_update > $expiration_time) {
-            foreach ($register_addresses as $register_address) {
-                set_error_handler(function(){});
-                $client = stream_socket_client('tcp://' . $register_address, $errno, $errmsg, static::$connectTimeout);
-                restore_error_handler();
-                if ($client) {
-                    break;
-                }
-            }
+        if(empty($addresses_cache) || $time_now - $last_update > $expiration_time || $last_register_address !== static::$registerAddress) {
+            $client = stream_socket_client('tcp://' . static::$registerAddress, $errno, $errmsg, static::$connectTimeout);
             if (!$client) {
-                throw new Exception('Can not connect to tcp://' . $register_address . ' ' . $errmsg);
+                throw new Exception('Can not connect to tcp://' . static::$registerAddress . ' ' . $errmsg);
             }
-
             fwrite($client, '{"event":"worker_connect","secret_key":"' . static::$secretKey . '"}' . "\n");
             stream_set_timeout($client, 5);
             $ret = fgets($client, 655350);
             if (!$ret || !$data = json_decode(trim($ret), true)) {
                 throw new Exception('getAllGatewayAddressesFromRegister fail. tcp://' .
-                    $register_address . ' return ' . var_export($ret, true));
+                    static::$registerAddress . ' return ' . var_export($ret, true));
             }
-            $last_update = $time_now;
-            $addresses_cache = $data['addresses'];
-        }
-        if (!$addresses_cache) {
-            throw new Exception('Gateway::getAllGatewayAddressesFromRegister() with registerAddress:' .
-                json_encode(static::$registerAddress) . '  return ' . var_export($addresses_cache, true));
+            $last_update           = $time_now;
+            $last_register_address = static::$registerAddress;
+            $addresses_cache       = $data['addresses'];
         }
         return $addresses_cache;
     }
@@ -1495,7 +1510,7 @@ class GatewayProtocol
     // 向组成员发消息
     const CMD_SEND_TO_GROUP = 22;
     // 获取组成员
-    const CMD_GET_CLIENT_SESSIONS_BY_GROUP = 23;
+    const CMD_GET_CLINET_SESSUONS_BY_GROUP = 23;
     // 获取组在线连接数
     const CMD_GET_CLIENT_COUNT_BY_GROUP = 24;
     // 按照条件查找

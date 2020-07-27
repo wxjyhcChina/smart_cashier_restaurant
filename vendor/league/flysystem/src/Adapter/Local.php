@@ -150,11 +150,18 @@ class Local extends AbstractAdapter
         $this->ensureDirectory(dirname($location));
         $stream = fopen($location, 'w+b');
 
-        if ( ! $stream || stream_copy_to_stream($resource, $stream) === false || ! fclose($stream)) {
+        if ( ! $stream) {
+            return false;
+        }
+
+        stream_copy_to_stream($resource, $stream);
+
+        if ( ! fclose($stream)) {
             return false;
         }
 
         $type = 'file';
+
         $result = compact('type', 'path');
 
         if ($visibility = $config->get('visibility')) {
@@ -254,7 +261,7 @@ class Local extends AbstractAdapter
     {
         $location = $this->applyPathPrefix($path);
 
-        return @unlink($location);
+        return unlink($location);
     }
 
     /**

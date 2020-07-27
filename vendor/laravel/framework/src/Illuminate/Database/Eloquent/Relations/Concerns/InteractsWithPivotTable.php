@@ -464,11 +464,11 @@ trait InteractsWithPivotTable
     protected function parseIds($value)
     {
         if ($value instanceof Model) {
-            return [$value->{$this->relatedKey}];
+            return [$value->getKey()];
         }
 
         if ($value instanceof Collection) {
-            return $value->pluck($this->relatedKey)->all();
+            return $value->modelKeys();
         }
 
         if ($value instanceof BaseCollection) {

@@ -69,7 +69,6 @@ abstract class BaseSigner implements Signer
     /**
      * Creates a hash with the given data
      *
-     * @param string $expected
      * @param string $payload
      * @param Key $key
      *

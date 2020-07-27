@@ -1,7 +1,5 @@
 <?= '<?php' ?>
 
-// @formatter:off
-
 namespace PHPSTORM_META {
 
    /**
