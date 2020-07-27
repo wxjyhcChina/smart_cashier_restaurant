@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Modules\Enums\ConsumeOrderStatus;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
+use App\Modules\Models\Customer\Customer;
 use App\Repositories\Api\Card\CardRepository;
 use App\Repositories\Api\ConsumeOrder\ConsumeOrderRepository;
+use App\Repositories\Backend\Customer\CustomerRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
@@ -18,12 +21,16 @@ class WxController extends Controller
      */
     private $consumeOrderRepo;
 
+    private $customerRepo;
+
     /**
      * ConsumeOrderController constructor.
      * @param $consumeOrderRepo
+     * @param CustomerRepository $customerRepo
      */
-    public function __construct(ConsumeOrderRepository $consumeOrderRepo)
+    public function __construct(CustomerRepository $customerRepo,ConsumeOrderRepository $consumeOrderRepo)
     {
+        $this->customerRepo = $customerRepo;
         $this->consumeOrderRepo = $consumeOrderRepo;
     }
 
@@ -145,8 +152,10 @@ class WxController extends Controller
 
 
     //支付模块
-    public function payCallback(){
+    public function payCallback(Request $request){
         Log::info("WxController payCallback() arrived");
+        $input = $request->all();
+        Log::info("info:".json_encode($input));
         //完成支付
         $xml = file_get_contents("php://input");
 
@@ -200,7 +209,7 @@ class WxController extends Controller
         return $this->responseSuccess($response);
     }
 
-    public function payWithCard( Request $request)
+    public function payWithCard(Request $request)
     {
         $input = $request->all();
         $consumeOrder=ConsumeOrder::query()
@@ -209,6 +218,30 @@ class WxController extends Controller
         $consumeOrder = $this->consumeOrderRepo->pay($consumeOrder, $input);
         Log::info("payWithCard:".json_encode($consumeOrder));
         return $this->responseSuccess($consumeOrder);
+    }
+
+    public function accountRecords(Request $request){
+        $input = $request->all();
+        /*$customer=Customer::query()
+            ->where("id",$input['userId'])->first();
+
+        $records = $this->customerRepo->getCustomerConsumeOrderQuery($customer);*/
+        $consumeOrder=ConsumeOrder::query()
+            ->where('customer_id',$input['userId'])
+            //->where('status', ConsumeOrderStatus::COMPLETE)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+        foreach ($consumeOrder as $order){
+            $order->goods;
+        }
+        if($consumeOrder->first() != null){
+            $records=['code'=>0];
+            $records +=['orderList'=>$consumeOrder];
+        }else{
+            $records=['code'=>1];
+        }
+
+        return $this->responseSuccessWithObject($records);
     }
 
     /**

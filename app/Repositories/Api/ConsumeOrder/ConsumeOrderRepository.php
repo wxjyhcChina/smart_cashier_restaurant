@@ -769,10 +769,10 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
                 foreach($material_goods as $material){
                     //修改库存表stock
                     $stock=Stocks::where("material_id",$material->material_id)->first();
-                    $stock->count=$stock->count-$material->number;
+                    $stock->count=$stock->count-($material->number)/1000;
                     $stock->save();
                     //记录stock_detail表
-                    $detail=$this->createConsumeMaterials($material);
+                    $detail=$this->createConsumeMaterials($material,$order->shop_id);
                     $detail->save();
                 }
             }
@@ -780,14 +780,16 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         return $order->load('goods', 'customer', 'card');
     }
 
-    private function createConsumeMaterials($material){
+    private function createConsumeMaterials($material,$shop_id){
         $user = Auth::User();
         $detail=new StocksDetail();
         $detail->material_id=$material->material_id;
         $detail->number=$material->number;
         $detail->status=StockDetailStatus::CONSUME;
-        $detail->restaurant_user_id=$user->id;
-        $detail->shop_id=$user->shop_id;
+        if($user!=null){
+            $detail->restaurant_user_id=$user->id;
+        }
+        $detail->shop_id=$shop_id;
         return $detail;
     }
 }

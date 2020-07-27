@@ -111,7 +111,7 @@
                         'searchable':false,
                         'orderable':false,
                         render:function(data, type, row){
-                            var str ="<span class='label label-success'>千克</span>";
+                            var str ="<span class='label label-success'>克</span>";
                             return str;
                         } },
                     {data: 'created_at', name: 'created_at'},

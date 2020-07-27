@@ -13,6 +13,7 @@ Route::group([
     Route::post('/create', 'WxController@create')->name('create');
     Route::post('/pay', 'WxController@pay')->name('pay');
     Route::post('/payWithCard', 'WxController@payWithCard')->name('payWithCard');
+    Route::post('/accountRecords', 'WxController@accountRecords')->name('accountRecords');
 
     Route::group([
         'middleware' => 'apiAuth'
