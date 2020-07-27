@@ -1015,24 +1015,17 @@ class Carbon extends DateTime implements JsonSerializable
     }
 
     /**
-     * Throws an exception if the given object is not a DateTime and does not implement DateTimeInterface
-     * and not in $other.
+     * Throws an exception if the given object is not a DateTime and does not implement DateTimeInterface.
      *
-     * @param mixed        $date
-     * @param string|array $other
+     * @param mixed $date
      *
      * @throws \InvalidArgumentException
      */
-    protected static function expectDateTime($date, $other = array())
+    protected static function expectDateTime($date)
     {
-        $message = 'Expected ';
-        foreach ((array) $other as $expect) {
-            $message .= "{$expect}, ";
-        }
-
         if (!$date instanceof DateTime && !$date instanceof DateTimeInterface) {
             throw new InvalidArgumentException(
-                $message.'DateTime or DateTimeInterface, '.
+                'Expected null, string, DateTime or DateTimeInterface, '.
                 (is_object($date) ? get_class($date) : gettype($date)).' given'
             );
         }
@@ -1056,7 +1049,7 @@ class Carbon extends DateTime implements JsonSerializable
             return static::parse($date, $this->getTimezone());
         }
 
-        static::expectDateTime($date, array('null', 'string'));
+        static::expectDateTime($date);
 
         return $date instanceof self ? $date : static::instance($date);
     }
@@ -1854,7 +1847,7 @@ class Carbon extends DateTime implements JsonSerializable
     /**
      * Set the default format used when type juggling a Carbon instance to a string
      *
-     * @param string|Closure $format
+     * @param string $format
      *
      * @return void
      */
@@ -1870,9 +1863,7 @@ class Carbon extends DateTime implements JsonSerializable
      */
     public function __toString()
     {
-        $format = static::$toStringFormat;
-
-        return $this->format($format instanceof Closure ? $format($this) : $format);
+        return $this->format(static::$toStringFormat);
     }
 
     /**
@@ -2293,7 +2284,7 @@ class Carbon extends DateTime implements JsonSerializable
     /**
      * Get the minimum instance between a given instance (default now) and the current instance.
      *
-     * @param \Carbon\Carbon|\DateTimeInterface|string|null $date
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
      *
      * @return static
      */
@@ -2321,7 +2312,7 @@ class Carbon extends DateTime implements JsonSerializable
     /**
      * Get the maximum instance between a given instance (default now) and the current instance.
      *
-     * @param \Carbon\Carbon|\DateTimeInterface|string|null $date
+     * @param \Carbon\Carbon|\DateTimeInterface|mixed $date
      *
      * @return static
      */
@@ -2532,7 +2523,7 @@ class Carbon extends DateTime implements JsonSerializable
     {
         $date = $date ?: static::now($this->tz);
 
-        static::expectDateTime($date, 'null');
+        static::expectDateTime($date);
 
         return $this->format($format) === $date->format($format);
     }
@@ -2581,7 +2572,7 @@ class Carbon extends DateTime implements JsonSerializable
     {
         $date = $date ? static::instance($date) : static::now($this->tz);
 
-        static::expectDateTime($date, 'null');
+        static::expectDateTime($date);
 
         $ofSameYear = is_null($ofSameYear) ? static::shouldCompareYearWithMonth() : $ofSameYear;
 
@@ -4173,7 +4164,7 @@ class Carbon extends DateTime implements JsonSerializable
      */
     public function endOfDay()
     {
-        return $this->modify('23:59:59.999999');
+        return $this->modify('23.59.59.999999');
     }
 
     /**
@@ -4331,7 +4322,7 @@ class Carbon extends DateTime implements JsonSerializable
      */
     public function endOfHour()
     {
-        return $this->modify("$this->hour:59:59.999999");
+        return $this->setTime($this->hour, 59, 59);
     }
 
     /**
@@ -4351,27 +4342,7 @@ class Carbon extends DateTime implements JsonSerializable
      */
     public function endOfMinute()
     {
-        return $this->modify("$this->hour:$this->minute:59.999999");
-    }
-
-    /**
-     * Modify to start of current minute, seconds become 0
-     *
-     * @return static
-     */
-    public function startOfSecond()
-    {
-        return $this->modify("$this->hour:$this->minute:$this->second.0");
-    }
-
-    /**
-     * Modify to end of current minute, seconds become 59
-     *
-     * @return static
-     */
-    public function endOfSecond()
-    {
-        return $this->modify("$this->hour:$this->minute:$this->second.999999");
+        return $this->setTime($this->hour, $this->minute, 59);
     }
 
     /**
@@ -4645,7 +4616,7 @@ class Carbon extends DateTime implements JsonSerializable
     /**
      * Modify the current instance to the average of a given instance (default now) and the current instance.
      *
-     * @param \Carbon\Carbon|\DateTimeInterface|string|null $date
+     * @param \Carbon\Carbon|\DateTimeInterface|null $date
      *
      * @return static
      */

@@ -14,6 +14,7 @@ namespace Psy\Command;
 use Psy\Formatter\DocblockFormatter;
 use Psy\Formatter\SignatureFormatter;
 use Psy\Input\CodeArgument;
+use Psy\Reflection\ReflectionClassConstant;
 use Psy\Reflection\ReflectionLanguageConstruct;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -86,7 +87,7 @@ HELP
 
     private function getManualDoc($reflector)
     {
-        switch (\get_class($reflector)) {
+        switch (get_class($reflector)) {
             case 'ReflectionClass':
             case 'ReflectionObject':
             case 'ReflectionFunction':
@@ -124,7 +125,7 @@ HELP
     {
         if ($db = $this->getApplication()->getManualDb()) {
             return $db
-                ->query(\sprintf('SELECT doc FROM php_manual WHERE id = %s', $db->quote($id)))
+                ->query(sprintf('SELECT doc FROM php_manual WHERE id = %s', $db->quote($id)))
                 ->fetchColumn(0);
         }
     }

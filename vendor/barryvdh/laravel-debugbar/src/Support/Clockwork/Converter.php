@@ -91,9 +91,6 @@ class Converter {
         if (isset($data['queries'])) {
             $queries = $data['queries'];
             foreach($queries['statements'] as $statement){
-                if ($statement['type'] === 'explain') {
-                    continue;
-                }
                 $output['databaseQueries'][] = [
                     'query' => $statement['sql'],
                     'bindings' => $statement['params'],
