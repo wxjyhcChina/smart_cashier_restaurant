@@ -1,20 +1,20 @@
 @extends ('backend.layouts.app')
 
-@section ('title', trans('labels.backend.card.management') . ' | ' . trans('labels.backend.card.edit'))
+@section ('title', trans('labels.backend.card.management') . ' | ' . trans('labels.backend.card.create'))
 
 @section('page-header')
     <h1>
         {{ trans('labels.backend.card.management') }}
-        <small>{{ trans('labels.backend.card.edit') }}</small>
+        <small>{{ trans('labels.backend.card.create') }}</small>
     </h1>
 @endsection
 
 @section('content')
-    {{ Form::model($card, ['route' => ['admin.card.update', $card], 'class' => 'form-horizontal', 'id'=>'edit-card-form','role' => 'form', 'method' => 'PATCH']) }}
+    {{ Form::open(['route' => 'admin.card.store', 'class' => 'form-horizontal', 'role' => 'form', 'id'=>'store-card-form', 'method' => 'post']) }}
 
     <div class="box box-success">
         <div class="box-header with-border">
-            <h3 class="box-title">{{ trans('labels.backend.card.edit') }}</h3>
+            <h3 class="box-title">{{ trans('labels.backend.card.create') }}</h3>
 
             <div class="box-tools pull-right">
                 @include('backend.card.includes.partials.header-buttons')
@@ -26,7 +26,7 @@
                 {{ Form::label('number', trans('validation.attributes.backend.card.number').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('number', $card->number, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.card.number')]) }}
+                    {{ Form::text('number', null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.card.number')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
@@ -34,19 +34,10 @@
                 {{ Form::label('internal_number', trans('validation.attributes.backend.card.internal_number').":", ['class' => 'col-lg-2 control-label']) }}
 
                 <div class="col-lg-10">
-                    {{ Form::text('internal_number', $card->internal_number, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.card.internal_number')]) }}
+                    {{ Form::text('internal_number', null, ['class' => 'form-control', 'placeholder' => trans('validation.attributes.backend.card.internal_number')]) }}
                 </div><!--col-lg-10-->
             </div><!--form control-->
 
-            @if($card->status != \App\Modules\Enums\CardStatus::ACTIVATED)
-                <div class="form-group">
-                    {{ Form::label('status', trans('validation.attributes.backend.card.status').":", ['class' => 'col-lg-2 control-label']) }}
-
-                    <div class="col-lg-10">
-                        {{ Form::select('status', [\App\Modules\Enums\CardStatus::UNACTIVATED => '未使用', \App\Modules\Enums\CardStatus::LOST =>'挂失'], $card->status,  ['class' => 'form-control', 'required']) }}
-                    </div><!--col-lg-10-->
-                </div><!--form control-->
-            @endif
         </div><!-- /.box-body -->
     </div><!--box-->
 
@@ -57,7 +48,7 @@
             </div><!--pull-left-->
 
             <div class="pull-right">
-                {{ Form::submit(trans('buttons.general.crud.edit'), ['class' => 'btn btn-success btn-xs']) }}
+                {{ Form::submit(trans('buttons.general.crud.create'), ['class' => 'btn btn-success btn-xs']) }}
             </div><!--pull-right-->
 
             <div class="clearfix"></div>

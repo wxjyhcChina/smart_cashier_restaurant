@@ -54,6 +54,13 @@ return [
             ],
         ],
 
+        'card' => [
+            'mark_error' => '更新IC卡失败，请稍后重试',
+            'update_error' => '更新IC卡失败，请稍后重试',
+            'create_error' => '创建IC卡失败，请稍后重试',
+            'already_exist' => 'IC卡已经存在'
+        ],
+
         'department' => [
             'mark_error' => '更新部门失败，请稍后重试',
             'update_error' => '更新部门失败，请稍后重试',

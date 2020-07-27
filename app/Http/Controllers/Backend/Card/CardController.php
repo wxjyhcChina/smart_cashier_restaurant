@@ -52,6 +52,7 @@ class CardController extends Controller
     public function create(ManageCardRequest $request)
     {
         //
+        return view('backend.card.create');
     }
 
     /**
@@ -64,6 +65,11 @@ class CardController extends Controller
     public function store(StoreCardRequest $request)
     {
         //
+        $input = $request->all();
+
+        $this->cardRepo->create($input);
+
+        return redirect()->route('admin.card.index')->withFlashSuccess(trans('alerts.backend.card.created'));
     }
 
     /**

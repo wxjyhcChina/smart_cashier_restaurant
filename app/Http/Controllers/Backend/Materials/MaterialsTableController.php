@@ -66,7 +66,9 @@ class MaterialsTableController extends Controller
                     {
                         $keyId=$materials->id;
 
-                        $data=DB::table('material_goods')->where('material_id',$keyId)->first();
+                        $data=DB::table('material_goods')
+                            ->where('material_id',$keyId)
+                            ->where('goods_id',$goods_id)->first();
                         //Log::info("data:".json_encode($data->number));
                         $number = $data->number;
                         break;

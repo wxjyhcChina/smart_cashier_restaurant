@@ -118,13 +118,16 @@ return [
             'management' => 'IC卡管理',
             'active' => '所有IC卡',
             'edit' => '编辑IC卡',
+            'create' => '创建IC卡',
+            'import' => '导入IC卡',
+            'select' => '选择文件',
 
             'table' => [
                 'id' => '编号',
                 'number' => 'IC卡号',
                 'internal_number' => 'IC卡内部编码',
-                'status' => '状态',
                 'created_at' => '创建时间',
+                'status' => '状态',
             ],
 
             'status' => [

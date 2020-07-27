@@ -39,6 +39,9 @@ return [
 
         'card' => [
             'title' => 'IC卡管理',
+            'all' => '所有IC卡',
+            'create' => '创建IC卡',
+            'import' => '导入IC卡',
         ],
 
         'device' => [

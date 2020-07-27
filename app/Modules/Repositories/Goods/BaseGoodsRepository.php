@@ -322,10 +322,13 @@ class BaseGoodsRepository extends BaseRepository
             Log::info("goods_id:".$goods->id);
             $data=['material_id'=>$material->id,
                     'goods_id'=>$goods->id,
-                    'number'=>$number
+                    'number'=>$number,
+                    'created_at'=>date('Y-m-d H:i:s',time()),
+                    'updated_at'=>date('Y-m-d H:i:s',time()),
             ];
-
-            DB::table('material_goods')->insert($data);
+            Log::info("data:".json_encode($data));
+            $res=DB::table('material_goods')->insert($data);
+            Log::info("res:".json_encode($res));
             DB::commit();
         }
         catch (\Exception $exception)

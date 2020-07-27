@@ -161,7 +161,8 @@ return [
 
             'card' => [
                 'number' => 'IC卡号',
-                'status' => '状态',
+                'internal_number' => 'IC卡内部编码',
+                'status' => '状态'
             ],
 
             'device' => [

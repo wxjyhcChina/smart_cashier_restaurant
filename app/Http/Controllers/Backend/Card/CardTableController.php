@@ -33,7 +33,7 @@ class CardTableController extends Controller
 
         return DataTables::of($this->cardRepo->getByRestaurantQuery($user->restaurant_id))
             ->addColumn('actions', function ($card) {
-                return $card->restaurant_action_buttons;
+                return $card->action_buttons;
             })
             ->addColumn('show_status', function ($card){
                 return $card->getShowStatusAttribute();

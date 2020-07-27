@@ -784,7 +784,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $user = Auth::User();
         $detail=new StocksDetail();
         $detail->material_id=$material->material_id;
-        $detail->number=$material->number;
+        $detail->number=($material->number)/1000;
         $detail->status=StockDetailStatus::CONSUME;
         if($user!=null){
             $detail->restaurant_user_id=$user->id;

@@ -25,7 +25,8 @@ class StoreCardRequest extends Request
     {
         return [
             //
-            'status' => 'required',
+            'number' => 'required',
+            'internal_number' => 'required',
         ];
     }
 }
