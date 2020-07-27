@@ -10,6 +10,11 @@
 
 namespace Barryvdh\LaravelIdeHelper;
 
+use Barryvdh\Reflection\DocBlock;
+use Barryvdh\Reflection\DocBlock\Context;
+use Barryvdh\Reflection\DocBlock\Serializer as DocBlockSerializer;
+use ReflectionClass;
+
 class Alias
 {
     protected $alias;
@@ -27,6 +32,7 @@ class Alias
     protected $valid = false;
     protected $magicMethods = array();
     protected $interfaces = array();
+    protected $phpdoc = null;
 
     /**
      * @param string $alias
@@ -53,10 +59,17 @@ class Alias
         }
 
         $this->addClass($this->root);
+        $this->detectFake();
         $this->detectNamespace();
         $this->detectClassType();
         $this->detectExtendsNamespace();
-        
+
+        if (!empty($this->namespace)) {
+            //Create a DocBlock and serializer instance
+            $this->phpdoc = new DocBlock(new ReflectionClass($alias), new Context($this->namespace));
+        }
+
+
         if ($facade === '\Illuminate\Database\Eloquent\Model') {
             $this->usedMethods = array('decrement', 'increment');
         }
@@ -107,7 +120,7 @@ class Alias
     {
         return $this->extends;
     }
-    
+
     /**
      * Get the class short name which this alias extends
      *
@@ -117,7 +130,7 @@ class Alias
     {
         return $this->extendsClass;
     }
-    
+
     /**
      * Get the namespace of the class which this alias extends
      *
@@ -168,6 +181,30 @@ class Alias
     }
 
     /**
+     * Detect class returned by ::fake()
+     */
+    protected function detectFake()
+    {
+        $facade = $this->facade;
+        
+        if (!method_exists($facade, 'fake')) {
+            return;
+        }
+
+        $real = $facade::getFacadeRoot();
+        
+        try {
+            $facade::fake();
+            $fake = $facade::getFacadeRoot();
+            if ($fake !== $real) {
+                $this->addClass(get_class($fake));
+            }
+        } finally {
+            $facade::swap($real);
+        }
+    }
+
+    /**
      * Detect the namespace
      */
     protected function detectNamespace()
@@ -180,7 +217,7 @@ class Alias
             $this->short = $this->alias;
         }
     }
-    
+
     /**
      * Detect the extends namespace
      */
@@ -319,10 +356,9 @@ class Alias
                 $properties = $reflection->getStaticProperties();
                 $macros = isset($properties['macros']) ? $properties['macros'] : [];
                 foreach ($macros as $macro_name => $macro_func) {
-                    $function = new \ReflectionFunction($macro_func);
                     // Add macros
                     $this->methods[] = new Macro(
-                        $function,
+                        $this->getMacroFunction($macro_func),
                         $this->alias,
                         $reflection,
                         $macro_name,
@@ -331,6 +367,38 @@ class Alias
                 }
             }
         }
+    }
+
+    /**
+     * @param $macro_func
+     *
+     * @return \ReflectionFunctionAbstract
+     * @throws \ReflectionException
+     */
+    protected function getMacroFunction($macro_func)
+    {
+        if (is_array($macro_func) && is_callable($macro_func)) {
+            return new \ReflectionMethod($macro_func[0], $macro_func[1]);
+        }
+
+        return new \ReflectionFunction($macro_func);
+    }
+
+    /*
+     * Get the docblock for this alias
+     *
+     * @param string $prefix
+     * @return mixed
+     */
+    public function getDocComment($prefix = "\t\t")
+    {
+        $serializer = new DocBlockSerializer(1, $prefix);
+
+        if ($this->phpdoc) {
+            return $serializer->getDocComment($this->phpdoc);
+        }
+        
+        return '';
     }
 
     /**
