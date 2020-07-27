@@ -175,7 +175,10 @@ return [
 
             'shop' => [
                 'name' => '子商户名',
-                'default' => '默认'
+                'default' => '默认',
+                'discount'=>'是否前台打折',
+                'recharge'=>'是否前台充值',
+                'face'=>'是否使用人脸',
             ],
 
             'dinningTime' => [

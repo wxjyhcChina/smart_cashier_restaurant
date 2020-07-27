@@ -9,6 +9,7 @@ use App\Modules\Models\Label\LabelCategory;
 use App\Modules\Repositories\BaseRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class BaseGoodsRepository.
@@ -84,6 +85,7 @@ class BaseLabelCategoryRepository extends BaseRepository
      */
     public function update(LabelCategory $labelCategory, $input)
     {
+        $input['shop_id'] = Auth::User()->shop_id;
         $this->labelCategoryExist($input, $labelCategory);
         Log::info("restaurant update param:".json_encode($input));
 
@@ -113,7 +115,7 @@ class BaseLabelCategoryRepository extends BaseRepository
         $labelCategory->image = isset($input['image']) ? $input['image'] : '';
         $labelCategory->name = $input['name'];
         $labelCategory->restaurant_id = $input['restaurant_id'];
-        $labelCategory->restaurant_id = $input['shop_id'];
+        $labelCategory->shop_id = $input['shop_id'];
         return $labelCategory;
     }
 }

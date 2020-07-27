@@ -40,7 +40,7 @@ class ConsumeOrderController extends Controller
         $user = Auth::User();
 
         $input = $request->all();
-        $orders = $this->consumeOrderRepo->getByRestaurant($user->restaurant_id, $input);
+        $orders = $this->consumeOrderRepo->getByShop($user->shop_id, $input);
 
         return $this->responseSuccessWithObject($orders);
     }
@@ -104,9 +104,9 @@ class ConsumeOrderController extends Controller
      */
     public function latestOrder(Request $request)
     {
-        $restaurant_id = Auth::User()->restaurant_id;
-
-        $order = $this->consumeOrderRepo->latestOrder($restaurant_id);
+        //$restaurant_id = Auth::User()->restaurant_id;
+        $shop_id = Auth::User()->shop_id;
+        $order = $this->consumeOrderRepo->latestOrder($shop_id);
 
         return $this->responseSuccess($order);
     }
@@ -122,7 +122,7 @@ class ConsumeOrderController extends Controller
     public function pay(ConsumeOrder $consumeOrder, Request $request)
     {
         $consumeOrder = $this->consumeOrderRepo->pay($consumeOrder, $request->all());
-        Log::info("consumeOrder:".json_encode($consumeOrder));
+        //Log::info("consumeOrder:".json_encode($consumeOrder));
         return $this->responseSuccess($consumeOrder);
     }
 

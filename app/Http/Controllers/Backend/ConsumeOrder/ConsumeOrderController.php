@@ -13,6 +13,7 @@ use App\Repositories\Backend\ConsumeOrder\ConsumeOrderRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ConsumeOrderController extends Controller
 {
@@ -200,6 +201,7 @@ class ConsumeOrderController extends Controller
     public function show(ConsumeOrder $consumeOrder, ManageConsumeOrderRequest $request)
     {
         //
+        Log::info("show:".json_encode($consumeOrder));
         return view('backend.consumeOrder.info')->withConsumeOrder($consumeOrder);
     }
 

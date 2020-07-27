@@ -37,6 +37,23 @@
                     {{ Form::checkbox('default', $shop->default, $shop->default, ['id' => 'default_checkbox']) }}
                 </div><!--col-lg-1-->
             </div><!--form control-->
+
+            <div class="form-group">
+                {{ Form::label('default', trans('validation.attributes.backend.shop.discount').":", ['class' => 'col-lg-2 control-label']) }}
+
+                <div class="col-lg-10" style="margin-top: 8px">
+                    {{ Form::radio('discount_flag', 1) }}是
+                    {{ Form::radio('discount_flag', 0) }}否
+                </div><!--col-lg-1-->
+            </div>
+            <div class="form-group">
+                {{ Form::label('default', trans('validation.attributes.backend.shop.recharge').":", ['class' => 'col-lg-2 control-label']) }}
+
+                <div class="col-lg-10" style="margin-top: 8px">
+                    {{ Form::radio('recharge_flag', 1) }}是
+                    {{ Form::radio('recharge_flag', 0) }}否
+                </div><!--col-lg-1-->
+            </div>
         </div><!-- /.box-body -->
     </div><!--box-->
 

@@ -189,38 +189,69 @@ class CustomerRepository extends BaseCustomerRepository
 
         try{
             DB::beginTransaction();
-            $user=Auth::User();
-            $shop=Shop::where('id', $user->shop_id)->get();
 
             $card->customer_id = $customer->id;
             $card->status = CardStatus::ACTIVATED;
             $card->save();
 
             //如果有uface信息
-            //TODO:建立shop关于是否使用人脸信息的数据库
-            /**
-            $http = new GuzzleHttp\Client;
-            $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/update', [
-                'query' => [
-                    'ip' => 'http://192.168.1.121:8090',
-                    'pass' => 'admin123',
-                    'id'=>$customer->id,
-                    'name'=>$customer->user_name,
-                    'idcardNum'=>$card->internal_number,
-                ],
-            ]);
-            //log::info("res:".json_encode($response));
-            $res = json_decode( $response->getBody(), true);
-            log::info("res:".json_encode($res));
-            $result=$res["success"];
-
-            if($result =="true"){
-                DB::commit();
+            $shop=Shop::where("id",$customer->shop_id)->first();
+            //Log::info("分店:".json_encode($shop));
+            if($shop!=null&&($shop->face_flag!=0)){
+                $devices=DB::table("outer_devices")
+                    ->select("url")
+                    ->where('shop_id',$customer->shop_id)
+                    ->where('type','人脸机')
+                    ->where('sources','uface')
+                    ->where('enabled',1)
+                    ->get();
+                //Log::info("外接设备:".json_encode($devices));
+                $flag=true;
+                $msg="";
+                try {
+                    foreach($devices as $device){
+                        $ip=$device->url;
+                        Log::info("bindCard发送的外网ip:".$ip);
+                        $http = new GuzzleHttp\Client;
+                        $faceMaven=env('JAVA_FACE_MAVEN');
+                        $response = $http->get($faceMaven.'/person/update', [
+                            'query' => [
+                                'ip' => $ip,
+                                'pass' => 'admin123',
+                                'id'=>$customer->id,
+                                'name'=>$customer->user_name,
+                                'idcardNum'=>$card->internal_number,
+                            ],
+                        ]);
+                        $res = json_decode( $response->getBody(), true);
+                        //log::info("res:".json_encode($res));
+                        $result=$res["success"];
+                        if($result!="true"){
+                            $flag=false;
+                            $msg=$res["data"];
+                        }
+                    }
+                }catch (\Throwable $throwable){
+                    if ($throwable instanceof ClientException) {
+                        //doing something
+                        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                    }
+                    if ($throwable instanceof ServerException) {
+                        //doing something
+                        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                    }
+                    throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                }
+                if($flag){
+                    DB::commit();
+                }else{
+                    DB::rollBack();
+                    throw new ApiException(ErrorCode::DATABASE_ERROR, $msg);
+                }
             }else{
-                DB::rollBack();
-                throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
-            }**/
-            DB::commit();
+                DB::commit();
+            }
+
         }catch (\Exception $exception){
             DB::rollBack();
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));
@@ -245,30 +276,64 @@ class CustomerRepository extends BaseCustomerRepository
             $card->save();
 
             //如果有uface信息
-            //TODO:建立shop关于是否使用人脸信息的数据库
-            /**
-            $http = new GuzzleHttp\Client;
-            $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/unbindCard', [
-                'query' => [
-                    'ip' => 'http://192.168.1.121:8090',
-                    'pass' => 'admin123',
-                    'id'=>$customer->id,
-                    'name'=>$customer->user_name,
-                    'idcardNum'=>'',
-                ],
-            ]);
-            //log::info("res:".json_encode($response));
-            $res = json_decode( $response->getBody(), true);
-            log::info("res:".json_encode($res));
-            $result=$res["success"];
-
-            if($result =="true"){
-                DB::commit();
+            $shop=Shop::where("id",$customer->shop_id)->first();
+            //Log::info("分店:".json_encode($shop));
+            if($shop!=null&&($shop->face_flag!=0)){
+                $devices=DB::table("outer_devices")
+                    ->select("url")
+                    ->where('shop_id',$customer->shop_id)
+                    ->where('type','人脸机')
+                    ->where('sources','uface')
+                    ->where('enabled',1)
+                    ->get();
+                //Log::info("外接设备:".json_encode($devices));
+                $flag=true;
+                $msg="";
+                try {
+                    foreach($devices as $device){
+                        $ip=$device->url;
+                        Log::info("unbindCard发送的外网ip:".$ip);
+                        $http = new GuzzleHttp\Client;
+                        $faceMaven=env('JAVA_FACE_MAVEN');
+                        //Log::info("java ip:".$faceMaven.'/person/unbindCard');
+                        $response = $http->get($faceMaven.'/person/unbindCard', [
+                            'query' => [
+                                'ip' => $ip,
+                                'pass' => 'admin123',
+                                'id'=>$customer->id,
+                                'name'=>$customer->user_name,
+                                'idcardNum'=>'',
+                            ],
+                        ]);
+                        $res = json_decode( $response->getBody(), true);
+                        //log::info("res:".json_encode($res));
+                        $result=$res["success"];
+                        if($result!="true"){
+                            $flag=false;
+                            $msg=$res["data"];
+                        }
+                    }
+                }catch (\Throwable $throwable){
+                    if ($throwable instanceof ClientException) {
+                        //doing something
+                        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                    }
+                    if ($throwable instanceof ServerException) {
+                        //doing something
+                        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                    }
+                    throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                }
+                if($flag){
+                    DB::commit();
+                }else{
+                    DB::rollBack();
+                    throw new ApiException(ErrorCode::DATABASE_ERROR, $msg);
+                }
             }else{
-                DB::rollBack();
-                throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
-            }**/
-            DB::commit();
+                DB::commit();
+            }
+
         }catch (\Exception $exception){
             DB::rollBack();
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));
@@ -306,30 +371,63 @@ class CustomerRepository extends BaseCustomerRepository
             $card->save();
 
             //如果有uface信息
-            //TODO:建立shop关于是否使用人脸信息的数据库
-            /**
-            $http = new GuzzleHttp\Client;
-            $response = $http->get('http://192.168.1.188:8090/FaceMaven/person/update', [
-                'query' => [
-                    'ip' => 'http://192.168.1.121:8090',
-                    'pass' => 'admin123',
-                    'id'=>$customer->id,
-                    'name'=>$customer->user_name,
-                    'idcardNum'=>$card->internal_number,
-                ],
-            ]);
-            //log::info("res:".json_encode($response));
-            $res = json_decode( $response->getBody(), true);
-            log::info("res:".json_encode($res));
-            $result=$res["success"];
-
-            if($result =="true"){
-                DB::commit();
+            $shop=Shop::where("id",$customer->shop_id)->first();
+            //Log::info("分店:".json_encode($shop));
+            if($shop!=null&&($shop->face_flag!=0)){
+                $devices=DB::table("outer_devices")
+                    ->select("url")
+                    ->where('shop_id',$customer->shop_id)
+                    ->where('type','人脸机')
+                    ->where('sources','uface')
+                    ->where('enabled',1)
+                    ->get();
+                //Log::info("外接设备:".json_encode($devices));
+                $flag=true;
+                $msg="";
+                try {
+                    foreach($devices as $device){
+                        $ip=$device->url;
+                        Log::info("lostCard发送的外网ip:".$ip);
+                        $http = new GuzzleHttp\Client;
+                        $faceMaven=env('JAVA_FACE_MAVEN');
+                        $response = $http->get($faceMaven.'/person/update', [
+                            'query' => [
+                                'ip' => $ip,
+                                'pass' => 'admin123',
+                                'id'=>$customer->id,
+                                'name'=>$customer->user_name,
+                                'idcardNum'=>$card->internal_number,
+                            ],
+                        ]);
+                        $res = json_decode( $response->getBody(), true);
+                        //log::info("res:".json_encode($res));
+                        $result=$res["success"];
+                        if($result!="true"){
+                            $flag=false;
+                            $msg=$res["data"];
+                        }
+                    }
+                }catch (\Throwable $throwable){
+                    if ($throwable instanceof ClientException) {
+                        //doing something
+                        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                    }
+                    if ($throwable instanceof ServerException) {
+                        //doing something
+                        throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                    }
+                    throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                }
+                if($flag){
+                    DB::commit();
+                }else{
+                    DB::rollBack();
+                    throw new ApiException(ErrorCode::DATABASE_ERROR, $msg);
+                }
             }else{
-                DB::rollBack();
-                throw new ApiException(ErrorCode::DATABASE_ERROR, $res["data"]);
-            }**/
-            DB::commit();
+                DB::commit();
+            }
+
         }catch (\Exception $exception){
             DB::rollBack();
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));

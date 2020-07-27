@@ -10,5 +10,5 @@ class Shop extends Model
 {
     use ShopAttribute, ShopRelationship;
 
-    protected $fillable = ['name', 'default', 'enabled'];
+    protected $fillable = ['name', 'default', 'enabled','discount_flag','recharge_flag'];
 }

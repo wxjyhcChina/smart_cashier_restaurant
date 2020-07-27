@@ -152,4 +152,26 @@ class StocksController extends Controller
         $this->stocksRepo->stockConsume($stock,$input);
         return redirect()->route('admin.stocks.index')->withFlashSuccess(trans('alerts.backend.stocks.expendUpdated'));
     }
+
+    //统计查询总览
+    public function materialStatistics(ManageStocksRequest $request){
+        $start_time = $request->get('start_time');
+        $end_time = $request->get('end_time');
+        $shop_id = $request->get('shop_id');
+
+        $orders = $this->fetchMaterialStatistics($start_time, $end_time, $shop_id);
+
+        return $orders;
+    }
+
+    public function fetchMaterialStatistics($start_time, $end_time, $shop_id)
+    {
+        if($shop_id==null){
+            $shop_id= Auth::User()->shop_id;
+        }
+
+        $orders = $this->stocksRepo->getByShopWithRelationQuery($start_time, $end_time, $shop_id)->get();
+
+        return $orders;
+    }
 }

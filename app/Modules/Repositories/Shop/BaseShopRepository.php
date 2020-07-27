@@ -131,6 +131,9 @@ class BaseShopRepository extends BaseRepository
         $shop->restaurant_id = $input['restaurant_id'];
         $shop->name = $input['name'];
         $shop->default = isset($input['default']) ? true : false;
+        $shop->recharge_flag=1;//默认前台可充值
+        $shop->discount_flag=1;//默认前台可打折
+        $shop->face_flag=0;//默认不使用人脸
 
         $default_shop = Shop::where('default', 1)
             ->where('restaurant_id', $input['restaurant_id'])

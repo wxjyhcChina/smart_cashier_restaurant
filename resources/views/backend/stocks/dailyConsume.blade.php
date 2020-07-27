@@ -43,6 +43,28 @@
     </div>
 
     <div class="box box-success">
+        <div class="box-body">
+            <div class="table-responsive">
+                <table id="statistics-table" class="table table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th>{{ trans('labels.backend.stocks.table.id') }}</th>
+                        <th>{{ trans('labels.backend.stocks.table.material_name') }}</th>
+                        <!--<th>{{ trans('labels.backend.stocks.table.dailyCount') }}</th>-->
+                        <th>{{ trans('labels.backend.stocks.table.minusStatus') }}</th>
+                        <th>{{ trans('labels.backend.stocks.table.plusStatus') }}</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="statistics_container">
+
+                    </tbody>
+                </table>
+            </div><!--table-responsive-->
+        </div>
+    </div>
+
+    <div class="box box-success">
 
         <div class="box-body">
             <div class="table-responsive">
@@ -154,6 +176,32 @@
                     alert("查询时间跨度不得超过两周");
                     return false;
                 }
+
+                $.ajax({
+                    type: "GET",
+                    url: '{{ route("admin.stocks.materialStatistics") }}',
+                    data: {
+                        start_time: startDate,
+                        end_time: endDate
+                    },
+                    dataType: "json",
+                    success: function (items) {
+                        //console.log(items);
+                        $('#statistics_container').empty();
+                        for(let i=0;i<items.length;i++){
+                            let e=items[i];
+                            $('#statistics_container').append('<tr>' +
+                                '<td>' + (i+1) + '</td>' +
+                                '<td>' + e.name + '</td>' +
+                                //'<td>' + e.count + '</td>' +
+                                '<td>' + e.minus  + '</td>' +
+                                '<td>' + e.plus + '</td>'+
+                                '</tr>')
+                        }
+                    },
+                    fail: function () {
+                    }
+                });
             }
         });
     </script>

@@ -79,6 +79,42 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         return $query->orderBy('consume_orders.created_at', 'desc')->paginate(15);
     }
 
+    public function getByShop($shop_id, $input)
+    {
+        $query = $this->getByShopQuery($shop_id);
+        if (isset($input['start_time']) && isset($input['end_time']))
+        {
+            $query = $query->whereBetween('created_at', [$input['start_time'].' 00:00:00', $input['end_time']." 23:59:59"]);
+        }
+
+        if (isset($input['key'])) {
+            $query->where(function ($query) use ($input) {
+                $query->where('id', 'like', '%' . $input['key'] . '%')
+                    ->orWhereHas('customer', function ($query) use ($input) {
+                        $query->where('user_name', 'like', '%' . $input['key'] . '%');
+                    })
+                    ->orWhereHas('card', function ($query) use ($input) {
+                        $query->where('number', 'like', '%' . $input['key'] . '%');
+                    });
+            });
+        }
+
+        if (isset($input['dinning_time_id']))
+        {
+            $query = $query->where('dinning_time_id', $input['dinning_time_id']);
+        }
+
+        if (isset($input['pay_method']))
+        {
+            $query = $query->where('pay_method', $input['pay_method']);
+        }
+
+        $query->where('status', '<>', ConsumeOrderStatus::WAIT_PAY)
+            ->where('status', '<>', ConsumeOrderStatus::PAY_IN_PROGRESS)
+            ->where('status', '<>', ConsumeOrderStatus::CLOSED);
+        return $query->orderBy('consume_orders.created_at', 'desc')->paginate(15);
+    }
+
     /**
      * @param $restaurant_user_id
      * @param $input
@@ -127,21 +163,21 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
-     * @param $restaurant_id
+     * @param $shop_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      * @throws ApiException
      */
     private function getCurrentDinningTime($shop_id)
     {
         $current_time = Carbon::now()->format("H:i");
-        Log::info("current_time:".json_encode($current_time));
+        //Log::info("current_time:".json_encode($current_time));
         $dinningTime = DinningTime::where('enabled', 1)
             ->where('start_time', '<=' , $current_time)
             ->where('end_time', '>', $current_time)
             //->where('restaurant_id', $restaurant_id)
             ->where('shop_id', $shop_id)
             ->first();
-        Log::info("dinningTime:".json_encode($dinningTime));
+        //Log::info("dinningTime:".json_encode($dinningTime));
         if ($dinningTime == null)
         {
             throw new ApiException(ErrorCode::NOT_IN_DINNING_TIME, trans('api.error.not_in_dinning_time'));
@@ -214,6 +250,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
      * @param $labels
      * @param $tempGoods
      * @param $forceDiscount
+     * @param $shop_id
      * @return array
      * @throws ApiException
      */
@@ -221,7 +258,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     {
         $dinningTime = $this->getCurrentDinningTime($shop_id);
 
-        $excludeLabels = $this->excludeLabels($restaurant_id, $dinningTime->id);
+        $excludeLabels = $this->excludeLabels($shop_id, $dinningTime->id);
 
         $price = 0;
         $goodsArray = [];
@@ -278,7 +315,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     {
         $labels = isset($input['labels']) ? $input['labels'] : array();
         $tempGoods = isset($input['temp_goods']) ? $input['temp_goods'] : array();
-
+        Log::info('tempGoods, input'.json_encode($tempGoods));
         $forceDiscount = isset($input['discount']) ? $input['discount'] : null;
         $restaurant_id = $input['restaurant_id'];
         $shop_id = $input['shop_id'];
@@ -299,7 +336,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $forceDiscount = isset($input['discount']) ? $input['discount'] : null;
         $restaurant_id = $input['restaurant_id'];
         $shop_id = $input['shop_id'];
-        $restaurant_user_id = $input['restaurant_user_id'];
+        $restaurant_user_id = isset($input['restaurant_user_id']) ? $input['restaurant_user_id'] : null;
 
         $response = $this->getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount,$shop_id);
 
@@ -340,12 +377,12 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
-     * @param $restaurant_id
+     * @param $shop_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      */
-    public function latestOrder($restaurant_id)
+    public function latestOrder($shop_id)
     {
-        $order = ConsumeOrder::where('restaurant_id', $restaurant_id)
+        $order = ConsumeOrder::where('shop_id', $shop_id)
             ->orderBy('id', 'desc')
             ->with('goods')
             ->first();
@@ -354,16 +391,16 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
     }
 
     /**
-     * @param $restaurant_id
+     * @param $shop_id
      * @param $dinning_time_id
      * @return \Illuminate\Database\Eloquent\Model|null|object|static
      */
-    private function excludeLabels($restaurant_id, $dinning_time_id)
+    private function excludeLabels($shop_id, $dinning_time_id)
     {
         $now = Carbon::now();
         $excludeTime = Carbon::now()->subSeconds(config('constants.order.exclude_time'));
 
-        $order = ConsumeOrder::where('restaurant_id', $restaurant_id)
+        $order = ConsumeOrder::where('shop_id', $shop_id)
             ->where('dinning_time_id', $dinning_time_id)
             ->whereBetween('updated_at', [$excludeTime, $now])
             ->where('status','<>', ConsumeOrderStatus::CLOSED)
@@ -673,7 +710,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         {
             $payMethod = $input['pay_method'];
             $method = PayMethod::where('method', $payMethod)
-                ->where('restaurant_id', $order->restaurant_id)
+                ->where('shop_id', $order->shop_id)
                 ->first();
             if ($method == null
                 || (($payMethod == PayMethodType::CASH || $payMethod == PayMethodType::CARD)
@@ -691,30 +728,20 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             }
             else if ($payMethod == PayMethodType::CARD)
             {
-                //TODO:是否能通过uface人脸
-/**
-                $http = new GuzzleHttp\Client;
-                $start_time = Carbon::now();
-                $end_time =Carbon::now()->addSeconds(5);//5秒后
-                $response = $http->get('http://192.168.1.188:8090/FaceMaven_war_exploded/findRecords', [
-                    'query' => [
-                        'ip' => 'http://192.168.1.188:8090',
-                        'pass' => '123456',
-                        'startTime'=>$start_time,
-                        'endTime'=>$end_time,
-                    ],
-                ]);
-
-                $res = json_decode( $response->getBody(), true);
-                log::info("res:".json_encode($res));
-                //验证通过进入payWithFace
- **/
                 if (!isset($input['card_id']))
                 {
                     throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
                 }
 
                 $order = $this->payWithCard($order, $input['card_id']);
+            }else if ($payMethod == PayMethodType::FACE)
+            {
+                if (!isset($input['card_id']))
+                {
+                    throw new ApiException(ErrorCode::INPUT_INCOMPLETE, trans('api.error.input_incomplete'));
+                }
+
+                $order = $this->payWithFace($order, $input['card_id']);
             }
             else
             {
@@ -734,18 +761,18 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         }
         //消耗食材部分
         $data=DB::table('consume_order_goods')->where('consume_order_id','=',$order->id)->get();
-        Log::info("order param:".json_encode($data));
+        //Log::info("order param:".json_encode($data));
         foreach ($data as $goods){
-            Log::info("ordergoods param:".json_encode($goods));
+            //Log::info("ordergoods param:".json_encode($goods));
             $material_goods=DB::table('material_goods')->where('goods_id',$goods->goods_id)->get();
             if($material_goods ->first() != null){
                 foreach($material_goods as $material){
                     //修改库存表stock
                     $stock=Stocks::where("material_id",$material->material_id)->first();
-                    $stock->count=$stock->count-$material->number;
+                    $stock->count=$stock->count-($material->number)/1000;
                     $stock->save();
                     //记录stock_detail表
-                    $detail=$this->createConsumeMaterials($material);
+                    $detail=$this->createConsumeMaterials($material,$order->shop_id);
                     $detail->save();
                 }
             }
@@ -753,14 +780,16 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         return $order->load('goods', 'customer', 'card');
     }
 
-    private function createConsumeMaterials($material){
+    private function createConsumeMaterials($material,$shop_id){
         $user = Auth::User();
         $detail=new StocksDetail();
         $detail->material_id=$material->material_id;
         $detail->number=$material->number;
         $detail->status=StockDetailStatus::CONSUME;
-        $detail->restaurant_user_id=$user->id;
-        $detail->shop_id=$user->shop_id;
+        if($user!=null){
+            $detail->restaurant_user_id=$user->id;
+        }
+        $detail->shop_id=$shop_id;
         return $detail;
     }
 }
