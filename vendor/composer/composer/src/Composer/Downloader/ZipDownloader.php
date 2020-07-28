@@ -69,7 +69,8 @@ class ZipDownloader extends ArchiveDownloader
 
             if (!self::$isWindows && !self::$hasSystemUnzip) {
                 $this->io->writeError("<warning>As there is no 'unzip' command installed zip files are being unpacked using the PHP zip extension.</warning>");
-                $this->io->writeError("<warning>This may cause invalid reports of corrupted archives. Installing 'unzip' may remediate them.</warning>");
+                $this->io->writeError("<warning>This may cause invalid reports of corrupted archives. Besides, any UNIX permissions (e.g. executable) defined in the archives will be lost.</warning>");
+                $this->io->writeError("<warning>Installing 'unzip' may remediate them.</warning>");
             }
         }
 
@@ -104,11 +105,11 @@ class ZipDownloader extends ArchiveDownloader
         $command = 'unzip -qq '.$overwrite.' '.ProcessExecutor::escape($file).' -d '.ProcessExecutor::escape($path);
 
         try {
-            if (0 === $this->process->execute($command, $ignoredOutput)) {
+            if (0 === $exitCode = $this->process->execute($command, $ignoredOutput)) {
                 return true;
             }
 
-            $processError = new \RuntimeException('Failed to execute ' . $command . "\n\n" . $this->process->getErrorOutput());
+            $processError = new \RuntimeException('Failed to execute ('.$exitCode.') '.$command."\n\n".$this->process->getErrorOutput());
         } catch (\Exception $e) {
             $processError = $e;
         }

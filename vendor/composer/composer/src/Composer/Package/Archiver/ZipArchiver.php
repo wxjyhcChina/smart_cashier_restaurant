@@ -37,13 +37,25 @@ class ZipArchiver implements ArchiverInterface
         if ($res === true) {
             $files = new ArchivableFilesFinder($sources, $excludes, $ignoreFilters);
             foreach ($files as $file) {
-                /** @var $file \SplFileInfo */
+                /** @var \SplFileInfo $file */
                 $filepath = strtr($file->getPath()."/".$file->getFilename(), '\\', '/');
                 $localname = str_replace($sources.'/', '', $filepath);
                 if ($file->isDir()) {
                     $zip->addEmptyDir($localname);
                 } else {
                     $zip->addFile($filepath, $localname);
+                }
+
+                /**
+                 * ZipArchive::setExternalAttributesName is available from >= PHP 5.6
+                 */
+                if (PHP_VERSION_ID >= 50600) {
+                    $perms = fileperms($filepath);
+
+                    /**
+                     * Ensure to preserve the permission umasks for the filepath in the archive.
+                     */
+                    $zip->setExternalAttributesName($localname, ZipArchive::OPSYS_UNIX, $perms << 16);
                 }
             }
             if ($zip->close()) {

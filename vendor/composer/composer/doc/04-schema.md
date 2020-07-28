@@ -243,6 +243,7 @@ Support information includes the following:
 * **source:** URL to browse or download the sources.
 * **docs:** URL to the documentation.
 * **rss:** URL to the RSS feed.
+* **chat:** URL to the chat channel.
 
 An example:
 
@@ -252,6 +253,39 @@ An example:
         "email": "support@example.org",
         "irc": "irc://irc.freenode.org/composer"
     }
+}
+```
+
+Optional.
+
+### funding
+
+A list of URLs to provide funding to the package authors for maintenance and
+development of new functionality.
+
+Each entry consists of the following
+
+* **type:** The type of funding or the platform through which funding can be provided, e.g. patreon, opencollective, tidelift or github.
+* **url:** URL to a website with details and a way to fund the package.
+
+An example:
+
+```json
+{
+    "funding": [
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/phpdoctrine"
+        },
+        {
+            "type": "tidelift",
+            "url": "https://tidelift.com/subscription/pkg/packagist-doctrine_doctrine-bundle"
+        },
+        {
+            "type": "other",
+            "url": "https://www.doctrine-project.org/sponsorship.html"
+        }
+    ]
 }
 ```
 
@@ -275,10 +309,11 @@ Example:
 
 All links are optional fields.
 
-`require` and `require-dev` additionally support stability flags ([root-only](04-schema.md#root-package)).
+`require` and `require-dev` additionally support _stability flags_ ([root-only](04-schema.md#root-package)).
+They take the form "_constraint_@_stability flag_". 
 These allow you to further restrict or expand the stability of a package beyond
 the scope of the [minimum-stability](#minimum-stability) setting. You can apply
-them to a constraint, or apply them to an empty constraint if you want to
+them to a constraint, or apply them to an empty _constraint_ if you want to
 allow unstable packages of a dependency for example.
 
 Example:

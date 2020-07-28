@@ -19,8 +19,6 @@ use Composer\CaBundle\CaBundle;
  */
 final class TlsHelper
 {
-    private static $useOpensslParse;
-
     /**
      * Match hostname against a certificate.
      *
@@ -164,7 +162,7 @@ final class TlsHelper
      *
      * @param string $certName CN/SAN
      *
-     * @return callable|null
+     * @return callable|void
      */
     private static function certNameMatcher($certName)
     {

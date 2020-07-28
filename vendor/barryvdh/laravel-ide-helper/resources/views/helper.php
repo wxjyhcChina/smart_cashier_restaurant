@@ -1,4 +1,12 @@
 <?= '<?php' ?>
+<?php
+/**
+ * @var \Barryvdh\LaravelIdeHelper\Alias[][] $namespaces_by_alias_ns
+ * @var \Barryvdh\LaravelIdeHelper\Alias[][] $namespaces_by_extends_ns
+ * @var bool $include_fluent
+ * @var string $helpers
+ */
+?>
 
 // @formatter:off
 
@@ -28,7 +36,10 @@ namespace <?= $namespace == '__root' ? '' : trim($namespace, '\\') ?> {
             //Method inherited from <?= $method->getDeclaringClass() ?>
             <?php endif; ?>
 
-            <?= $method->shouldReturn() ? 'return ': '' ?><?= $method->getRoot() ?>::<?= $method->getName() ?>(<?= $method->getParams() ?>);
+            <?php if($method->isInstanceCall()):?>
+            /** @var <?=$method->getRoot()?> $instance */
+            <?php endif?>
+            <?= $method->shouldReturn() ? 'return ': '' ?><?= $method->getRootMethodCall() ?>;
         }
         <?php endforeach; ?> 
     }
@@ -49,8 +60,11 @@ namespace <?= $namespace == '__root' ? '' : trim($namespace, '\\') ?> {
     
                 //Method inherited from <?= $method->getDeclaringClass() ?>
                 <?php endif; ?>
-    
-                <?= $method->shouldReturn() ? 'return ': '' ?><?= $method->getRoot() ?>::<?= $method->getName() ?>(<?= $method->getParams() ?>);
+
+                <?php if($method->isInstanceCall()):?>
+                /** @var <?=$method->getRoot()?> $instance */
+                <?php endif?>
+                <?= $method->shouldReturn() ? 'return ': '' ?><?= $method->getRootMethodCall() ?>;
             }
         <?php endforeach; ?>
 <?php endif; ?>}
@@ -91,3 +105,13 @@ namespace Illuminate\Support {
     class Fluent {}
 }
 <?php endif ?>
+
+<?php foreach ($factories as $factory): ?>
+namespace <?=$factory->getNamespaceName()?> {
+    /**
+    * @method \Illuminate\Database\Eloquent\Collection|<?=$factory->getShortName()?>[]|<?=$factory->getShortName()?> create($attributes = [])
+    * @method \Illuminate\Database\Eloquent\Collection|<?=$factory->getShortName()?>[]|<?=$factory->getShortName()?> make($attributes = [])
+    */
+    class <?=$factory->getShortName()?>FactoryBuilder extends \Illuminate\Database\Eloquent\FactoryBuilder {}
+}
+<?php endforeach; ?>
