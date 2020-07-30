@@ -2,6 +2,7 @@
 namespace Iwanli\Wxxcx;
 
 
+use Illuminate\Support\Facades\Log;
 use Ixudra\Curl\Facades\Curl;
 
 class Wxxcx
@@ -18,11 +19,11 @@ class Wxxcx
      * Wxxcx constructor.
      * @param $code 登录凭证（code）
      */
-    function __construct()
+    function __construct($appid,$secret)
     {
-        $this->appId = config('wxxcx.appid', '');
-        $this->secret = config('wxxcx.secret', '');
-        $this->code2session_url = config('wxxcx.code2session_url', '');
+        $this->appId = $appid;
+        $this->secret = $secret;
+        $this->code2session_url = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code";
     }
 
     /**

@@ -78,7 +78,8 @@ return [
             'alipay' => '支付宝支付',
             'wechat' => '微信支付',
             'cash' => '现金支付',
-            'card' => '卡支付'
+            'card' => '卡支付',
+            'face'=>'人脸支付'
         ]
     ],
     'stock'=>[

@@ -83,7 +83,9 @@ class StatisticsController extends Controller
                 'cash' => 0,
                 'cash_count' => 0,
                 'card' => 0,
-                'card_count' => 0
+                'card_count' => 0,
+                'face'=>0,
+                'face_count'=>0
             ];
 
             foreach ($orders as $order)
@@ -110,6 +112,10 @@ class StatisticsController extends Controller
                         case PayMethodType::WECHAT_PAY:
                             $data['wechat'] = bcadd($data['wechat'], $order->discount_price, 2);
                             $data['wechat_count'] ++;
+                            break;
+                        case PayMethodType::FACE:
+                            $data['face'] = bcadd($data['face'], $order->discount_price, 2);
+                            $data['face_count'] ++;
                             break;
                     }
                 }
@@ -216,7 +222,9 @@ class StatisticsController extends Controller
                 'cash' => 0,
                 'cash_count' => 0,
                 'card' => 0,
-                'card_count' => 0
+                'card_count' => 0,
+                'face'=>0,
+                'face_count'=>0
             ];
 
             foreach ($orders as $order)
@@ -243,6 +251,10 @@ class StatisticsController extends Controller
                         case PayMethodType::WECHAT_PAY:
                             $data['wechat'] = bcadd($data['wechat'], $order->discount_price, 2);
                             $data['wechat_count'] ++;
+                            break;
+                        case PayMethodType::FACE:
+                            $data['face'] = bcadd($data['face'], $order->discount_price, 2);
+                            $data['face_count'] ++;
                             break;
                     }
                 }

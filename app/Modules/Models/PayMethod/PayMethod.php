@@ -32,6 +32,9 @@ class PayMethod extends Model
             case PayMethodType::WECHAT_PAY:
                 $str = '微信支付';
                 break;
+            case PayMethodType::FACE:
+                $str = '人脸支付';
+                break;
         }
 
         return $str;

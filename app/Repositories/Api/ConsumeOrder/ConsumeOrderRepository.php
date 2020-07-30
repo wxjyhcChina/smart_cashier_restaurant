@@ -717,10 +717,13 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
                     && $method->enabled == false)
             )
             {
-                throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
+                if($payMethod != PayMethodType::FACE){
+                    throw new ApiException(ErrorCode::PAY_METHOD_NOT_SUPPORTED, trans('api.error.pay_method_not_supported'));
+
+                }
             }
 
-            Log::info('pay, pay method is '.$method->toJson());
+            //Log::info('pay, pay method is '.$method->toJson());
 
             if ($payMethod == PayMethodType::CASH)
             {

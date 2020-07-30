@@ -12,8 +12,10 @@ use App\Exceptions\Api\ApiException;
 use App\Modules\Enums\AccountRecordType;
 use App\Modules\Enums\CardStatus;
 use App\Modules\Enums\ErrorCode;
+use App\Modules\Enums\PayMethodType;
 use App\Modules\Models\Card\Card;
 use App\Modules\Models\Customer\Customer;
+use App\Modules\Models\PayMethod\PayMethod;
 use App\Modules\Models\Shop\Shop;
 use App\Modules\Repositories\Customer\BaseCustomerRepository;
 use App\Modules\Services\Account\Facades\Account;
@@ -195,9 +197,13 @@ class CustomerRepository extends BaseCustomerRepository
             $card->save();
 
             //如果有uface信息
-            $shop=Shop::where("id",$customer->shop_id)->first();
+            //$shop=Shop::where("id",$customer->shop_id)->first();
+            $method = PayMethod::where('method', PayMethodType::FACE)
+                ->where('shop_id', $customer->shop_id)
+                ->where('enabled',1)//使用中
+                ->first();
             //Log::info("分店:".json_encode($shop));
-            if($shop!=null&&($shop->face_flag!=0)){
+            if($method!=null){
                 $devices=DB::table("outer_devices")
                     ->select("url")
                     ->where('shop_id',$customer->shop_id)
@@ -276,9 +282,15 @@ class CustomerRepository extends BaseCustomerRepository
             $card->save();
 
             //如果有uface信息
-            $shop=Shop::where("id",$customer->shop_id)->first();
+            //$shop=Shop::where("id",$customer->shop_id)->first();
             //Log::info("分店:".json_encode($shop));
-            if($shop!=null&&($shop->face_flag!=0)){
+            $method = PayMethod::where('method', PayMethodType::FACE)
+                ->where('shop_id', $customer->shop_id)
+                ->where('enabled',1)//使用中
+                ->first();
+            //Log::info("分店:".json_encode($shop));
+            if($method!=null){
+            //if($shop!=null&&($shop->face_flag!=0)){
                 $devices=DB::table("outer_devices")
                     ->select("url")
                     ->where('shop_id',$customer->shop_id)
@@ -371,9 +383,15 @@ class CustomerRepository extends BaseCustomerRepository
             $card->save();
 
             //如果有uface信息
-            $shop=Shop::where("id",$customer->shop_id)->first();
+            //$shop=Shop::where("id",$customer->shop_id)->first();
             //Log::info("分店:".json_encode($shop));
-            if($shop!=null&&($shop->face_flag!=0)){
+            $method = PayMethod::where('method', PayMethodType::FACE)
+                ->where('shop_id', $customer->shop_id)
+                ->where('enabled',1)//使用中
+                ->first();
+            //Log::info("分店:".json_encode($shop));
+            if($method!=null){
+            //if($shop!=null&&($shop->face_flag!=0)){
                 $devices=DB::table("outer_devices")
                     ->select("url")
                     ->where('shop_id',$customer->shop_id)

@@ -133,7 +133,7 @@ class BaseShopRepository extends BaseRepository
         $shop->default = isset($input['default']) ? true : false;
         $shop->recharge_flag=1;//默认前台可充值
         $shop->discount_flag=1;//默认前台可打折
-        $shop->face_flag=0;//默认不使用人脸
+        //$shop->face_flag=0;//默认不使用人脸移入paymethod
 
         $default_shop = Shop::where('default', 1)
             ->where('restaurant_id', $input['restaurant_id'])
@@ -158,6 +158,7 @@ class BaseShopRepository extends BaseRepository
         $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::CARD, 1);
         $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::ALIPAY, 0);
         $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::WECHAT_PAY, 0);
+        $this->createPayMethod($restaurant_id,$shop_id, PayMethodType::FACE, 0);
     }
 
     /**

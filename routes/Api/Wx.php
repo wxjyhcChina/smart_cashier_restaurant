@@ -10,10 +10,11 @@ Route::group([
     Route::any('/getWxUserInfo','WxController@getWxUserInfo');
     Route::any('/prePay','WxController@prePay');
     Route::any('/payCallback','WxController@payCallback');
-    Route::post('/create', 'WxController@create')->name('create');
-    Route::post('/pay', 'WxController@pay')->name('pay');
-    Route::post('/payWithCard', 'WxController@payWithCard')->name('payWithCard');
-    Route::post('/accountRecords', 'WxController@accountRecords')->name('accountRecords');
+    Route::any('/create', 'WxController@create')->name('create');
+    Route::any('/pay', 'WxController@pay')->name('pay');
+    Route::any('/payWithCard', 'WxController@payWithCard')->name('payWithCard');
+    Route::any('/accountRecords', 'WxController@accountRecords')->name('accountRecords');
+    Route::any('/getGoodInfo', 'WxController@getGoodInfo')->name('getGoodInfo');
 
     Route::group([
         'middleware' => 'apiAuth'

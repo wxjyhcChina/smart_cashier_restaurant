@@ -45,6 +45,11 @@ class WxController extends Controller
         echo json_encode($data);
     }
 
+    /**
+     * 获取微信用户信息
+     * @return string
+     * @throws \Exception
+     */
     public function getWxUserInfo(){
         Log::info('WxController getWxUserInfo() arrived.');
         //code 在小程序端使用wx.login 获取
@@ -59,12 +64,16 @@ class WxController extends Controller
         //根据code获取用户session_key等信息，返回用户openid 和 session_key
         $wxInfo=new Wxxcx('wx7f0a0b52520c1c68','a5aa218b35d2ed0c212ef420ddd06e5e');
         $userInfo = $wxInfo->getLoginInfo($code);
-        Log::info($userInfo);
+        Log::info("info:".json_encode($userInfo));
         //return $userInfo;
         //获取解密后的用户信息
         return $wxInfo->getUserInfo($encryptedData,$iv);
     }
 
+    /**
+     * 获取登录人员信息
+     * @param Request $request
+     */
     public function getAllInfo(Request $request)
     {
         $shopId=request('shopId','');
@@ -105,6 +114,10 @@ class WxController extends Controller
         echo $data;
     }
 
+    /**
+     * 获取菜单
+     * @param Request $request
+     */
     public function getMenu(Request $request){
         $shopId=request('shopId','');
         //Log::info($shopId);
@@ -195,7 +208,7 @@ class WxController extends Controller
     }
 
     /**
-     * 卡支付
+     * 卡支付前获取orderid
      * @param Request $request
      */
     public function pay(Request $request){
@@ -209,6 +222,13 @@ class WxController extends Controller
         return $this->responseSuccess($response);
     }
 
+    /**
+     * 卡支付
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
     public function payWithCard(Request $request)
     {
         $input = $request->all();
@@ -220,7 +240,13 @@ class WxController extends Controller
         return $this->responseSuccess($consumeOrder);
     }
 
+    /**
+     * 我的订单
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function accountRecords(Request $request){
+        Log::info("accountRecords");
         $input = $request->all();
         /*$customer=Customer::query()
             ->where("id",$input['userId'])->first();
@@ -361,6 +387,48 @@ class WxController extends Controller
 
     }
 
+
+    /**
+     * 获取营养信息
+     * @param Request $request
+     */
+    public  function getGoodInfo(Request $request){
+        $input = $request->all();
+        $goodId=$input['goodId'];
+        $materials=DB::table("materials")
+                ->select("materials.name as name","material_goods.number as number")
+                ->leftJoin("material_goods","material_goods.material_id","=","materials.id")
+                ->where("material_goods.goods_id","=",$goodId)->get();
+        Log::info("materials:".json_encode($materials));
+        $nengliang=0;//能量(千卡)
+        $danbai=0.00;//蛋白质(克)
+        $zhifang=0.00;//脂肪(克)
+        $tanshui=0.00;//碳水化合物(克)
+        foreach ($materials as $material){
+            $data=DB::table("yk_foodnutrition_copy1")
+                ->select("yk_foodnutrition_copy1.nengliang as nengliang","yk_foodnutrition_copy1.danbai as danbai","yk_foodnutrition_copy1.zhifang as zhifang","yk_foodnutrition_copy1.tanshui as tanshui")
+                ->where('name','=',$material->name)
+                ->orWhere('name', 'like', '%'.$material->name.'%')
+                ->first();
+            Log::info("data:".json_encode($data));
+            if($data != null){
+                $perCount=($material->number)/100;
+                $nengliang +=intval(($data->nengliang)*$perCount);
+                $danbai +=intval(($data->danbai)*$perCount);
+                $zhifang +=intval(($data->zhifang)*$perCount);
+                $tanshui += intval(($data->tanshui)*$perCount);
+            }
+        }
+        $info["nengliang"]=$nengliang;
+        $info["danbai"]=$danbai;
+        $info["zhifang"]=$zhifang;
+        $info["tanshui"]=$tanshui;
+        $res['materials']=$materials;
+        $res['info']=$info;
+        return $this->responseSuccess($res);
+    }
+
+
     private function order_number($openid){
         return md5($openid.time().rand(10,99));//32
     }
@@ -376,7 +444,7 @@ class WxController extends Controller
     /**
      * 通过code 获取 openid
      */
-    function getOpenId($code,$appid,$secret){
+    private function getOpenId($code,$appid,$secret){
         //获得appid和secret
 
         $url="https://api.weixin.qq.com/sns/jscode2session?appid=$appid&secret=$secret&js_code=$code&grant_type=authorization_code";
