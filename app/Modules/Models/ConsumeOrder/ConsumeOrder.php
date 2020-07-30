@@ -30,7 +30,9 @@ class ConsumeOrder extends Model
             case PayMethodType::WECHAT_PAY:
                 $ret = trans('api.wallet.pay_method.wechat');
                 break;
-
+            case PayMethodType::FACE:
+                $ret=trans('api.wallet.pay_method.face');
+                break;
             default:
                 $ret = '';
         }

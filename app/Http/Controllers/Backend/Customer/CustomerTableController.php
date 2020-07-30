@@ -9,6 +9,7 @@ use App\Repositories\Backend\Customer\CustomerRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Yajra\DataTables\Facades\DataTables;
 
 class CustomerTableController extends Controller
@@ -80,6 +81,7 @@ class CustomerTableController extends Controller
                 return $consumeOrder->getShowStatusAttribute();
             })
             ->addColumn('show_pay_method', function ($consumeOrder) {
+                Log::info("pay_method:".json_encode($consumeOrder->getShowPayMethodAttribute()));
                 return $consumeOrder->getShowPayMethodAttribute();
             })
             ->rawColumns(['actions', 'show_status'])

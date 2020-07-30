@@ -57,6 +57,8 @@
                         <th>{{ trans('labels.backend.statistics.table.alipay_count') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.wechat') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.wechat_count') }}</th>
+                        <th>{{ trans('labels.backend.statistics.table.face') }}</th>
+                        <th>{{ trans('labels.backend.statistics.table.face_count') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.total') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.total_count') }}</th>
                     </tr>
@@ -154,6 +156,8 @@
                                 '<td>' + e.alipay_count  + '</td>' +
                                 '<td>' + e.wechat + '</td>' +
                                 '<td>' + e.wechat_count  + '</td>' +
+                                '<td>' + e.face + '</td>' +
+                                '<td>' + e.face_count  + '</td>' +
                                 '<td>' + e.total + '</td>' +
                                 '<td>' + e.total_count + '</td>' +
                                 '</tr>')

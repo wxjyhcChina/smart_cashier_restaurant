@@ -422,6 +422,8 @@ return [
                 'alipay_count' => '支付宝人次',
                 'wechat' => '微信支付金额',
                 'wechat_count' => '微信人次',
+                'face' => '人脸支付金额',
+                'face_count' => '人脸人次',
                 'total' => '合计',
                 'total_count' => '合计人次',
             ]

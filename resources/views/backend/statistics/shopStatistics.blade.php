@@ -53,6 +53,7 @@
                         <th>{{ trans('labels.backend.statistics.table.card') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.alipay') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.wechat') }}</th>
+                        <th>{{ trans('labels.backend.statistics.table.face') }}</th>
                         <th>{{ trans('labels.backend.statistics.table.total') }}</th>
                     </tr>
                     </thead>
@@ -142,15 +143,17 @@
                                 '<td>' + (i+1) + '</td>' +
                                 '<td>' + e.name + '</td>' +
                                 '<td>' + e.cash + '</td>' +
-                                '<td>' + e.cash_count  + '</td>' +
+                                //'<td>' + e.cash_count  + '</td>' +
                                 '<td>' + e.card + '</td>' +
-                                '<td>' + e.card_count  + '</td>' +
+                                //'<td>' + e.card_count  + '</td>' +
                                 '<td>' + e.alipay + '</td>' +
-                                '<td>' + e.alipay_count  + '</td>' +
+                                //'<td>' + e.alipay_count  + '</td>' +
                                 '<td>' + e.wechat + '</td>' +
-                                '<td>' + e.wechat_count  + '</td>' +
+                                //'<td>' + e.wechat_count  + '</td>' +
+                                '<td>' + e.face + '</td>' +
+                                //'<td>' + e.face_count  + '</td>' +
                                 '<td>' + e.total + '</td>' +
-                                '<td>' + e.total_count + '</td>' +
+                                //'<td>' + e.total_count + '</td>' +
                                 '</tr>')
                         }
                         /*items.forEach(function (e) {
