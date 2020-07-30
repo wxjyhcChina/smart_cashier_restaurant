@@ -503,7 +503,7 @@ class StatisticsController extends Controller
                 $sheet->row(3, array(
                     '编号', $name,'现金金额','现金人次',
                     '卡金额','卡人次','支付宝金额','支付宝人次',
-                    '微信支付金额','微信人次','合计','合计人次'
+                    '微信支付金额','微信人次','人脸支付人数','人脸支付人次','合计','合计人次'
                 ));
 
                 $rowNumber = 3;
@@ -516,6 +516,7 @@ class StatisticsController extends Controller
                         $statistics['card'], $statistics['card_count'],
                         $statistics['alipay'], $statistics['alipay_count'],
                         $statistics['wechat'], $statistics['wechat_count'],
+                        $statistics['face'], $statistics['face_count'],
                         $statistics['total'], $statistics['total_count'],
                     ));
                 }
@@ -535,6 +536,11 @@ class StatisticsController extends Controller
 
                 foreach ($orders as $order)
                 {
+                    if($order->restaurant_user!=null){
+                        $restaurant_user_name=$order->restaurant_user->last_name.$order->restaurant_user->first_name;
+                    }else{
+                        $restaurant_user_name='无营业员';
+                    }
                     $rowNumber++;
                     $sheet->mergeCells("B$rowNumber:C$rowNumber");
                     $sheet->mergeCells("G$rowNumber:H$rowNumber");
@@ -544,7 +550,7 @@ class StatisticsController extends Controller
                         $order->discount_price, $order->consume_category != null ? $order->consume_category->name : '',
                         $order->getShowPayMethodAttribute(), '', $order->dinning_time->name,
                         $order->department != null ? $order->department->name : '', $order->created_at,
-                        $order->restaurant_user->last_name.$order->restaurant_user->first_name
+                        $restaurant_user_name
                     ));
                 }
 
@@ -687,7 +693,7 @@ class StatisticsController extends Controller
                     array(
                         '编号', '商户','现金金额',
                         '卡金额','支付宝金额',
-                        '微信支付金额','合计'
+                        '微信支付金额','人脸支付金额','合计'
                     )
                 );
 
@@ -701,6 +707,7 @@ class StatisticsController extends Controller
                         $statistics['card'],
                         $statistics['alipay'],
                         $statistics['wechat'],
+                        $statistics['face'],
                         $statistics['total'],
                     ));
                 }
@@ -847,7 +854,7 @@ class StatisticsController extends Controller
                     array(
                         '编号','商品','现金金额','现金人次',
                         '卡金额','卡人次','支付宝金额','支付宝人次',
-                        '微信支付金额','微信人次','合计','合计人次'
+                        '微信支付金额','微信人次','人脸金额','人脸人次','合计','合计人次'
                     )
                 );
 
@@ -861,6 +868,7 @@ class StatisticsController extends Controller
                         $statistics['card'], $statistics['card_count'],
                         $statistics['alipay'], $statistics['alipay_count'],
                         $statistics['wechat'], $statistics['wechat_count'],
+                        $statistics['face'], $statistics['face_count'],
                         $statistics['total'], $statistics['total_count'],
                     ));
                 }
