@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Access\Repository\User\UserRepository;
+use App\Http\Requests\Api\User\UserLoginRequest;
 use App\Modules\Enums\ConsumeOrderStatus;
+use App\Modules\Enums\PayMethodType;
 use App\Modules\Models\ConsumeOrder\ConsumeOrder;
 use App\Modules\Models\Customer\Customer;
 use App\Repositories\Api\Card\CardRepository;
@@ -11,6 +14,7 @@ use App\Repositories\Backend\Customer\CustomerRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 use DB;
 use Iwanli\Wxxcx\Wxxcx;
 
@@ -23,15 +27,18 @@ class WxController extends Controller
 
     private $customerRepo;
 
+    protected $users;
     /**
-     * ConsumeOrderController constructor.
+     * WxController constructor.
      * @param $consumeOrderRepo
      * @param CustomerRepository $customerRepo
+     *  @param UserRepository $users
      */
-    public function __construct(CustomerRepository $customerRepo,ConsumeOrderRepository $consumeOrderRepo)
+    public function __construct(CustomerRepository $customerRepo,ConsumeOrderRepository $consumeOrderRepo,UserRepository $users)
     {
         $this->customerRepo = $customerRepo;
         $this->consumeOrderRepo = $consumeOrderRepo;
+        $this->users = $users;
     }
 
     public function index(Request $request)
@@ -43,6 +50,59 @@ class WxController extends Controller
         $data = ['score'=>mt_rand(40,90),'user'=>['user1','user2','user3']];
         Log::info("test");
         echo json_encode($data);
+    }
+
+
+    /**
+     * 用户登录
+     * @param UserLoginRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \App\Exceptions\Api\ApiException
+     */
+    public function userLogin(UserLoginRequest $request){
+        $input = $request->all();
+
+        $response = $this->users->login($request->only("username", "password"));
+
+        return $this->responseSuccess($response);
+    }
+
+    /**
+     * 获取本店已付款信息
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getShopOrder(Request $request){
+        //
+        $input = $request->all();
+        $consumeOrder=ConsumeOrder::query()
+            ->where('shop_id',$input['shop_id'])
+            ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->where('state','<>',null)//非小程序订单
+            ->where('state','<>',0)//已配送完成
+            ->get();
+        foreach ($consumeOrder as $item) {
+            $item->goods;
+            $item->customer;
+        }
+        return $this->responseSuccess($consumeOrder);
+    }
+
+    /**
+     * 更改订单的外卖状态
+     * 0:完成,1:配送中,2:未接单,3:已接单准备中
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function changeOrderState(Request $request){
+        $input = $request->all();
+        $consumeOrder=ConsumeOrder::query()
+            ->where('id',$input['order_id'])
+            ->first();
+        $consumeOrder->state=$input['state'];
+        $consumeOrder->save();
+
+        return $this->responseSuccess($consumeOrder);
     }
 
     /**
@@ -191,7 +251,7 @@ class WxController extends Controller
             $total_fee = $data['total_fee'];	//付款金额
             Log::info("data param:".json_encode($data));
             //更新状态,完成订单
-            //$this->updatePsDB($order_sn,$order_id,$openid,$total_fee);
+            $this->updatePsDB($order_sn,$order_id,$openid,$total_fee);
         } else {
             $results = false;
         }
@@ -217,7 +277,9 @@ class WxController extends Controller
         $shop_id=$input['shopId'];
         $temp_goods=$input['tempGoods'];
         $temp_goods = explode(",", $temp_goods);
-        $response=$this->preCreate($restaurant_id,$shop_id,$temp_goods);
+        $address=$input['address'];
+
+        $response=$this->preCreate($restaurant_id,$shop_id,$temp_goods,$address);
         Log::info("pay:".json_encode($response));
         return $this->responseSuccess($response);
     }
@@ -234,7 +296,7 @@ class WxController extends Controller
         $input = $request->all();
         $consumeOrder=ConsumeOrder::query()
             ->where('id',$input['orderId'])->first();
-
+        $consumeOrder->state=2;
         $consumeOrder = $this->consumeOrderRepo->pay($consumeOrder, $input);
         Log::info("payWithCard:".json_encode($consumeOrder));
         return $this->responseSuccess($consumeOrder);
@@ -254,7 +316,7 @@ class WxController extends Controller
         $records = $this->customerRepo->getCustomerConsumeOrderQuery($customer);*/
         $consumeOrder=ConsumeOrder::query()
             ->where('customer_id',$input['userId'])
-            //->where('status', ConsumeOrderStatus::COMPLETE)
+            ->where('status', ConsumeOrderStatus::COMPLETE)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
         foreach ($consumeOrder as $order){
@@ -270,6 +332,22 @@ class WxController extends Controller
         return $this->responseSuccessWithObject($records);
     }
 
+
+    /**
+     * 单个订单详情
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getOrderDetail(Request $request){
+        //
+        $input = $request->all();
+        $consumeOrder=ConsumeOrder::query()
+            ->where('id',$input['order_id'])
+            ->first();
+        $consumeOrder->goods;
+        return $this->responseSuccessWithObject($consumeOrder);
+    }
+
     /**
      * 微信小程序预支付
      * @param  Request $request
@@ -277,11 +355,12 @@ class WxController extends Controller
      */
     public function prepay(Request $request){
         $input = $request->all();
-        Log::info("WxController pay() arrived:".json_encode($input));
+        Log::info("WxController prepay() arrived:".json_encode($input));
         $restaurant_id=$input['restaurantId'];
         $shop_id=$input['shopId'];
         $temp_goods=$input['tempGoods'];
         $temp_goods = explode(",", $temp_goods);
+        $address=$input['address'];
         $db=DB::table("pay_methods")
             ->where("shop_id",$shop_id)
             ->where("enabled",1)
@@ -297,10 +376,10 @@ class WxController extends Controller
 
         //写入
 
-        $res=$this->preCreate($restaurant_id,$shop_id,$temp_goods);
+        $res=$this->preCreate($restaurant_id,$shop_id,$temp_goods,$address);
 
         $appid="wx7f0a0b52520c1c68";//appid.如果是公众号 就是公众号的appid
-        $body="test";
+        $body="购物";
         $mch_id="1549500931";//商户号
         $secret="a5aa218b35d2ed0c212ef420ddd06e5e";
         if($input['code']){
@@ -310,7 +389,7 @@ class WxController extends Controller
         //Log::info("prepay openid:".json_encode($openid));
         //print_r($openid);die;
         //$openid = 'ossyJ5TjaHcDq9tAVVh90a07F0QM';
-        $fee =$res[price];//举例支付0.01
+        $fee =$res['price'];//支付金额
         $nonce_str=$this->nonce_str();//随机字符串
         $notify_url='https://www.jyjiesuan.com/api/v1/wx/payCallback';//回调的url
         $openid=$openid;
@@ -389,42 +468,79 @@ class WxController extends Controller
 
 
     /**
+     * 上一餐营养价值+过去7天营养摄入情况
+     */
+    public function dietReport(Request $request){
+        //
+        $input=$request->all();
+        $customerId=$input['customerId'];
+        $consumeOrder=ConsumeOrder::query()
+            ->where('customer_id',$customerId)
+            ->where('status', ConsumeOrderStatus::COMPLETE)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $nengliang=0;//能量(千卡)
+        $danbai=0.00;//蛋白质(克)
+        $zhifang=0.00;//脂肪(克)
+        $tanshui=0.00;//碳水化合物(克)
+        $nengliangNRV=8400;
+        $danbaiNRV=60;
+        $zhifangNRV=60;
+        $tanshuiNRV=300;
+        if($consumeOrder!=null){
+            //营养素摄入量
+            $res['success']=1;
+            //Log::info("order:".json_encode($consumeOrder));
+            $goods=$consumeOrder->goods;
+            //Log::info("goods:".json_encode($goods));
+            foreach ($goods as $good){
+                $info=$this->getGoodCompose($good->id);
+                //Log::info(json_encode($info));
+                $nengliang += $info['nengliang'];
+                $danbai += $info['danbai'];
+                $zhifang += $info['zhifang'];
+                $tanshui += $info['tanshui'];
+            }
+            $nengliangPercent=round($nengliang/$nengliangNRV*100);
+            $danbaiPercent=round($danbai/$danbaiNRV*100);
+            $zhifangPercent=round($zhifang/$zhifangNRV*100);
+            $tanshuiPercent=round($tanshui/$tanshuiNRV*100);
+            $nrvInfo['nlNRV']=$nengliangPercent;
+            $nrvInfo['nengliang']=$nengliang;
+            $nrvInfo['dbNRV']=$danbaiPercent;
+            $nrvInfo['danbai']=$danbai;
+            $nrvInfo['zfNRV']=$zhifangPercent;
+            $nrvInfo['zhifang']=$zhifang;
+            $nrvInfo['tsNRV']=$tanshuiPercent;
+            $nrvInfo['tanshui']=$tanshui;
+            $res['nrv']=$nrvInfo;
+            //营养素供比
+            $dietInfo=$this->getDietInfoByWeek($customerId);
+            $res['weekInfo']=$dietInfo;
+        }else{
+            $res['success']=0;
+            $res['msg']="你没有最近的消费记录";
+        }
+        return $this->responseSuccess($res);
+    }
+
+
+    /**
      * 获取营养信息
      * @param Request $request
      */
     public  function getGoodInfo(Request $request){
         $input = $request->all();
         $goodId=$input['goodId'];
-        $materials=DB::table("materials")
-                ->select("materials.name as name","material_goods.number as number")
-                ->leftJoin("material_goods","material_goods.material_id","=","materials.id")
-                ->where("material_goods.goods_id","=",$goodId)->get();
-        Log::info("materials:".json_encode($materials));
-        $nengliang=0;//能量(千卡)
-        $danbai=0.00;//蛋白质(克)
-        $zhifang=0.00;//脂肪(克)
-        $tanshui=0.00;//碳水化合物(克)
-        foreach ($materials as $material){
-            $data=DB::table("yk_foodnutrition_copy1")
-                ->select("yk_foodnutrition_copy1.nengliang as nengliang","yk_foodnutrition_copy1.danbai as danbai","yk_foodnutrition_copy1.zhifang as zhifang","yk_foodnutrition_copy1.tanshui as tanshui")
-                ->where('name','=',$material->name)
-                ->orWhere('name', 'like', '%'.$material->name.'%')
-                ->first();
-            Log::info("data:".json_encode($data));
-            if($data != null){
-                $perCount=($material->number)/100;
-                $nengliang +=intval(($data->nengliang)*$perCount);
-                $danbai +=intval(($data->danbai)*$perCount);
-                $zhifang +=intval(($data->zhifang)*$perCount);
-                $tanshui += intval(($data->tanshui)*$perCount);
-            }
-        }
-        $info["nengliang"]=$nengliang;
-        $info["danbai"]=$danbai;
-        $info["zhifang"]=$zhifang;
-        $info["tanshui"]=$tanshui;
-        $res['materials']=$materials;
+        $composeInfo=$this->getGoodCompose($goodId);
+
+        $info["nengliang"]=$composeInfo['nengliang'];
+        $info["danbai"]=$composeInfo["tanshui"];
+        $info["zhifang"]=$composeInfo["tanshui"];
+        $info["tanshui"]=$composeInfo["tanshui"];
+        $res['materials']=$composeInfo['materials'];
         $res['info']=$info;
+
         return $this->responseSuccess($res);
     }
 
@@ -519,7 +635,7 @@ class WxController extends Controller
     }
 
     //生成订单
-    private function preCreate($restaurant_id,$shop_id,$temp_goods){
+    private function preCreate($restaurant_id,$shop_id,$temp_goods,$address){
         //restaurant_id
         $input['restaurant_id'] =$restaurant_id;
         //discount无
@@ -527,6 +643,7 @@ class WxController extends Controller
         $input['shop_id'] =$shop_id;
         //temp_goods
         $input['temp_goods'] =$temp_goods;
+        $input['address'] =$address;
 
         $response = $this->consumeOrderRepo->create($input);
         Log::info(json_encode($response));
@@ -535,7 +652,16 @@ class WxController extends Controller
 
     //更新订单状态
     private function  updatePsDB($order_sn,$order_id,$openid,$total_fee){
-        Log::info("更新订单状态:".$order_id);
+        Log::info("更新订单id:".$order_id);
+        Log::info("更新订单:".$order_sn);
+        $order=ConsumeOrder::query()->where('order_id',$order_sn)->first();
+        $order->status = ConsumeOrderStatus::COMPLETE;
+        $order->pay_method = PayMethodType::WECHAT_PAY;
+        $order->online_pay = true;
+        $order->online_pay = true;
+        $order->status = 2;
+        //$order->external_pay_no = $trade_no;
+        $order->save();
     }
 
     /**
@@ -550,5 +676,118 @@ class WxController extends Controller
             $cip = getenv("REMOTE_ADDR");
         }
         return $cip;
-}
+    }
+
+    /**
+     * 食物营养组成
+     * @param $goodId
+     * @return mixed
+     */
+    private function getGoodCompose($goodId){
+        $materials=DB::table("material_goods")
+            ->select("materials.name as name","material_goods.number as number")
+            ->leftJoin("materials","material_goods.material_id","=","materials.id")
+            ->where("material_goods.goods_id","=",$goodId)->get();
+        //Log::info("materials:".json_encode($materials));
+        $nengliang=0;//能量(千卡)
+        $danbai=0.00;//蛋白质(克)
+        $zhifang=0.00;//脂肪(克)
+        $tanshui=0.00;//碳水化合物(克)
+        foreach ($materials as $material){
+            $data=DB::table("yk_foodnutrition_copy1")
+                ->select("yk_foodnutrition_copy1.nengliang as nengliang","yk_foodnutrition_copy1.danbai as danbai","yk_foodnutrition_copy1.zhifang as zhifang","yk_foodnutrition_copy1.tanshui as tanshui")
+                ->where('name','=',$material->name)
+                ->orWhere('name', 'like', '%'.$material->name.'%')
+                ->first();
+            //Log::info("data:".json_encode($data));
+            if($data != null){
+                $perCount=($material->number)/100;
+                $nengliang +=intval(($data->nengliang)*$perCount);
+                $danbai +=intval(($data->danbai)*$perCount);
+                $zhifang +=intval(($data->zhifang)*$perCount);
+                $tanshui += intval(($data->tanshui)*$perCount);
+            }
+        }
+        $info["nengliang"]=$nengliang;
+        $info["danbai"]=$danbai;
+        $info["zhifang"]=$zhifang;
+        $info["tanshui"]=$tanshui;
+        $info['materials']=$materials;
+        return $info;
+    }
+
+    /**
+     * 过去7天消耗营养素
+     * @param $customerId
+     * @return mixed
+     */
+    private function getDietInfoByWeek($customerId){
+        //过去一周 消耗的三大营养素
+        $danbaiNRV=60;
+        $zhifangNRV=60;
+        $tanshuiNRV=300;
+        for($i=0;$i<7;$i++){
+            $date=Carbon::parse($i.' days ago')->toDateString();
+            //Log::info("day:".json_encode($date));
+            $day[$i]['str']=Carbon::parse($i.' days ago')->format('m-d');
+            $consumeOrder=ConsumeOrder::query()
+                ->where('customer_id',$customerId)
+                ->where('status', ConsumeOrderStatus::COMPLETE)
+                ->whereBetween('created_at', [$date.' 00:00:00', $date." 23:59:59"])
+                ->get();
+
+            $danbai=0.00;//蛋白质(克)
+            $zhifang=0.00;//脂肪(克)
+            $tanshui=0.00;//碳水化合物(克)
+            if($consumeOrder->count() != 0){
+                foreach($consumeOrder as $order){
+                    $goods=$order->goods;
+                    if($goods!=null){
+                        foreach ($goods as $good){
+                            $info=$this->getGoodCompose($good->id);
+                            //Log::info(json_encode($info));
+                            $danbai += $info['danbai'];
+                            $zhifang += $info['zhifang'];
+                            $tanshui += $info['tanshui'];
+                        }
+                        $danbaiPercent=round($danbai/$danbaiNRV*100);
+                        $zhifangPercent=round($zhifang/$zhifangNRV*100);
+                        $tanshuiPercent=round($tanshui/$tanshuiNRV*100);
+                        $day[$i]['dbNRV']=$danbaiPercent;
+                        $day[$i]['zfNRV']=$zhifangPercent;
+                        $day[$i]['tsNRV']=$tanshuiPercent;
+                    }else{
+                        $day[$i]['dbNRV']=0;
+                        $day[$i]['zfNRV']=0;
+                        $day[$i]['tsNRV']=0;
+                    }
+                }
+            }else{
+                $day[$i]['dbNRV']=0;
+                $day[$i]['zfNRV']=0;
+                $day[$i]['tsNRV']=0;
+            }
+        }
+        //处理day
+        $date=array();
+        $dbNRV=array();
+        $zfNRV=array();
+        $tsNRV=array();
+        for ($j=6;$j>=0;$j--){
+            $date[]=$day[$j]['str'];
+
+            $dbNRV[]=$day[$j]['dbNRV'];
+            $zfNRV[]=$day[$j]['zfNRV'];
+            $tsNRV[]=$day[$j]['tsNRV'];
+        }
+        $res['date']=$date;
+        $res['dbNRV']=$dbNRV;
+        $res['zfNRV']=$zfNRV;
+        $res['tsNRV']=$tsNRV;
+        return $res;
+
+    }
+
+
+
 }

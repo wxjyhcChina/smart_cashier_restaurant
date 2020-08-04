@@ -144,6 +144,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             ['pay_method' => PayMethodType::CARD, 'money' => 0, 'count' => 0],
             ['pay_method' => PayMethodType::CASH, 'money' => 0, 'count' => 0],
             ['pay_method' => PayMethodType::WECHAT_PAY, 'money' => 0, 'count' => 0],
+            ['pay_method' => PayMethodType::FACE, 'money' => 0, 'count' => 0],
         ];
 
         foreach ($payMethods as $payMethod)
@@ -337,6 +338,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
         $restaurant_id = $input['restaurant_id'];
         $shop_id = $input['shop_id'];
         $restaurant_user_id = isset($input['restaurant_user_id']) ? $input['restaurant_user_id'] : null;
+        $address=isset($input['address']) ? $input['address'] : null;
 
         $response = $this->getOrderOrderInfo($restaurant_id, $labels, $tempGoods, $forceDiscount,$shop_id);
 
@@ -355,6 +357,7 @@ class ConsumeOrderRepository extends BaseConsumeOrderRepository
             $consumeOrder->force_discount = $response['force_discount'];
             $consumeOrder->goods_count = $response['goods_count'];
             $consumeOrder->status = ConsumeOrderStatus::WAIT_PAY;
+            $consumeOrder->address = $address;
             $consumeOrder->save();
 
             $goodsIds = [];

@@ -14,7 +14,12 @@ Route::group([
     Route::any('/pay', 'WxController@pay')->name('pay');
     Route::any('/payWithCard', 'WxController@payWithCard')->name('payWithCard');
     Route::any('/accountRecords', 'WxController@accountRecords')->name('accountRecords');
+    Route::any('/getOrderDetail', 'WxController@getOrderDetail')->name('getOrderDetail');
     Route::any('/getGoodInfo', 'WxController@getGoodInfo')->name('getGoodInfo');
+    Route::any('/dietReport', 'WxController@dietReport')->name('dietReport');
+    Route::any('/userLogin', 'WxController@userLogin')->name('userLogin');
+    Route::any('/getShopOrder', 'WxController@getShopOrder')->name('getShopOrder');
+    Route::any('/changeOrderState', 'WxController@changeOrderState')->name('changeOrderState');
 
     Route::group([
         'middleware' => 'apiAuth'

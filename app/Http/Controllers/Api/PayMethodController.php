@@ -6,6 +6,7 @@ use App\Repositories\Api\PayMethod\PayMethodRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class PayMethodController extends Controller
 {
@@ -34,7 +35,7 @@ class PayMethodController extends Controller
         $user = Auth::User();
 
         //$payMethods = $this->payMethodRepo->getByRestaurant($user->restaurant_id);
-        $payMethods = $this->payMethodRepo->getByShopQuery($user->shop_id);
+        $payMethods = $this->payMethodRepo->getByShop($user->shop_id);
 
         return $this->responseSuccess($payMethods);
     }
