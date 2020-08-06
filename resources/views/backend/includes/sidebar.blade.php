@@ -245,7 +245,7 @@
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
 
-                <ul class="treeview-menu {{ active_class(Active::checkUriPattern('admin/stocks/*'), 'menu-open') }}" style="display: none; {{ active_class(Active::checkUriPattern('admin/statistics/*'), 'display: block;') }}">
+                <ul class="treeview-menu {{ active_class(Active::checkUriPattern('admin/stocks/*'), 'menu-open') }}" style="display: none; {{ active_class(Active::checkUriPattern('admin/stocks/*'), 'display: block;') }}">
                     <li class="{{ active_class(Active::checkUriPattern('admin/stocks/purchase')) }}">
                         <a href="{{ route('admin.stocks.purchase') }}">
                             <i class="fa fa-circle-o"></i>
