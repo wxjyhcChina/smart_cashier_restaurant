@@ -180,6 +180,7 @@ class CustomerRepository extends BaseCustomerRepository
     public function bindCard($customer, $input)
     {
         $card = Card::where('internal_number', $input['card_id'])->first();
+
         if ($card == null)
         {
             throw new ApiException(ErrorCode::RESOURCE_NOT_FOUND, trans('api.error.card_not_exist'));
@@ -202,10 +203,13 @@ class CustomerRepository extends BaseCustomerRepository
                 ->where('shop_id', $customer->shop_id)
                 ->where('enabled',1)//使用中
                 ->first();
-            //Log::info("分店:".json_encode($shop));
+
             if($method!=null){
+                $shop=Shop::where("id",$customer->shop_id)->first();
+                $online_flag=$shop->face_flag;
+                $http = new GuzzleHttp\Client;
+                $faceMaven=env('JAVA_FACE_MAVEN');
                 $devices=DB::table("outer_devices")
-                    ->select("url")
                     ->where('shop_id',$customer->shop_id)
                     ->where('type','人脸机')
                     ->where('sources','uface')
@@ -216,25 +220,45 @@ class CustomerRepository extends BaseCustomerRepository
                 $msg="";
                 try {
                     foreach($devices as $device){
-                        $ip=$device->url;
-                        Log::info("bindCard发送的外网ip:".$ip);
-                        $http = new GuzzleHttp\Client;
-                        $faceMaven=env('JAVA_FACE_MAVEN');
-                        $response = $http->get($faceMaven.'/person/update', [
-                            'query' => [
-                                'ip' => $ip,
-                                'pass' => 'admin123',
-                                'id'=>$customer->id,
-                                'name'=>$customer->user_name,
-                                'idcardNum'=>$card->internal_number,
-                            ],
-                        ]);
-                        $res = json_decode( $response->getBody(), true);
+                        if($online_flag==1){
+                            Log::info("online1");
+                            $response = $http->get($faceMaven.'/onlineUser/update', [
+                                'query' => [
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'cardNum'=>$card->internal_number,
+                                    'idCardNo'=>$customer->id_license,
+                                    'phone'=>$customer->telephone,
+                                    'deviceKey' => $device->deviceKey,
+                                    'appKey' => $shop->appKey,
+                                    'appSecret'=>$shop->appSecret,
+                                    'appId'=>$shop->appId,
+                                    'personGuid'=>$customer->personGuid,
+                                ],
+                            ]);
+                        }else{
+                            //离线内网穿透
+                            $ip=$device->url;
+                            Log::info("bindCard发送的外网ip:".$ip);
+
+                            $response = $http->get($faceMaven.'/person/update', [
+                                'query' => [
+                                    'ip' => $ip,
+                                    'pass' => 'admin123',
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'idcardNum'=>$card->internal_number,
+                                ],
+                            ]);
+                        }
+
+                        $res = json_decode($response->getBody(), true);
                         //log::info("res:".json_encode($res));
                         $result=$res["success"];
-                        if($result!="true"){
+                        if($result==0){
                             $flag=false;
                             $msg=$res["data"];
+                            break;
                         }
                     }
                 }catch (\Throwable $throwable){
@@ -257,7 +281,6 @@ class CustomerRepository extends BaseCustomerRepository
             }else{
                 DB::commit();
             }
-
         }catch (\Exception $exception){
             DB::rollBack();
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));
@@ -275,6 +298,7 @@ class CustomerRepository extends BaseCustomerRepository
         }
 
         try {
+
             DB::beginTransaction();
 
             $card->status = CardStatus::UNACTIVATED;
@@ -290,39 +314,51 @@ class CustomerRepository extends BaseCustomerRepository
                 ->first();
             //Log::info("分店:".json_encode($shop));
             if($method!=null){
-            //if($shop!=null&&($shop->face_flag!=0)){
+                //if($shop!=null&&($shop->face_flag!=0)){
+                $shop=Shop::where("id",$customer->shop_id)->first();
+                $online_flag=$shop->face_flag;
+                $http = new GuzzleHttp\Client;
+                $faceMaven=env('JAVA_FACE_MAVEN');
                 $devices=DB::table("outer_devices")
-                    ->select("url")
                     ->where('shop_id',$customer->shop_id)
                     ->where('type','人脸机')
                     ->where('sources','uface')
                     ->where('enabled',1)
                     ->get();
-                //Log::info("外接设备:".json_encode($devices));
                 $flag=true;
                 $msg="";
                 try {
                     foreach($devices as $device){
-                        $ip=$device->url;
-                        Log::info("unbindCard发送的外网ip:".$ip);
-                        $http = new GuzzleHttp\Client;
-                        $faceMaven=env('JAVA_FACE_MAVEN');
-                        //Log::info("java ip:".$faceMaven.'/person/unbindCard');
-                        $response = $http->get($faceMaven.'/person/unbindCard', [
-                            'query' => [
-                                'ip' => $ip,
-                                'pass' => 'admin123',
-                                'id'=>$customer->id,
-                                'name'=>$customer->user_name,
-                                'idcardNum'=>'',
-                            ],
-                        ]);
-                        $res = json_decode( $response->getBody(), true);
-                        //log::info("res:".json_encode($res));
-                        $result=$res["success"];
-                        if($result!="true"){
-                            $flag=false;
-                            $msg=$res["data"];
+                        if($online_flag==1){
+                            //宇泛在线
+                            Log::info("online");
+                            $response = $http->get($faceMaven.'/onlineUser/update', [
+                                'query' => [
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'cardNum'=>'0',
+                                    'idCardNo'=>$customer->id_license,
+                                    'phone'=>$customer->telephone,
+                                    'deviceKey' => $device->deviceKey,
+                                    'appKey' => $shop->appKey,
+                                    'appSecret'=>$shop->appSecret,
+                                    'appId'=>$shop->appId,
+                                    'personGuid'=>$customer->personGuid,
+                                ],
+                            ]);
+                        }else{
+                            //Log::info("外接设备:".json_encode($devices));
+                            $ip=$device->url;
+                            Log::info("unbindCard发送的外网ip:".$ip);
+                            $response = $http->get($faceMaven.'/person/unbindCard', [
+                                'query' => [
+                                    'ip' => $ip,
+                                    'pass' => 'admin123',
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'idcardNum'=>'',
+                                ],
+                            ]);
                         }
                     }
                 }catch (\Throwable $throwable){
@@ -345,7 +381,6 @@ class CustomerRepository extends BaseCustomerRepository
             }else{
                 DB::commit();
             }
-
         }catch (\Exception $exception){
             DB::rollBack();
             throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.update_error'));
@@ -391,40 +426,63 @@ class CustomerRepository extends BaseCustomerRepository
                 ->first();
             //Log::info("分店:".json_encode($shop));
             if($method!=null){
-            //if($shop!=null&&($shop->face_flag!=0)){
+                $shop=Shop::where("id",$customer->shop_id)->first();
+                $online_flag=$shop->face_flag;
                 $devices=DB::table("outer_devices")
-                    ->select("url")
                     ->where('shop_id',$customer->shop_id)
                     ->where('type','人脸机')
                     ->where('sources','uface')
                     ->where('enabled',1)
                     ->get();
-                //Log::info("外接设备:".json_encode($devices));
+                $http = new GuzzleHttp\Client;
+                $faceMaven=env('JAVA_FACE_MAVEN');
                 $flag=true;
                 $msg="";
                 try {
                     foreach($devices as $device){
-                        $ip=$device->url;
-                        Log::info("lostCard发送的外网ip:".$ip);
-                        $http = new GuzzleHttp\Client;
-                        $faceMaven=env('JAVA_FACE_MAVEN');
-                        $response = $http->get($faceMaven.'/person/update', [
-                            'query' => [
-                                'ip' => $ip,
-                                'pass' => 'admin123',
-                                'id'=>$customer->id,
-                                'name'=>$customer->user_name,
-                                'idcardNum'=>$card->internal_number,
-                            ],
-                        ]);
-                        $res = json_decode( $response->getBody(), true);
+                        if($online_flag==1){
+                            //宇泛在线
+                            Log::info("online");
+                            $response = $http->get($faceMaven.'/onlineUser/update', [
+                                'query' => [
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'cardNum'=>$card->internal_number,
+                                    'idCardNo'=>$customer->id_license,
+                                    'phone'=>$customer->telephone,
+                                    'deviceKey' => $device->deviceKey,
+                                    'appKey' => $shop->appKey,
+                                    'appSecret'=>$shop->appSecret,
+                                    'appId'=>$shop->appId,
+                                    'personGuid'=>$customer->personGuid,
+                                ],
+                            ]);
+                        }else{
+                            //if($shop!=null&&($shop->face_flag!=0)){
+                            //离线内网穿透
+                            //Log::info("外接设备:".json_encode($devices));
+                            $ip=$device->url;
+                            Log::info("离线lostCard发送的外网ip:".$ip);
+                            $response = $http->get($faceMaven.'/person/update', [
+                                'query' => [
+                                    'ip' => $ip,
+                                    'pass' => 'admin123',
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'idcardNum'=>$card->internal_number,
+                                ],
+                            ]);
+                        }
+                        $res = json_decode($response->getBody(), true);
                         //log::info("res:".json_encode($res));
                         $result=$res["success"];
-                        if($result!="true"){
+                        if($result==0){
                             $flag=false;
                             $msg=$res["data"];
+                            break;
                         }
                     }
+
                 }catch (\Throwable $throwable){
                     if ($throwable instanceof ClientException) {
                         //doing something

@@ -57,7 +57,7 @@ class BaseCustomerRepository extends BaseRepository
                 $card->save();
 
                 $this->createAccount($customer->id, isset($input['balance']) ? $input['balance'] : 0);
-
+                Log::info("分店111");
                 //如果有uface信息
                 //$shop=Shop::where("id",$customer->shop_id)->first();
                 //Log::info("分店:".json_encode($shop));
@@ -67,38 +67,66 @@ class BaseCustomerRepository extends BaseRepository
                     ->first();
                 //Log::info("分店:".json_encode($shop));
                 if($method!=null){
-                //if($shop!=null&&($shop->face_flag!=0)){
+                    Log::info("分店2222");
+                    //Log::info("分店:".json_encode($shop));
+                    $shop=Shop::where("id",$customer->shop_id)->first();
+                    $online_flag=$shop->face_flag;
+                    $http = new GuzzleHttp\Client;
+                    $faceMaven=env('JAVA_FACE_MAVEN');
                     $devices=DB::table("outer_devices")
-                        ->select("url")
                         ->where('shop_id',$customer->shop_id)
                         ->where('type','人脸机')
                         ->where('sources','uface')
                         ->where('enabled',1)
                         ->get();
-                    //Log::info("外接设备:".json_encode($devices));
                     $flag=true;
                     $msg="";
+                    //Log::info("分店333");
                     try {
                         foreach($devices as $device){
-                            $ip=$device->url;
-                            Log::info("create发送的外网ip:".$ip);
-                            $http = new GuzzleHttp\Client;
-                            $faceMaven=env('JAVA_FACE_MAVEN');
-                            $response = $http->get($faceMaven.'/person/create', [
-                                'query' => [
-                                    'ip' => $ip,
-                                    'pass' => 'admin123',
-                                    'id'=>$customer->id,
-                                    'name'=>$customer->user_name,
-                                    'idcardNum'=>$card->internal_number,
-                                ],
-                            ]);
-                            $res = json_decode( $response->getBody(), true);
+                            Log::info("分店:".json_encode($device));
+                            if($online_flag==1){
+                                //宇泛在线
+                                Log::info("online");
+                                $response = $http->get($faceMaven.'/onlineUser/create', [
+                                    'query' => [
+                                        'id'=>$customer->id,
+                                        'name'=>$customer->user_name,
+                                        'cardNum'=>$card->internal_number,
+                                        'idCardNo'=>$customer->id_license,
+                                        'phoneNum'=>$customer->telephone,
+                                        'deviceKey' => $device->deviceKey,
+                                        'appKey' => $shop->appKey,
+                                        'appSecret'=>$shop->appSecret,
+                                        'appId'=>$shop->appId,
+                                        'personsetGuid'=>$shop->personsetGuid,
+                                    ],
+                                ]);
+                            }else{
+                                $ip=$device->url;
+                                Log::info("create发送的外网ip:".$ip);
+                                $response = $http->get($faceMaven.'/person/create', [
+                                    'query' => [
+                                        'ip' => $ip,
+                                        'pass' => 'admin123',
+                                        'id'=>$customer->id,
+                                        'name'=>$customer->user_name,
+                                        'idcardNum'=>$card->internal_number,
+                                    ],
+                                ]);
+                            }
+                            $res = json_decode($response->getBody(), true);
                             //log::info("res:".json_encode($res));
                             $result=$res["success"];
-                            if($result!="true"){
+                            if($result==0){
                                 $flag=false;
                                 $msg=$res["data"];
+                                break;
+                            }else{
+                                if($online_flag==1){
+                                    $customer->personGuid=$res["guid"];
+                                    $customer->save();
+                                }
                             }
                         }
                     }catch (\Throwable $throwable){
@@ -112,6 +140,46 @@ class BaseCustomerRepository extends BaseRepository
                         }
                         throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
                     }
+                    /**
+                    if($online_flag==1){
+                        //宇泛在线
+                        Log::info("online");
+                    }else{
+                        //if($shop!=null&&($shop->face_flag!=0)){
+                        //Log::info("外接设备:".json_encode($devices));
+                        try {
+                            foreach($devices as $device){
+                                $ip=$device->url;
+                                Log::info("create发送的外网ip:".$ip);
+                                $response = $http->get($faceMaven.'/person/create', [
+                                    'query' => [
+                                        'ip' => $ip,
+                                        'pass' => 'admin123',
+                                        'id'=>$customer->id,
+                                        'name'=>$customer->user_name,
+                                        'idcardNum'=>$card->internal_number,
+                                    ],
+                                ]);
+                                $res = json_decode( $response->getBody(), true);
+                                //log::info("res:".json_encode($res));
+                                $result=$res["success"];
+                                if($result==0){
+                                    $flag=false;
+                                    $msg=$res["data"];
+                                }
+                            }
+                        }catch (\Throwable $throwable){
+                            if ($throwable instanceof ClientException) {
+                                //doing something
+                                throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                            }
+                            if ($throwable instanceof ServerException) {
+                                //doing something
+                                throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                            }
+                            throw new ApiException(ErrorCode::DATABASE_ERROR, trans('exceptions.backend.customer.net_error'));
+                        }
+                    }**/
                     if($flag){
                         DB::commit();
                     }else{
@@ -164,9 +232,11 @@ class BaseCustomerRepository extends BaseRepository
                 ->first();
             //Log::info("分店:".json_encode($shop));
             if($method!=null){
-            //if($shop!=null&&($shop->face_flag!=0)){
+                $shop=Shop::where("id",$customer->shop_id)->first();
+                $online_flag=$shop->face_flag;
+                $http = new GuzzleHttp\Client;
+                $faceMaven=env('JAVA_FACE_MAVEN');
                 $devices=DB::table("outer_devices")
-                    ->select("url")
                     ->where('shop_id',$customer->shop_id)
                     ->where('type','人脸机')
                     ->where('sources','uface')
@@ -177,25 +247,47 @@ class BaseCustomerRepository extends BaseRepository
                 $msg="";
                 try {
                     foreach($devices as $device){
-                        $ip=$device->url;
-                        Log::info("update发送的外网ip:".$ip);
-                        $http = new GuzzleHttp\Client;
-                        $faceMaven=env('JAVA_FACE_MAVEN');
-                        $response = $http->get($faceMaven.'/person/update', [
-                            'query' => [
-                                'ip' => $ip,
-                                'pass' => 'admin123',
-                                'id'=>$customer->id,
-                                'name'=>$customer->user_name,
-                                'idcardNum'=>"",
-                            ],
-                        ]);
-                        $res = json_decode( $response->getBody(), true);
+
+                        if($online_flag==1){
+                            //宇泛在线
+                            Log::info("online");
+                            $response = $http->get($faceMaven.'/onlineUser/update', [
+                                'query' => [
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'cardNum'=>'',
+                                    'idCardNo'=>$customer->id_license,
+                                    'phone'=>$customer->telephone,
+                                    'deviceKey' => $device->deviceKey,
+                                    'appKey' => $shop->appKey,
+                                    'appSecret'=>$shop->appSecret,
+                                    'appId'=>$shop->appId,
+                                    'personGuid'=>$customer->personGuid,
+                                ],
+                            ]);
+                        }else{
+                            //if($shop!=null&&($shop->face_flag!=0)){
+                            $ip=$device->url;
+                            Log::info("update发送的外网ip:".$ip);
+                            $response = $http->get($faceMaven.'/person/update', [
+                                'query' => [
+                                    'ip' => $ip,
+                                    'pass' => 'admin123',
+                                    'id'=>$customer->id,
+                                    'name'=>$customer->user_name,
+                                    'idcardNum'=>"",
+                                ],
+                            ]);
+
+                        }
+
+                        $res = json_decode($response->getBody(), true);
                         //log::info("res:".json_encode($res));
                         $result=$res["success"];
-                        if($result!="true"){
+                        if($result==0){
                             $flag=false;
                             $msg=$res["data"];
+                            break;
                         }
                     }
                 }catch (\Throwable $throwable){
