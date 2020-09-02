@@ -57,7 +57,7 @@ class BaseCustomerRepository extends BaseRepository
                 $card->save();
 
                 $this->createAccount($customer->id, isset($input['balance']) ? $input['balance'] : 0);
-                Log::info("分店111");
+                //Log::info("分店111");
                 //如果有uface信息
                 //$shop=Shop::where("id",$customer->shop_id)->first();
                 //Log::info("分店:".json_encode($shop));
@@ -67,7 +67,7 @@ class BaseCustomerRepository extends BaseRepository
                     ->first();
                 //Log::info("分店:".json_encode($shop));
                 if($method!=null){
-                    Log::info("分店2222");
+                    //Log::info("分店2222");
                     //Log::info("分店:".json_encode($shop));
                     $shop=Shop::where("id",$customer->shop_id)->first();
                     $online_flag=$shop->face_flag;
