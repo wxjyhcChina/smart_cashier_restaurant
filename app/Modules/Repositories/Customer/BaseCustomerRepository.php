@@ -94,7 +94,7 @@ class BaseCustomerRepository extends BaseRepository
                                         'name'=>$customer->user_name,
                                         'cardNum'=>$card->internal_number,
                                         'idCardNo'=>$customer->id_license,
-                                        'phoneNum'=>$customer->telephone,
+                                        'phone'=>$customer->telephone,
                                         'deviceKey' => $device->deviceKey,
                                         'appKey' => $shop->appKey,
                                         'appSecret'=>$shop->appSecret,
