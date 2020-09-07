@@ -243,6 +243,7 @@ class BaseCustomerRepository extends BaseRepository
                     ->where('enabled',1)
                     ->get();
                 //Log::info("外接设备:".json_encode($devices));
+                $card = Card::where('customer_id', $customer->id)->first();
                 $flag=true;
                 $msg="";
                 try {
@@ -255,7 +256,7 @@ class BaseCustomerRepository extends BaseRepository
                                 'query' => [
                                     'id'=>$customer->id,
                                     'name'=>$customer->user_name,
-                                    'cardNum'=>'',
+                                    'cardNum'=>$card->internal_number,
                                     'idCardNo'=>$customer->id_license,
                                     'phone'=>$customer->telephone,
                                     'deviceKey' => $device->deviceKey,

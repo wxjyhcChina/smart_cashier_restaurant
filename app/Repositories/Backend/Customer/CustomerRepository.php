@@ -336,7 +336,7 @@ class CustomerRepository extends BaseCustomerRepository
                                 'query' => [
                                     'id'=>$customer->id,
                                     'name'=>$customer->user_name,
-                                    'cardNum'=>'0',
+                                    'cardNum'=>'',
                                     'idCardNo'=>$customer->id_license,
                                     'phone'=>$customer->telephone,
                                     'deviceKey' => $device->deviceKey,
