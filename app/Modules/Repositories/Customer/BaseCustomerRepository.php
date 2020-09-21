@@ -126,6 +126,7 @@ class BaseCustomerRepository extends BaseRepository
                                 if($online_flag==1){
                                     $customer->personGuid=$res["guid"];
                                     $customer->save();
+                                    break;
                                 }
                             }
                         }
